@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace App\Connection;
 
-class Finder
+class QueryBuilder
 {
     private static $classInstance = NULL;
     private static $sql = "";
@@ -10,7 +10,7 @@ class Finder
     private static $suffix = "";
 
     public static function select(string $table, array $columns = array()) : self {
-        self::$classInstance = new Finder();
+        self::$classInstance = new QueryBuilder();
 
         self::$prefix = "SELECT";
         if(!empty($columns)){
