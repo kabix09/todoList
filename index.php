@@ -3,31 +3,61 @@ define('DB_CONFIG_FILE', __DIR__ . "/config/db.config.php");
 
 require_once __DIR__ . "/vendor/autoload.php";
 
-use App\Connection\ {Connection, QueryBuilder};
+use App\Connection\Connection;
+
+use App\Repository\UserRepository;
 use App\Entity\ {User, Base};
 
-$conn = new Connection(include DB_CONFIG_FILE);
-$conn->connect();
+$repo = new UserRepository(new Connection(include DB_CONFIG_FILE));
 
-$stmt = $conn->getConnection()->prepare(
-    QueryBuilder::select("user")::getSQL()
-);
-$stmt->execute();
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
+/*      first example - find with criteria       */
+$date = [
+    "where" => NULL,
+    "IN" => ["status", ["'inactive'"]]
+];
 
-echo "<pre>";
-    var_dump($result);
-echo "</pre>";
+$date2 = [
+    "where" => NULL,
+    "like" => ["status", "'%in%'"],
+    "AND" => "nick = 'kabix09'"
+];
 
+echo '<pre>';
+foreach ($repo->find(array(), $date) as $item){
+    var_dump($item);
+}
+
+foreach ($repo->find(array(), $date2) as $item){
+    var_dump($item);
+}
+echo '</pre>';
+
+/*      second example - insert       */
 $user = new User();
-User::arrayToEntity($result, $user);
+$user->setNick("bogWojny");
+$user->setEmail("bogWojny@gmail.com");
+$user->setPassword("qwerty");
+$user->setLastLoginDate("2020-08-29 23:35:05");
+$user->setCreateAccountDate("2020-08-29 23:35:05");
+$user->setStatus("inactive");
 
-echo "<pre>";
-var_dump($user);
-echo "</pre>";
+$repo->insert($user);
 
-$res = User::entityToArray($user);
+/*      third example - update       */
+$user->setStatus("active");
+$date3 = [
+    "where" => ["nick", "= '{$user->getNick()}'"]
+];
 
-echo "<pre>";
-var_dump($res);
-echo "</pre>";
+$repo->update($user, $date3);
+
+/*      fourth example - remove few records       */
+$date4 = [
+    "where" => ["status", "= 'active'"]
+];
+$repo->remove($date4);
+
+
+
+
+
