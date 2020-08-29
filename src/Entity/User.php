@@ -6,7 +6,7 @@ final class User extends Base
     const TABLE_NAME = "user";
     const STATUS = ["active", "inactive", "blocked"];
 
-    protected array $mapping = [
+    const MAPPING = [
         "nick" => "nick",
         "email" => "email",
         "password" => "password",

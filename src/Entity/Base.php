@@ -4,7 +4,7 @@ namespace App\Entity;
 class Base
 {
     protected $id;
-    protected array $mapping = ["id" => "id"];
+    const MAPPING = ["id" => "id"];
     const DATE_FORMAT = "Y-m-d H:i:s";
 
     /**
@@ -23,10 +23,18 @@ class Base
         $this->id = (int) $id;
     }
 
+    public static function getColumnFieldName(string $entityFieldName) : ?string{
+        foreach (static::MAPPING as $dbColumnName => $objectPropertyName)
+            if($entityFieldName === $objectPropertyName)
+                return $dbColumnName;
+
+        return NULL;
+    }
+
     public static function arrayToEntity(array $data, Base $objectInstance) : ?Base
     {
         if($data){
-            foreach ($objectInstance->mapping as $dbColumnName => $objectPropertyName){
+            foreach ($objectInstance::MAPPING as $dbColumnName => $objectPropertyName){
                 $method = "set" . ucfirst($objectPropertyName);
                 $objectInstance->$method($data[$dbColumnName]);
             }
@@ -38,7 +46,7 @@ class Base
     public static function entityToArray(Base $objectInstance) : ?array
     {
         $data = array();
-        foreach ($objectInstance->mapping as $dbColumnName => $objectPropertyName){
+        foreach ($objectInstance::MAPPING as $dbColumnName => $objectPropertyName){
             $method = "get" . ucfirst($objectPropertyName);
             $data[$dbColumnName] = $objectInstance->$method() ?? NULL;
         }
