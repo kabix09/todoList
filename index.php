@@ -25,3 +25,9 @@ User::arrayToEntity($result, $user);
 echo "<pre>";
 var_dump($user);
 echo "</pre>";
+
+$res = User::entityToArray($user);
+
+echo "<pre>";
+var_dump($res);
+echo "</pre>";

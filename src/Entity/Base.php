@@ -35,12 +35,12 @@ class Base
         return NULL;
     }
 
-    public function entityToArray() : ?array
+    public static function entityToArray(Base $objectInstance) : ?array
     {
         $data = array();
-        foreach ($this->mapping as $dbColumnName => $objectPropertyName){
+        foreach ($objectInstance->mapping as $dbColumnName => $objectPropertyName){
             $method = "get" . ucfirst($objectPropertyName);
-            $data[$dbColumnName] = $this->$method() ?? NULL;
+            $data[$dbColumnName] = $objectInstance->$method() ?? NULL;
         }
         return $data;
     }
