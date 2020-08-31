@@ -4,18 +4,22 @@ namespace App\Connection;
 class QueryBuilder
 {
     private static $classInstance = NULL;
-    private static $sql = "";
-    private static $prefix = "";
-    private static $set = array();
-    private static $where = array();
-    private static $suffix = "";
+    private static $sql;
+    private static $prefix;
+    private static $set;
+    private static $where;
+    private static $suffix;
 
-    protected static function init(){
+    private function __construct()
+    {
         self::$sql = "";
         self::$prefix = "";
         self::$set = array();
         self::$where = array();
         self::$suffix = "";
+    }
+
+    protected static function init(){
         return new QueryBuilder();
     }
 
