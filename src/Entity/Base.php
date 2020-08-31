@@ -30,26 +30,4 @@ class Base
 
         return NULL;
     }
-
-    public static function arrayToEntity(array $data, Base $objectInstance) : ?Base
-    {
-        if($data){
-            foreach ($objectInstance::MAPPING as $dbColumnName => $objectPropertyName){
-                $method = "set" . ucfirst($objectPropertyName);
-                $objectInstance->$method($data[$dbColumnName]);
-            }
-            return $objectInstance;
-        }
-        return NULL;
-    }
-
-    public static function entityToArray(Base $objectInstance) : ?array
-    {
-        $data = array();
-        foreach ($objectInstance::MAPPING as $dbColumnName => $objectPropertyName){
-            $method = "get" . ucfirst($objectPropertyName);
-            $data[$dbColumnName] = $objectInstance->$method() ?? NULL;
-        }
-        return $data;
-    }
 }
