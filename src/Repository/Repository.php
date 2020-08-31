@@ -1,8 +1,6 @@
 <?php
 namespace App\Repository;
 
-use App\Entity\Base;
-
 interface Repository
 {
     public function find (array $columns = array(), array $criteria = array());

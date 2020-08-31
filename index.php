@@ -10,7 +10,7 @@ use App\Entity\ {User, Base};
 
 $repo = new UserRepository(new Connection(include DB_CONFIG_FILE));
 
-/*      first example - find with criteria       */
+        /*      first example - find with criteria       */
 $date = [
     "where" => NULL,
     "IN" => ["status", ["'inactive'"]]
@@ -31,8 +31,9 @@ foreach ($repo->find(array(), $date2) as $item){
     var_dump($item);
 }
 echo '</pre>';
+die();
 
-/*      second example - insert       */
+        /*      second example - insert       */
 $user = new User();
 $user->setNick("bogWojny");
 $user->setEmail("bogWojny@gmail.com");
@@ -42,21 +43,21 @@ $user->setCreateAccountDate("2020-08-29 23:35:05");
 $user->setStatus("inactive");
 
 $repo->insert($user);
-
-/*      third example - update       */
+die();
+        /*      third example - update       */
 $user->setStatus("active");
 $date3 = [
     "where" => ["nick", "= '{$user->getNick()}'"]
 ];
 
-$repo->update($user, $date3);
-
-/*      fourth example - remove few records       */
+echo $repo->update($user, $date3);
+die();
+        /*      fourth example - remove few records       */
 $date4 = [
     "where" => ["status", "= 'active'"]
 ];
-$repo->remove($date4);
-
+echo $repo->remove($date4);
+die();
 
 
 

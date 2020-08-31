@@ -4,15 +4,19 @@ namespace App\Repository;
 use App\Connection\Connection;
 use App\Connection\QueryBuilder;
 use App\Entity\Base;
+use App\Entity\Factory\BaseFactory;
+
 
 abstract class BaseRepository implements Repository
 {
     protected $connection;
+    protected $entityFactory;
     protected $dbName = "";
 
-    public function __construct(Connection $connection, string $dbName){
+    public function __construct(Connection $connection, string $dbName, BaseFactory $baseFactory){
         $this->connection = $connection;
         $this->dbName = $dbName;
+        $this->entityFactory = $baseFactory;
 
         $this->connection->connect();
     }
@@ -98,5 +102,28 @@ abstract class BaseRepository implements Repository
     }
 
     /* toDo -> use bindValue in $criteria */
-    abstract protected function buildCriteria(array $criteria = array());
+    protected function buildCriteria(array $criteria = array())
+    {
+        if(!empty($criteria))
+        {
+            foreach ($criteria as $sqlComand => $value){
+                $command = strtolower($sqlComand);
+
+                if(is_array($value))
+                {
+                    // if any value in MAPPER dosn't match then parameter is value not column name
+                    $firstPram = $this->entityFactory::targetClass()::getColumnFieldName($value[0]);
+
+                    if(!is_array($value[1]))
+                        $secondPram = $this->entityFactory::targetClass()::getColumnFieldName($value[1]);
+
+                    QueryBuilder::$command(
+                        $firstPram ?? $value[0],
+                        $secondPram ?? $value[1]);
+                }
+                else
+                    QueryBuilder::$command($value);
+            }
+        }
+    }
 }
