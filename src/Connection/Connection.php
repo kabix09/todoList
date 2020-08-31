@@ -1,28 +1,21 @@
 <?php declare(strict_types = 1);
 namespace App\Connection;
-use App\Connection\AbstractFactory\ {mysqlFactory, odbcFactory, PDOfactory, sqliteFactory};
+use App\Connection\AbstractFactory\{mysqlFactory, odbcFactory, PDOfactory};
 use \PDO;
 
-class Connection{
+class Connection extends PDOfactory
+{
     const PDOdrivers = ['odbc'=>'odbc', 'mysql' =>'mysql'];
     private $connection;
     private $data = array();
 
     public function __construct(array $data)
     {
-        if (count($data) < 5)
-            throw new \RuntimeException("invalid arguments: incorrect number of parameters" . PHP_EOL);
-
-        if (!isset($data['driver']))
-            throw new \RuntimeException("invalid arguments: driver wasn't indicated" . PHP_EOL);
-
-        if (!$this->checkDriver($data['driver']))
-            throw new \RuntimeException("unrecognized PDO driver: your server don't support '" . $data['driver'] . "' driver extension" . PHP_EOL);
-
-        $this->setData($data);
+        if($this->validData($data))
+            $this->setData($data);
     }
 
-    public function connect(){
+    public function connect(array $connectData = array()){
         $pdoInstance = $this->makePDO();
 
         if(is_null($pdoInstance))
@@ -59,6 +52,19 @@ class Connection{
                 return TRUE;
 
         return FALSE;
+    }
+
+    private function validData(array $data) : bool{
+        if (count($data) < 5)
+            throw new \RuntimeException("invalid arguments: incorrect number of parameters" . PHP_EOL);
+
+        if (!isset($data['driver']))
+            throw new \RuntimeException("invalid arguments: driver wasn't indicated" . PHP_EOL);
+
+        if (!$this->checkDriver($data['driver']))
+            throw new \RuntimeException("unrecognized PDO driver: your server don't support '" . $data['driver'] . "' driver extension" . PHP_EOL);
+
+        return TRUE;
     }
 
     public function setData(array $data){
