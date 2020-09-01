@@ -6,7 +6,7 @@ use App\Entity\Base;
 abstract class BaseFactory implements EntityFactory
 {
     public function createEntity(array $data){
-        return $this::arrayToEntity($data);
+        return static::arrayToEntity($data);
     }
 
     public function createEntityCollection(array $data){
