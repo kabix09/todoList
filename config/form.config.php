@@ -1,8 +1,8 @@
 <?php
 return $formConfig = [
-    "name" => 'login_form',
+    "name" => 'form',
     "attributes" => [
-        "id" => "loginForm",
+        "id" => "form",
         "method"=>'post',
         "action"=>''
     ]
