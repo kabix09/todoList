@@ -6,15 +6,15 @@ class Generic
     const DEFAULT_TYPE = FormConstants::TYPE_TEXT;
     const DEFAULT_WRAPPER = 'div';
 
-    protected $name = "";
-    protected $type = self::DEFAULT_TYPE;
-    protected $label = "";
-    protected $errors = array();
-    protected $wrappers = "";
-    protected $attribures = array();
-    protected $pattern = '<input type="%s" name="%s" %s>';
+    protected string $name = "";
+    protected string $type = self::DEFAULT_TYPE;
+    protected string $label = "";
+    protected array $errors = array();
+    protected array $wrappers = array();
+    protected array $attributes = array();
+    protected string $pattern = '<input type="%s" name="%s" %s>';
 
-    public function __construct(string $name, $type, string $label,
+    public function __construct(string $name, $type, string $label = '',
                                 array $wrappers = array(),
                                 array $attributes = array(),
                                 array $errors = array())
@@ -23,7 +23,8 @@ class Generic
         $this->type = $type ?? self::DEFAULT_TYPE;
         $this->label = $label;
         $this->errors = $errors;
-        $this->attribures = $attributes;
+        $this->attributes = $attributes;
+
         if($wrappers){
             $this->wrappers = $wrappers;
         }else{
@@ -31,7 +32,7 @@ class Generic
             $this->wrappers[FormConstants::LABEL]['type'] = self::DEFAULT_WRAPPER;
             $this->wrappers[FormConstants::ERRORS]['type'] = self::DEFAULT_WRAPPER;
         }
-        $this->attribures['id'] = $name;
+        $this->attributes['id'] = $name;
     }
 
     protected function getWrapperPattern(string $type) : string {
@@ -42,7 +43,7 @@ class Generic
                 continue;
 
             if($key === 'for')
-                $value = $this->attribures['id'] ?? NULL;
+                $value = $this->attributes['id'] ?? NULL;
 
             if($value)
                 $pattern .= ' ' . $key . ' = "' . $value . '"';
@@ -54,10 +55,10 @@ class Generic
         return $pattern;
     }
 
-    private function getAttributes() : string {
+    protected function getAttributes() : string {
         $attributes = '';
 
-        foreach ($this->attribures as $key => $value){
+        foreach ($this->attributes as $key => $value){
             $key = strtolower($key);
             if($value)
             {
@@ -73,7 +74,7 @@ class Generic
 
 
     public function getLabel() : string {
-        return sprintf($this->getWrapperPattern(FormConstants::LABEL), $this->label);
+        return sprintf($this->getWrapperPattern(FormConstants::LABEL), $this->label) . PHP_EOL;
     }
 
     public function getInput() : string {
@@ -81,11 +82,11 @@ class Generic
             $this->type,
             $this->name,
             $this->getAttributes()
-        );
+        ) . PHP_EOL;
     }
 
-    public function getInputWithLabel() : string {
-        return $this->getLabel() . $this->getInput();
+    public function getInputWithLabel(bool $newLine = false) : string {
+        return $this->getLabel() . $this->getInput() . ($newLine ? '</br>' : '');
     }
 
     public function getErrors() : string{
@@ -102,10 +103,10 @@ class Generic
         return sprintf($this->getWrapperPattern(FormConstants::ERRORS), trim($html));
     }
 
-    public function render(bool $wrapped = FALSE) : string {
+    public function render(bool $wrapped = FALSE, bool $brElement = FALSE) : string {
         if($wrapped)
-            return sprintf($this->getWrapperPattern(FormConstants::WRAPPER), $this->getInputWithLabel() . $this->getErrors());
+            return sprintf($this->getWrapperPattern(FormConstants::WRAPPER), $this->getInputWithLabel($brElement) . $this->getErrors());
 
-        return $this->getInputWithLabel() . $this->getErrors();
+        return $this->getInputWithLabel($brElement) . $this->getErrors();
     }
 }
