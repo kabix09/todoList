@@ -109,4 +109,19 @@ class Generic
 
         return $this->getInputWithLabel($brElement) . $this->getErrors();
     }
+
+
+    // getters & setters declarations
+
+    /**
+     * @param string $attribute
+     */
+    public function setAttribute(string $key, $attribute): void
+    {
+        if(isset($this->attributes[$key]))
+            $this->attributes[$key] = $attribute;
+        else
+            $this->attributes[$key] = $attribute;
+
+    }
 }

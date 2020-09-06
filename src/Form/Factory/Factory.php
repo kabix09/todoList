@@ -9,7 +9,7 @@ final class Factory
 {
     private array $elements = array();
 
-    public function generate(array $config){
+    public function generate(array $config, ?string $token = NULL){
         foreach ($config as $key => $element){
             $element['errors'] = $element['errors'] ?? array();
             $element['wrappers'] = $element['wrappers'] ?? array();
@@ -25,6 +25,9 @@ final class Factory
                 $element['errors']
             );
         }
+
+        if(isset($this->elements['hidden']) && $token)
+            $this->elements['hidden']->setAttribute("value", $token);
     }
 
     public function render(array $formConfig, bool $wrapp = FALSE, bool $brElement = FALSE){
