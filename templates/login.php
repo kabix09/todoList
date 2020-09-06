@@ -6,7 +6,7 @@ define('FORM_CONFIG', "../config/form.config.php");
 define('LOG_FORM', "../config/logForm.config.php");
 
 use App\Form\Factory\Factory;
-
+use App\Token\Token;
 /*
  * $errors = [
  *  "wrong Nickname",
@@ -17,7 +17,11 @@ use App\Form\Factory\Factory;
  */
 
 $formFactory = new Factory();
-$formFactory->generate(include LOG_FORM, $_SESSION['token']);
+$formFactory->generate(include LOG_FORM,
+                        (new Token($_SESSION['token']))
+                            ->hash()
+                            ->encode()
+                            ->getToken());
 ?>
 
 <?= $formFactory->render(include FORM_CONFIG, FALSE, TRUE); ?>

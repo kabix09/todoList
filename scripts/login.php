@@ -1,34 +1,45 @@
 <?php
 require_once '../init.php';
 
+use App\Token\Token;
+
 /*
  * $recaptcha = '';
  */
 
 if(!isset($_POST['hidden']))
-    $_SESSION['token'] = bin2hex(random_bytes(16));
+    $_SESSION['token'] = (new Token())->generate()->binToHex()->getToken();
 
-if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] !== 'POST')
+if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
 {
-    include '../templates/login.php';
+    include ROOT_PATH . './templates/login.php';
+    exit();
 }
-else {
-    unset($_POST['submit']);
 
-    echo '<pre>';
-        var_dump($_POST);
-    echo '</pre>';
+if($_SERVER['REQUEST_METHOD'] !== 'POST')
+{
+    header("Location: {$_SESSION['ROOT_PATH']} index.php");
+}
 
-    if(!isset($_SESSION['token']))
-        exit("token doesn't exists on server side ://");
+echo '<pre>';
+    var_dump($_POST);
+echo '</pre>';
 
-    if($_SESSION['token'] !== $_POST['hidden'])
-        throw new RuntimeException('detected cross-site attack on login form');
-    else
-        echo "token correct";
+unset($_POST['submit']);
 
-    unset($_SESSION['token']);
+// 1 check hidden token
+if(!isset($_SESSION['token']))
+    exit("token doesn't exists on server side ://");
 
+if(sodium_compare(
+        (new token($_SESSION['token']))->hash()->getToken(),
+        (new Token($_POST['hidden']))->decode()->getToken()
+    ) !== 0
+) throw new RuntimeException('detected cross-site attack on login form');
+
+unset($_SESSION['token']);
+
+echo "correct Token";
     //-------------------------------------------------------------------------------------
 
     // 2 - filter data
@@ -40,7 +51,6 @@ else {
     // insert into db
 
     // header
-}
 
 
 
