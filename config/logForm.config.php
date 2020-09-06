@@ -28,6 +28,16 @@ return $logForm = [
         ]
     ],
 
+    "hidden" => [
+        "class" => 'App\Form\Generic',
+        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "label" => '',
+        "wrappers" => include "formWrapper.config.php",
+        "attributes" => [
+            "value" => ''
+        ]
+    ],
+
     "submit" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_SUBMIT,

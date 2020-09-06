@@ -16,8 +16,8 @@ use App\Form\Factory\Factory;
  * echo $elementGenerator->render(TRUE);
  */
 
-$formfactory = new Factory();
-$formfactory->generate(include LOG_FORM);
+$formFactory = new Factory();
+$formFactory->generate(include LOG_FORM, $_SESSION['token']);
 ?>
 
-<?= $formfactory->render(include FORM_CONFIG, FALSE, TRUE); ?>
+<?= $formFactory->render(include FORM_CONFIG, FALSE, TRUE); ?>
