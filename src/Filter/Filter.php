@@ -23,11 +23,11 @@ final class Filter extends AbstractFilter
     }
 
     public function processGlobalAssignment($assignments, array $data) : void {
-        foreach ($assignments as $callback) {
-            if ($callback === NULL) continue;
+        foreach ($assignments as $task) {
+            if ($task === NULL) continue;
 
-            foreach ($callback as $key => $value){
-                $result = $this->callbacks[$callback[$key]]($this->results[$key]->item, $callback['params']);
+            foreach ($data as $key => $value){
+                $result = $this->callbacks[$task['key']]($this->results[$key]->getItem(), $task['params']);
 
                 $this->results[$key]->mergeResults($result);
             }
@@ -38,9 +38,8 @@ final class Filter extends AbstractFilter
         foreach ($assignment as $task){
             if($task === NULL) continue;
 
-            $result = $this->callbacks[$task['key']]($this->results[$key]->item, $task['params']);
+            $result = $this->callbacks[$task['key']]($this->results[$key]->getItem(), $task['params']);
 
-            $this->results[$key]->mergeResults($result);
-        }
+            $this->results[$key]->mergeResults($result);}
     }
 }

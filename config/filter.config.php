@@ -9,6 +9,8 @@ return $config = [
 
             public function __invoke($item, $params): Result
             {
+                $this->resetOldMessage();
+
                 $this->filteredValue = trim($item);
                 if($this->filteredValue !== $item) {
                     $flag = FALSE;
@@ -21,6 +23,8 @@ return $config = [
 
             public function __invoke($item, $params): Result
             {
+                $this->resetOldMessage();
+
                 $this->filteredValue = strip_tags($item);
                 if($this->filteredValue !== $item) {
                     $flag  = FALSE;
@@ -34,17 +38,22 @@ return $config = [
 
             public function __invoke($item, $params): Result
             {
-                if(isset($parms['min']) && (strlen($item) < $parms['min']))
+                $this->resetOldMessage();
+
+                if(isset($params['min']) && (strlen($item) < $params['min']))
                 {
                     $flag = FALSE;
-                    $this->filteredValue = substr($item, 0, $parms['min']);
-                    $this->message[] = Messages::$messages['length_too_short'];
+                    $this->filteredValue = substr($item, 0, $params['min']);
+                    $this->message[] = sprintf(Messages::$messages['length_too_short'],
+                                                $params['min']);
+
                 }
-                if(isset($parms['max']) && (strlen($item) > $parms['max']))
+                if(isset($params['max']) && (strlen($item) > $params['max']))
                 {
                     $flag = FALSE;
-                    $this->filteredValue = substr($item, 0, $parms['max']);
-                    $this->message[] = Messages::$messages['length_too_long'];
+                    $this->filteredValue = substr($item, 0, $params['max']);
+                    $this->message[] = sprintf(Messages::$messages['length_too_long'],
+                                                $params['max']);
                 }
 
                 return $this->createResult($flag ?? TRUE);

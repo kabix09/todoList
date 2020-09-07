@@ -1,12 +1,13 @@
 <?php
 require_once "../vendor/autoload.php";
 
-define('FORM_WRAPPER', "../config/formWrapper.config.php");
+use App\Form\Factory\Factory;
+use App\Token\Token;
+
 define('FORM_CONFIG', "../config/form.config.php");
 define('LOG_FORM', "../config/logForm.config.php");
 
-use App\Form\Factory\Factory;
-use App\Token\Token;
+
 /*
  * $errors = [
  *  "wrong Nickname",

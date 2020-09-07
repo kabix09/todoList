@@ -3,7 +3,11 @@ require_once '../init.php';
 
 use App\Token\Token;
 
+define("FILTER", $_SESSION['ROOT_PATH'] . './config/filter.config.php');
+define("LOG_ASSIGNMENTS", $_SESSION['ROOT_PATH'] . './config/logAssignments.config.php');
+
 /*
+ * toDo !!!
  * $recaptcha = '';
  */
 
@@ -14,43 +18,63 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
 {
     include ROOT_PATH . './templates/login.php';
     exit();
-}
-
-if($_SERVER['REQUEST_METHOD'] !== 'POST')
+}elseif($_SERVER['REQUEST_METHOD'] !== 'POST')
 {
-    header("Location: {$_SESSION['ROOT_PATH']} index.php");
-}
+    header("Location: ../templates/error/404.php");
+}else{
+        // 0 - remove old errors
+    if(isset($_SESSION['logForm']))
+        unset($_SESSION['logForm']);
 
-echo '<pre>';
-    var_dump($_POST);
-echo '</pre>';
+        // 1 - check hidden token
+    if(!isset($_SESSION['token']))
+        exit("token doesn't exists on server side ://");
 
-unset($_POST['submit']);
+    if(sodium_compare(
+            (new Token($_SESSION['token']))->hash()->getToken(),
+            (new Token($_POST['hidden']))->decode()->getToken()
+        ) !== 0
+    ) throw new RuntimeException('detected cross-site attack on login form');
+    else
+        echo "correct Token </br>";
 
-// 1 check hidden token
-if(!isset($_SESSION['token']))
-    exit("token doesn't exists on server side ://");
+    unset($_SESSION['token']);
 
-if(sodium_compare(
-        (new token($_SESSION['token']))->hash()->getToken(),
-        (new Token($_POST['hidden']))->decode()->getToken()
-    ) !== 0
-) throw new RuntimeException('detected cross-site attack on login form');
+            // remove POST data and operate on local variable
+    $formData = $_POST;
+    unset($_POST);
 
-unset($_SESSION['token']);
-
-echo "correct Token";
     //-------------------------------------------------------------------------------------
 
-    // 2 - filter data
+        // 2 - filter data
+    $filter = new App\Filter\Filter((include FILTER)['filters'], include LOG_ASSIGNMENTS);
+    $filter->process($formData);
 
-    // 3 - valid data
+    foreach ($filter->getMessages() as $key => $value)
+    {
+        $_SESSION['logForm'][$key] = $value;
+    }
 
-    // check password
+            //  if there is any error message, redirect to login form
+    if(isset($_SESSION['logForm'])) {
+        header("Location: ./login.php");
+    }else
+        {
+        echo '<pre>';
+            var_dump($filter->getItemsAsArray());
+        echo '</pre>';
+    }
 
-    // insert into db
+    /*
+     * toDO !!!
+     * 3 - valid data
+     * 4 - check password
+     * 5 - header
+     */
+}
 
-    // header
+
+
 
 
 

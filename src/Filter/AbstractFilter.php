@@ -6,6 +6,7 @@ use UnexpectedValueException;
 abstract class AbstractFilter
 {
     const BAD_CALLBACK = 'Value must be e.g function or callback';
+    const DEFAULT_MESSAGE_FORMAT = '%20s : %60s';
     const DEFAULT_SEPARATOR = '</br>' . PHP_EOL;
     const DEFAULT_MISSING_MESSAGE = 'Missing Item';
 
@@ -23,6 +24,7 @@ abstract class AbstractFilter
      * assignments - it is a list that defines the (form) fields and their constraints e.g
      *      'first_name' => [
                 ['key' => 'length', 'params' => ['length' => 128]]
+
      */
     public function __construct(array $callbacks, array $assignments, string $defaultSeparator = NULL, string $defaultMissingMessage = NULL)
     {
@@ -33,6 +35,7 @@ abstract class AbstractFilter
         $this->setMissingMessage($defaultMissingMessage ?? self::DEFAULT_MISSING_MESSAGE);
     }
 
+            // -------- callbacks --------
     /**
      * @return mixed
      */
@@ -69,27 +72,31 @@ abstract class AbstractFilter
         return FALSE;
     }
 
+            // -------- results --------
     public function getResults() : array{
         return $this->results;
     }
 
+            // -------- messages --------
     public function getMessages(){
+
         foreach ($this->results as $key => $item)
         {
-            if($item->message) yield $item->message;
+            if($item->getMessages()) yield $key => $item->getMessages();
         }
 
         return array();
     }
 
     /**
-     * @param array $assigments
+     * @param array $assignments
      */
     public function setAssignments(array $assignments): void
     {
         $this->assignments = $assignments;
     }
 
+            // ----------------    -------------    ----------------
     /**
      * @param string $messageSeparator
      */
@@ -104,5 +111,32 @@ abstract class AbstractFilter
     public function setMissingMessage(string $missingMessage): void
     {
         $this->missingMessage = $missingMessage;
+    }
+
+
+            // -------- ---- functions ---- --------
+    public function getMessageString($width = 80, $format = NULL){
+        if(!$format)
+            $format = self::DEFAULT_MESSAGE_FORMAT . $this->messageSeparator;
+        $output = '';
+        if($this->results){
+            foreach ($this->results as $key => $value) {
+                if ($value->getMessages()) {
+                    foreach ($value->getMessages() as $message)
+                        $output .= sprintf($format, $key, trim($message));
+                }
+            }
+        }
+        return $output;
+    }
+
+    public function getItemsAsArray()
+    {
+        $return = array();
+        if ($this->results) {
+            foreach ($this->results as $key => $item)
+                $return[$key] = $item->getItem();
+        }
+        return $return;
     }
 }

@@ -11,7 +11,8 @@ return $logForm = [
             'placeholder' => "nickname",
             'required' => "",
             'value' => ""
-        ]
+        ],
+        "errors" => $_SESSION['logForm']['nick'] ?? NULL
     ],
 
     "password" => [
@@ -25,7 +26,8 @@ return $logForm = [
             'placeholder' => "password",
             'required' => "",
             'value' => ""
-        ]
+        ],
+        "errors" => $_SESSION['logForm']['password'] ?? NULL
     ],
 
     "hidden" => [
