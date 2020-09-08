@@ -40,6 +40,7 @@ final class Filter extends AbstractFilter
 
             $result = $this->callbacks[$task['key']]($this->results[$key]->getItem(), $task['params']);
 
-            $this->results[$key]->mergeResults($result);}
+            $this->results[$key]->mergeResults($result);
+        }
     }
 }

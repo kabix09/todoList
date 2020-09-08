@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 namespace App\Filter\Elements;
 
 final class Result
@@ -7,9 +7,10 @@ final class Result
     protected $item;    // handle input value or bool result
     protected $messages = array();  // handle array of messages
 
-    public function __construct($value, $messages)
+    public function __construct($value, $messages, $flag = TRUE)
     {
         $this->item = $value;
+        $this->flag = $flag;
 
         if(is_array($messages))
             $this->messages = $messages;
@@ -19,11 +20,11 @@ final class Result
 
     public function mergeResults(Result $result){
 
-        /*if (is_bool($this->item) && is_bool($result->item))
-            $this->item = ($this->item && $result->item);   // if anywhere value is false then result will be false
-        else
-            $this->item = $result->item;
-*/
+        //if (is_bool($this->item) && is_bool($result->item))
+        //    $this->item = ($this->item && $result->item);   // if anywhere value is false then result will be false
+        //else
+        $this->item = $result->item;
+        $this->flag = ($this->flag && $result->flag);
         $this->mergeMessages($result);
     }
 

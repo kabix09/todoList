@@ -8,9 +8,9 @@ abstract class CallbackAbstract implements CallbackInterface
     protected $message;
     protected $filteredValue;
 
-    protected function createResult(?bool $value = NULL) : Result
+    protected function createResult(?bool $flag = NULL) : Result
     {
-        return new Result($value ?? $this->filteredValue, $this->message ?? array());
+        return new Result($this->filteredValue, $this->message ?? array(), $flag);
     }
 
     protected function resetOldMessage()
