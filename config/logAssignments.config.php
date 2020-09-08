@@ -3,7 +3,7 @@
 return $logAssignments = [
     '*' => [
         ['key' => 'trim', 'params' => []],
-        ['key' => 'strip_tags', 'params' => []]
+        ['key' => 'htmlentities', 'params' => ['ENT_QUOTES']]
     ],
     'nick' => [
         ['key' => 'length', 'params' => ['length' => 30]]

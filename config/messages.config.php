@@ -14,6 +14,7 @@ Messages::setMessages(
         'strip_tags' => 'Tags were removed from this item',
         'filter_float' => 'Converted to a decimal number',
         'phone' => 'Phone number is [+n] nnn-nnn-nnnn',
-        'filter_length' => 'Reduced to specified length'
+        'filter_length' => 'Reduced to specified length',
+        'htmlentities' => 'Converted characters to HTML entities'
     ]
 );

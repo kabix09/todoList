@@ -7,7 +7,8 @@ use App\Connection\Connection;
 use App\Repository\UserRepository;
 
 define("DB_CONFIG", $_SESSION['ROOT_PATH'] . './config/db.config.php');
-define("FILTER", $_SESSION['ROOT_PATH'] . './config/filter.config.php');
+define("FILTER_VALIDATE", $_SESSION['ROOT_PATH'] . './config/filter_validate.config.php');
+define("FILTER_SANITIZE", $_SESSION['ROOT_PATH'] . './config/filter_sanitize.config.php');
 define("LOG_ASSIGNMENTS", $_SESSION['ROOT_PATH'] . './config/logAssignments.config.php');
 
 if(!isset($_POST['hidden']))
@@ -38,13 +39,18 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     unset($_SESSION['token']);
 
             // remove POST data and operate on local variable
-    $formData = $_POST;
+    $formData = array();
+
+    foreach($_POST as $key => $value)
+        $formData[$key] = htmlentities($value);
+
     unset($_POST);
 
     //-------------------------------------------------------------------------------------
 
-        // 2 - filter data
-    $filter = new Filter((include FILTER)['filters'], include LOG_ASSIGNMENTS);
+        // 2 - filter data & 3 - valid data
+    $filter = new Filter(
+        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include LOG_ASSIGNMENTS);
     $filter->process($formData);
 
     foreach ($filter->getMessages() as $key => $value)
@@ -55,15 +61,8 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
             //  if there is any error message, redirect to login form
     if(isset($_SESSION['logForm'])) {
         header("Location: ./login.php");
-    }else {
-        echo '<pre>';
-            var_dump($filter->getItemsAsArray());
-        echo '</pre>';
+        exit();
     }
-
-        // toDO !!! 3 - valid data
-    //$filter = new Filter((include FILTER)['validators'], include LOG_ASSIGNMENTS);
-    //$filter->process($formData);
 
         // 4 - find user by nick
     $userRepo = new UserRepository(new Connection(include DB_CONFIG));
@@ -73,6 +72,7 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     {
         $_SESSION['logForm']['nick'] = ['incorrect login'];
         header("Location: ./login.php");
+        exit();
     }
 
         // 4 - check password
@@ -80,7 +80,9 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     {
         $_SESSION['logForm']['password'] = ['incorrect password'];
         header("Location: ./login.php");
+        exit();
     }
+
     $user->removePassword();
     $_SESSION['user'] = $user;
 
