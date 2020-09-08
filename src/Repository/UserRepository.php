@@ -46,7 +46,10 @@ final class UserRepository extends BaseRepository
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
         $statement->closeCursor();
 
-        return $this->entityFactory->createEntity($result);
+        if($result)
+            return $this->entityFactory->createEntity($result);
+        else
+            return NULL;
     }
 
     public function fetchByEmail(string $email) : ?User{
@@ -60,7 +63,10 @@ final class UserRepository extends BaseRepository
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
         $statement->closeCursor();
 
-        return $this->entityFactory->createEntity($result);
+        if($result)
+            return $this->entityFactory->createEntity($result);
+        else
+            return NULL;
     }
 
     public function fetchByLastLoginDate(){}
@@ -78,6 +84,9 @@ final class UserRepository extends BaseRepository
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
         $statement->closeCursor();
 
-        return $this->entityFactory->createEntityCollection($result);
+        if($result)
+            return $this->entityFactory->createEntityCollection($result);
+        else
+            return NULL;
     }
 }

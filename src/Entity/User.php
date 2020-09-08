@@ -80,6 +80,9 @@ final class User extends Base
         $this->password = $password;
     }
 
+    public function removePassword():void{
+        unset($this->password);
+    }
     /**
      * @return ?string
      */
