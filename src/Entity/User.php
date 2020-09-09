@@ -12,7 +12,8 @@ final class User extends Base
         "password" => "password",
         "last_login_date" => "lastLoginDate",
         "create_account_date" => "createAccountDate",
-        "account_status" => "status"
+        "account_status" => "status",
+        "end_ban" => "endBan"
     ];
 
     private string $nick;
@@ -21,6 +22,7 @@ final class User extends Base
     private string $lastLoginDate;
     private string $createAccountDate;
     private string $status;
+    private ?string $endBan;
 
     public function __construct()
     {
@@ -95,12 +97,9 @@ final class User extends Base
      * @param string|null $lastLoginDate
      * @throws \Exception
      */
-    public function setLastLoginDate(?string $lastLoginDate): void
+    public function setLastLoginDate(?string $lastLoginDate = NULL): void
     {
-        if(!is_null($lastLoginDate))
-            $this->lastLoginDate = (new \DateTime($lastLoginDate))->format(Base::DATE_FORMAT);
-        else
-            $this->lastLoginDate = NULL;
+        $this->lastLoginDate = $lastLoginDate;
     }
 
     /**
@@ -115,12 +114,9 @@ final class User extends Base
      * @param string|null $createAccountDate
      * @throws \Exception
      */
-    public function setCreateAccountDate(?string $createAccountDate): void
+    public function setCreateAccountDate(?string $createAccountDate = NULL): void
     {
-        if(!is_null($createAccountDate))
-            $this->createAccountDate = (new \DateTime($createAccountDate))->format(Base::DATE_FORMAT);
-        else
-            $this->createAccountDate = NULL;
+        $this->createAccountDate = $createAccountDate;
     }
 
     /**
@@ -137,6 +133,22 @@ final class User extends Base
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndBan(): ?string
+    {
+        return $this->endBan;
+    }
+
+    /**
+     * @param string $endBan
+     */
+    public function setEndBan(?string $endBan): void
+    {
+        $this->endBan = $endBan;
     }
 
 }
