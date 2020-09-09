@@ -12,6 +12,19 @@ final class UserManager
         $this->repository = $userRepository;
     }
 
+    public function changePassword(User $user, string $password)
+    {
+        $user->setPassword(
+            password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3])
+        );
+
+        return
+            $this->repository->update($user, [
+                    "where" => NULL,
+                    "AND" => ["nick = '{$user->getNick()}'", "email = '{$user->getEmail()}'"]
+                ]);
+    }
+
     public function activateTheAccount(User $user){
         $user->setStatus('active');
 
