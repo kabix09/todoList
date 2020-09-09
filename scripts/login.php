@@ -83,11 +83,14 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
         exit();
     }
 
-    $user->removePassword();
+    //$user->removePassword();
     $_SESSION['user'] = $user;
 
         //5 - header
-    header("Location: ../index.php");
+    if($_SESSION['user']->getStatus() === 'active')
+        header("Location: ../index.php");
+    else
+        header("Location: ../templates/accountStatus.php");
 }
 
 
