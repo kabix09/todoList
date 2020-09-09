@@ -6,7 +6,6 @@ use App\Connection\QueryBuilder;
 use App\Entity\Base;
 use App\Entity\Factory\BaseFactory;
 
-
 abstract class BaseRepository implements Repository
 {
     protected $connection;
@@ -75,7 +74,7 @@ abstract class BaseRepository implements Repository
         );
 
         foreach ($base as $key => $value){
-            $statement->bindValue(":" . $key, $value, \PDO::PARAM_STR);
+                $statement->bindValue(":" . $key, $value, \PDO::PARAM_STR);
         }
 
         if($statement->execute())   //var_dump($statement->errorInfo());

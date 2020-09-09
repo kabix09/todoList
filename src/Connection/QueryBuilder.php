@@ -97,13 +97,13 @@ class QueryBuilder
         return self::$classInstance;
     }
 
-    public static function and(?string $a = NULL) : self{
-        self::$where[] = trim(" AND " . $a);
+    public static function and(?string $a = NULL, ?string $b = NULL) : self{
+        self::$where[] = trim($b . " AND " . $a);
         return self::$classInstance;
     }
 
-    public static function or(?string $a = NULL) : self{
-        self::$where[] = trim(" OR " . $a);
+    public static function or(?string $a = NULL, ?string $b = NULL) : self{
+        self::$where[] = trim($b . " OR " . $a);
         return self::$classInstance;
     }
 
