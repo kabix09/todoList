@@ -1,11 +1,12 @@
 <?php
 require_once "../vendor/autoload.php";
 
-define('FORM_WRAPPER', "../config/formWrapper.config.php");
+use App\Form\Factory\Factory;
+use App\Token\Token;
+
 define('FORM_CONFIG', "../config/form.config.php");
 define('REG_FORM', "../config/regForm.config.php");
 
-use App\Form\Factory\Factory;
 
 /*
  * $errors = [
@@ -17,7 +18,11 @@ use App\Form\Factory\Factory;
  */
 
 $formfactory = new Factory();
-$formfactory->generate(include REG_FORM);
+$formfactory->generate(include REG_FORM,
+                        (new Token($_SESSION['token']))
+                            ->hash()
+                            ->encode()
+                            ->getToken());
 ?>
 
 <?= $formfactory->render(include FORM_CONFIG, FALSE, TRUE); ?>

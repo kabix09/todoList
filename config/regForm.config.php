@@ -11,7 +11,8 @@ return $regForm = [
             'placeholder' => "nickname",
             'required' => "",
             'value' => ""
-        ]
+        ],
+        "errors" => $_SESSION['regForm']['nick'] ?? NULL
     ],
 
     "email" => [
@@ -25,7 +26,8 @@ return $regForm = [
             'placeholder' => "email",
             'required' => "",
             'value' => ""
-        ]
+        ],
+        "errors" => $_SESSION['regForm']['email'] ?? NULL
     ],
 
     "password" => [
@@ -39,7 +41,8 @@ return $regForm = [
             'placeholder' => "password",
             'required' => "",
             'value' => ""
-        ]
+        ],
+        "errors" => $_SESSION['regForm']['password'] ?? NULL
     ],
 
     "repeatPassword" => [
@@ -53,6 +56,17 @@ return $regForm = [
             'placeholder' => "password",
             'required' => "",
             'value' => ""
+        ],
+        "errors" => $_SESSION['regForm']['repeatPassword'] ?? NULL
+    ],
+
+    "hidden" => [
+        "class" => 'App\Form\Generic',
+        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "label" => '',
+        "wrappers" => include "formWrapper.config.php",
+        "attributes" => [
+            "value" => ''
         ]
     ],
 
