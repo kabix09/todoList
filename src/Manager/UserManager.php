@@ -26,7 +26,7 @@ final class UserManager
         return $this->user;
     }
 
-    public function hashPassword(?User $user = NULL, string $password) : void{
+    public function hashPassword(string $password, ?User $user = NULL) : void{
         ($user ?? $this->user)->setPassword(
             password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3])
         );

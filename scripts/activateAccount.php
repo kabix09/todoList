@@ -6,7 +6,7 @@ use App\Repository\UserRepository;
 
 define("DB_CONFIG", $_SESSION['ROOT_PATH'] . './config/db.config.php');
 
-$new = new UserManager(new UserRepository(new Connection(include DB_CONFIG)));
+$new = new UserManager(NULL, new UserRepository(new Connection(include DB_CONFIG)));
 
 if($new->activateTheAccount($_SESSION['user']))
     header("Location: ../index.php");

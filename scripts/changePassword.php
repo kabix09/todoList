@@ -45,10 +45,6 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
 
     unset($_POST);
 
-    echo '<pre>';
-    var_dump($formData);
-    echo '</pre>';
-
     //-------------------------------------------------------------------------------------
 
         // 2 - filter data & 3 - valid data
@@ -75,7 +71,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
     }
 
         // 5 - change password
-    $userManager = new UserManager(
+    $userManager = new UserManager(NULL,
                         new UserRepository(
                             new Connection(include DB_CONFIG)));
 
