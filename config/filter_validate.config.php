@@ -39,6 +39,8 @@ return $filterValidate = [
         {
             $this->resetOldMessage();
 
+            $this->filteredValue = $item;
+
             if(isset($params['min']) && (strlen($item) < $params['min']))
             {
                 $flag = FALSE;

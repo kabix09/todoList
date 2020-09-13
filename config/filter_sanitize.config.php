@@ -19,5 +19,22 @@ return $filterSanitize = [
 
             return $this->createResult($flag ?? TRUE);
         }
+    },
+    'email_sanitize' => new class () extends CallbackAbstract{
+
+        public function __invoke($item, $params): Result
+        {
+            $this->resetOldMessage();
+
+            $this->filteredValue = filter_var($item, FILTER_SANITIZE_EMAIL);
+
+            if($this->filteredValue !== $item)
+            {
+                $flag = FALSE;
+                $this->message[] = Messages::getMessage('email');
+            }
+
+            return $this->createResult($flag ?? TRUE);
+        }
     }
 ];
