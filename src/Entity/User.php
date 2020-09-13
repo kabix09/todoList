@@ -1,6 +1,8 @@
 <?php
 namespace App\Entity;
 
+use Exception;
+
 final class User extends Base
 {
     const TABLE_NAME = "user";
@@ -32,6 +34,7 @@ final class User extends Base
         $this->lastLoginDate = "";
         $this->createAccountDate = "";
         $this->status = "";
+        $this->endBan  = NULL;
     }
 
     /**
@@ -85,8 +88,9 @@ final class User extends Base
     public function removePassword():void{
         unset($this->password);
     }
+
     /**
-     * @return ?string
+     * @return string|null ?string
      */
     public function getLastLoginDate(): ?string
     {
@@ -95,7 +99,6 @@ final class User extends Base
 
     /**
      * @param string|null $lastLoginDate
-     * @throws \Exception
      */
     public function setLastLoginDate(?string $lastLoginDate = NULL): void
     {
@@ -103,7 +106,7 @@ final class User extends Base
     }
 
     /**
-     * @return ?string
+     * @return string|null ?string
      */
     public function getCreateAccountDate(): ?string
     {
@@ -112,7 +115,6 @@ final class User extends Base
 
     /**
      * @param string|null $createAccountDate
-     * @throws \Exception
      */
     public function setCreateAccountDate(?string $createAccountDate = NULL): void
     {

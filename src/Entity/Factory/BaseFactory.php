@@ -24,7 +24,8 @@ abstract class BaseFactory implements EntityFactory
         if($data){
             foreach ($objectInstance::MAPPING as $dbColumnName => $objectPropertyName){
                 $method = "set" . ucfirst($objectPropertyName);
-                $objectInstance->$method($data[$dbColumnName]);
+                if (isset($data[$dbColumnName]))    // jesli istnieje
+                    $objectInstance->$method($data[$dbColumnName] ?? "");   // TODO ??? jesli istnieje ale nie am ustawionej wartosci -> ""
             }
             return $objectInstance;
         }

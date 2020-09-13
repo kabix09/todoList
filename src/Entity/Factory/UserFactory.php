@@ -22,4 +22,8 @@ final class UserFactory extends BaseFactory
     {
         return User::class;
     }
+
+    public function newUser() : User{
+        return new User();
+    }
 }

@@ -46,7 +46,9 @@ abstract class BaseRepository implements Repository
         if(!is_array($base))
             return FALSE;
 
-       $statement = $this->connection->getConnection()->prepare(
+        $this->clearEmptyValue($base);
+
+        $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::insert($this->dbName, array_keys($base))::getSql()
         );
 
@@ -123,6 +125,15 @@ abstract class BaseRepository implements Repository
                 else
                     QueryBuilder::$command($value);
             }
+        }
+    }
+
+    private function clearEmptyValue(array &$data)
+    {
+        foreach ($data as $key => $value)
+        {
+            if(is_null($value) || empty($value))
+                unset($data[$key]);
         }
     }
 }
