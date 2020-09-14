@@ -7,7 +7,7 @@
 </head>
 
 <body style="">
-    <header> My Todo List </header>
+<header style="text-align: center; border-bottom: 1px solid black"><h2>My Todo List</h2></header>
     <nav>
         <ul>
             <?php if(!isset($_SESSION['user'])):?>
@@ -19,34 +19,37 @@
             <?php endif ?>
         </ul>
     </nav>
-    <main>
-        <h4> Hello
+    <main style="background-color: aliceblue; padding: 10px; text-align: center;">
+        <h3> Hello
             <?php printf( isset($_SESSION['user']) ?
                 $_SESSION['user']->getNick() :
                 "world :))");
             ?>
-        </h4>
+        </h3>
 
         <?php if(isset($_SESSION['user'])): ?>
-        <div id="mainBlock">
-            <?php if(isset($_SESSION['task'])):
-                foreach ($_SESSION['task'] as $task): ?>
-                <div class="card" style="height: 100px; width: 60px;">
-                    <span><?= $task->getName(); ?></span>
-                    <span><?= $task->getAuthor(); ?></span>
-                    <div><a href="">remove</a></div>
+        <section id="mainBlock"
+             style="display:flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly; background-color: azure; text-align: left;">
+            <?php if(isset($_SESSION['tasks'])):
+                foreach ($_SESSION['tasks'] as $task): ?>
+                <div class="card" style="height: 100px; width: 300px; margin: 5px; padding:10px; background-color: #97d1cb; border-radius: 15px; float:left;">
+                    <span><b>Title:</b> <?= $task->getTitle(); ?></span><br>
+                    <span><b>Author:</b> <?= $task->getAuthor(); ?></span><br>
+                    <span><b>Content:</b> <?= $task->getContent(); ?></span><br><br>
+                    <div><a href="./scripts/removeTask.php?id=<?= $task->getId(); ?>&owner=<?= $task->getOwner()?>">remove</a></div>
                 </div>
                 <?php endforeach; ?>
             <?php else: ?>
-            <h3>You already haven't any task!!!</h3>
+            <h3 style="clear: both">You already haven't any task!!!</h3>
             <?php endif; ?>
-        </div>
-        <div>
-            <a href="">Create Task</a>
+        </section>
+        <div style="padding: 10px;">
+            <a href="./scripts/createTask.php">Create Task</a>
         </div>
         <?php endif; ?>
     </main>
-    <footer>
+    <footer
+        style="padding: 10px 15px 10px 15px; background-color: white; color: gray">
         @kabix09 2020
     </footer>
 </body>
