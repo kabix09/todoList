@@ -9,6 +9,7 @@ class FormConstants
     const LABEL = 'label';
     const ERRORS = 'error';
 
+    const TEXTAREA = 'textarea';
     const TYPE_TEXT = 'text';
     const TYPE_EMAIL = 'email';
     const TYPE_PASSWORD = 'password';
