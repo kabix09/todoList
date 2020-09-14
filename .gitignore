@@ -3,3 +3,4 @@ vendor/
 config/db.config.php
 composer.lock
 git
+tests/

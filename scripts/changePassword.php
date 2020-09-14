@@ -7,10 +7,9 @@ use App\Connection\Connection;
 use App\Repository\UserRepository;
 use App\Manager\UserManager;
 
-define("DB_CONFIG", $_SESSION['ROOT_PATH'] . './config/db.config.php');
-define("FILTER_VALIDATE", $_SESSION['ROOT_PATH'] . './config/filter_validate.config.php');
-define("FILTER_SANITIZE", $_SESSION['ROOT_PATH'] . './config/filter_sanitize.config.php');
-define("CHANGE_PASSWORD_ASSIGNMENTS", $_SESSION['ROOT_PATH'] . './config/changePasswordAssignments.config.php');
+define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
+define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
+define("CHANGE_PASSWORD_ASSIGNMENTS", ROOT_PATH . './config/changePasswordAssignments.config.php');
 
 if(!isset($_POST['hidden']))
     $_SESSION['token'] = (new Token())->generate()->binToHex()->getToken();

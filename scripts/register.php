@@ -6,12 +6,10 @@ use App\Filter\Filter;
 use App\Connection\Connection;
 use App\Repository\UserRepository;
 use App\Manager\UserManager;
-use App\Entity\Factory\UserFactory;
 
-define("DB_CONFIG", $_SESSION['ROOT_PATH'] . './config/db.config.php');
-define("FILTER_VALIDATE", $_SESSION['ROOT_PATH'] . './config/filter_validate.config.php');
-define("FILTER_SANITIZE", $_SESSION['ROOT_PATH'] . './config/filter_sanitize.config.php');
-define("REG_ASSIGNMENTS", $_SESSION['ROOT_PATH'] . './config/regAssignments.config.php');
+define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
+define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
+define("REG_ASSIGNMENTS", ROOT_PATH . './config/regAssignments.config.php');
 
 if(!isset($_POST['hidden']))
     $_SESSION['token'] = (new Token())->generate()->binToHex()->getToken();
@@ -41,7 +39,7 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     ) throw new RuntimeException('detected cross-site attack on login form');
 
     unset($_SESSION['token']);
-    unset($_POST['token']);
+    unset($_POST['hidden']);
 
     // remove POST data and operate on local variable
     $formData = array();
