@@ -1,10 +1,10 @@
 <?php
 require_once '../init.php';
 
+use App\Module\Login\Login;
+use App\Module\Login\Observers\DateObserver;
+use App\Module\Login\Observers\ErrorObserver;
 use App\Token\Token;
-use App\Filter\Filter;
-use App\Connection\Connection;
-use App\Repository\UserRepository;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
 define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
@@ -25,19 +25,9 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     if(isset($_SESSION['logForm']))
         unset($_SESSION['logForm']);
 
-        // 1 - check hidden token
-    if(!isset($_SESSION['token']))
-        exit("token doesn't exists on server side ://");
+    unset($_POST['submit']);
 
-    if(sodium_compare(
-            (new Token($_SESSION['token']))->hash()->getToken(),
-            (new Token($_POST['hidden']))->decode()->getToken()
-        ) !== 0
-    ) throw new RuntimeException('detected cross-site attack on login form');
-
-    unset($_SESSION['token']);
-
-            // remove POST data and operate on local variable
+        // remove POST data and operate on local variable
     $formData = array();
 
     foreach($_POST as $key => $value)
@@ -45,55 +35,28 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
 
     unset($_POST);
 
-    //-------------------------------------------------------------------------------------
+        // 1 - create login logic instance
+    $login = new Login($formData, include DB_CONFIG);
 
-        // 2 - filter data & 3 - valid data
-    $filter = new Filter(
-        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include LOG_ASSIGNMENTS);
-    $filter->process($formData);
+            // create usefully observers
+    new ErrorObserver($login);
+    new DateObserver($login);
 
-    foreach ($filter->getMessages() as $key => $value)
+            // execute login logic
+    if($login->loginHandler($_SESSION['token'],
+        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include LOG_ASSIGNMENTS))
     {
-        $_SESSION['logForm'][$key] = $value;
-    }
+        unset($_SESSION['token']);
 
-            //  if there is any error message, redirect to login form
-    if(isset($_SESSION['logForm'])) {
+        $_SESSION['login'] = TRUE;
+        $_SESSION['user'] = $login->getUser();
+
+        if($_SESSION['user']->getStatus() === 'active')
+            header("Location: ../index.php");
+        else
+            header("Location: ../templates/accountStatus.php");
+    }else
         header("Location: ./login.php");
-        exit();
-    }
+        //throw new RuntimeException('unexpected error...');
 
-        // 4 - find user by nick
-    $userRepo = new UserRepository(new Connection(include DB_CONFIG));
-    $user =  $userRepo->fetchByNick($formData['nick']);
-
-    if(! $user )
-    {
-        $_SESSION['logForm']['nick'] = ['incorrect login'];
-        header("Location: ./login.php");
-        exit();
-    }
-
-        // 4 - check password
-    if(!password_verify($formData['password'], $user->getPassword()))
-    {
-        $_SESSION['logForm']['password'] = ['incorrect password'];
-        header("Location: ./login.php");
-        exit();
-    }
-
-    //$user->removePassword();
-    $_SESSION['user'] = $user;
-
-        //5 - header
-    if($_SESSION['user']->getStatus() === 'active')
-        header("Location: ../index.php");
-    else
-        header("Location: ../templates/accountStatus.php");
 }
-
-
-
-
-
-
