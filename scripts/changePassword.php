@@ -21,8 +21,8 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
     header("Location: ../templates/errors/404.php");
 }else{
         // 0 - remove old errors
-    if(isset($_SESSION['changePwdForm']))
-        unset($_SESSION['changePwdForm']);
+    if(isset($_SESSION['formErrors']))
+        unset($_SESSION['formErrors']);
 
         // 1 - check hidden token
     if(!isset($_SESSION['token']))
@@ -57,7 +57,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
     }
 
         //  if there is any error message, redirect to login form
-    if(isset($_SESSION['changePwdForm'])) {
+    if(isset($_SESSION['formErrors'])) {
         header("Location: ./changePassword.php");
         exit();
     }

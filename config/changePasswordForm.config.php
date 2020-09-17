@@ -12,7 +12,7 @@ return $logForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['changePwdForm']['password'] ?? NULL
+        "errors" => $_SESSION['formErrors']['password'] ?? NULL
     ],
 
     "repeatPassword" => [
@@ -27,7 +27,7 @@ return $logForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['changePwdForm']['repeatPassword'] ?? NULL
+        "errors" => $_SESSION['formErrors']['repeatPassword'] ?? NULL
     ],
 
     "hidden" => [

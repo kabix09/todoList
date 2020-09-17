@@ -12,7 +12,7 @@ return $taskForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['taskForm']['title'] ?? NULL
+        "errors" => $_SESSION['formErrors']['title'] ?? NULL
     ],
 
     "content" => [
@@ -27,7 +27,7 @@ return $taskForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['taskForm']['content'] ?? NULL
+        "errors" => $_SESSION['formErrors']['content'] ?? NULL
     ],
 
     "start_date" => [
@@ -42,7 +42,7 @@ return $taskForm = [
             'required' => "",
             'value' => (new \DateTime())->format('Y-m-d')
         ],
-        "errors" => $_SESSION['taskForm']['startDate'] ?? NULL
+        "errors" => $_SESSION['formErrors']['startDate'] ?? NULL
     ],
 
     "target_end_date" => [
@@ -55,7 +55,7 @@ return $taskForm = [
             "maxLength" => 35,
             'placeholder' => "endDate"
         ],
-        "errors" => $_SESSION['taskForm']['endDate'] ?? NULL
+        "errors" => $_SESSION['formErrors']['endDate'] ?? NULL
     ],
 
     "hidden" => [
