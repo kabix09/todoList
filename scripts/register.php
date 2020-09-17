@@ -1,11 +1,10 @@
 <?php
 require_once '../init.php';
 
+use App\Module\Register\Register;
+use App\Module\Observer\ErrorObserver;
+use App\Module\Login\Observers\MailObserver;
 use App\Token\Token;
-use App\Filter\Filter;
-use App\Connection\Connection;
-use App\Repository\UserRepository;
-use App\Manager\UserManager;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
 define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
@@ -23,25 +22,12 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     header("Location: ../templates/errors/404.php");
 }else{
         // 0 - remove old errors
-    if(isset($_SESSION['regForm']))
-        unset($_SESSION['regForm']);
+    if(isset($_SESSION['formErrors']))
+        unset($_SESSION['formErrors']);
 
     unset($_POST['submit']);
 
-        // 1 - check hidden token
-    if(!isset($_SESSION['token']))
-        exit("token doesn't exists on server side ://");
-
-    if(sodium_compare(
-            (new Token($_SESSION['token']))->hash()->getToken(),
-            (new Token($_POST['hidden']))->decode()->getToken()
-        ) !== 0
-    ) throw new RuntimeException('detected cross-site attack on login form');
-
-    unset($_SESSION['token']);
-    unset($_POST['hidden']);
-
-    // remove POST data and operate on local variable
+            // remove POST data and operate on local variable
     $formData = array();
 
     foreach($_POST as $key => $value)
@@ -49,61 +35,29 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
 
     unset($_POST);
 
-    //-------------------------------------------------------------------------------------
+        // 1 - create register logic instance
+    $register = new Register($formData, include DB_CONFIG);
 
-        // 2 - filter data & 3 - valid data
-    $filter = new Filter(
-        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include REG_ASSIGNMENTS);
-    $filter->process($formData);
+            // create usefully observers
+    new ErrorObserver($register);
+    new MailObserver($register);
 
-    foreach ($filter->getMessages() as $key => $value)
+            // execute register logic
+    if($register->registerHandler($_SESSION['token'],
+        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include REG_ASSIGNMENTS))
     {
-        $_SESSION['regForm'][$key] = $value;
-    }
+        unset($_SESSION['token']);
 
-            //  if there is any error message, redirect to login form
-    if(isset($_SESSION['regForm'])) {
-        header("Location: ./register.php");
-        exit();
-    }
+        $_SESSION['login'] = TRUE;
+        $_SESSION['user'] = $register->getUser(TRUE);
 
-        // 4 - find user by nick
-    $userRepo = new UserRepository(new Connection(include DB_CONFIG));
-    $user =  $userRepo->fetchByNick($formData['nick']);
-
-    if( $user )
-    {
-        $_SESSION['regForm']['nick'] = ['login already exists'];
-        header("Location: ./register.php");
-        exit();
-    }
-
-        // 4 - check if passwords are equals
-    if($formData['password'] !== $formData['repeatPassword']) {
-        $_SESSION['regForm']['repeatPassword'] = ['passwords must be the same'];
-        header("Location: ./register.php");
-        exit();
-    }
-
-    $userManager = new UserManager($formData,
-                        new UserRepository(
-                            new Connection(include DB_CONFIG)));
-
-    $userManager->hashPassword($formData['password']);
-
-    $newUser = $userManager->return();
-
-        // 5 - insert
-    if($userRepo->insert($newUser))
-    {
-        $_SESSION['user'] = $userRepo->fetchByNick($newUser->getNick());
-
-            // 6  - header
+            // 3 - set header
         if($_SESSION['user']->getStatus() === 'active')
             header("Location: ../index.php");
         else
             header("Location: ../templates/accountStatus.php");
-    }else{
-        throw new RuntimeException("system error - couldn't create new user :/");
-    }
+
+    }else
+        header("Location: ./register.php");
+
 }

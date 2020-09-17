@@ -12,7 +12,7 @@ return $regForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['regForm']['nick'] ?? NULL
+        "errors" => $_SESSION['formErrors']['nick'] ?? NULL
     ],
 
     "email" => [
@@ -27,7 +27,7 @@ return $regForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['regForm']['email'] ?? NULL
+        "errors" => $_SESSION['formErrors']['email'] ?? NULL
     ],
 
     "password" => [
@@ -42,7 +42,7 @@ return $regForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['regForm']['password'] ?? NULL
+        "errors" => $_SESSION['formErrors']['password'] ?? NULL
     ],
 
     "repeatPassword" => [
@@ -57,7 +57,7 @@ return $regForm = [
             'required' => "",
             'value' => ""
         ],
-        "errors" => $_SESSION['regForm']['repeatPassword'] ?? NULL
+        "errors" => $_SESSION['formErrors']['repeatPassword'] ?? NULL
     ],
 
     "hidden" => [
