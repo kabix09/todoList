@@ -1,8 +1,9 @@
 <?php
 require_once '../init.php';
 
+use App\Module\ErrorObserver;
+use App\Module\Password\ChangePwd;
 use App\Token\Token;
-use App\Filter\Filter;
 use App\Connection\Connection;
 use App\Repository\UserRepository;
 use App\Manager\UserManager;
@@ -21,22 +22,12 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
     header("Location: ../templates/errors/404.php");
 }else{
         // 0 - remove old errors
-    if(isset($_SESSION['formErrors']))
-        unset($_SESSION['formErrors']);
+    if(isset($_SESSION['changepwdErrors']))
+        unset($_SESSION['changepwdErrors']);
 
-        // 1 - check hidden token
-    if(!isset($_SESSION['token']))
-        exit("token doesn't exists on server side ://");
+    unset($_POST['submit']);
 
-    if(sodium_compare(
-            (new Token($_SESSION['token']))->hash()->getToken(),
-            (new Token($_POST['hidden']))->decode()->getToken()
-        ) !== 0
-    ) throw new RuntimeException('detected cross-site attack on login form');
-
-    unset($_SESSION['token']);
-
-    // remove POST data and operate on local variable
+            // remove POST data and operate on local variable
     $formData = array();
 
     foreach($_POST as $key => $value)
@@ -44,39 +35,21 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
 
     unset($_POST);
 
-    //-------------------------------------------------------------------------------------
+        // 1 - create register logic instance
+    $changePwd = new ChangePwd($formData, include DB_CONFIG, $_SESSION['user']);
 
-        // 2 - filter data & 3 - valid data
-    $filter = new Filter(
-        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include CHANGE_PASSWORD_ASSIGNMENTS);
-    $filter->process($formData);
+            // create usefully observers
+    new ErrorObserver($changePwd);
 
-    foreach ($filter->getMessages() as $key => $value)
+            // execute register logic
+    if($changePwd->passwordHandler($_SESSION['token'],
+        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include CHANGE_PASSWORD_ASSIGNMENTS))
     {
-        $_SESSION['changePwdForm'][$key] = $value;
-    }
+        unset($_SESSION['token']);
 
-        //  if there is any error message, redirect to login form
-    if(isset($_SESSION['formErrors'])) {
-        header("Location: ./changePassword.php");
-        exit();
-    }
-
-        // 4 - check if passwords are equals
-    if($formData['password'] !== $formData['repeatPassword']) {
-        $_SESSION['changePwdForm']['repeatPassword'] = ['passwords must be the same'];
-        header("Location: ./changePassword.php");
-        exit();
-    }
-
-        // 5 - change password
-    $userManager = new UserManager(NULL,
-                        new UserRepository(
-                            new Connection(include DB_CONFIG)));
-
-    if($userManager->changePassword($_SESSION['user'], $formData['password']))
+            // 2 - set header
         header("Location: ../index.php");   // TODO - go to info page "password changed successfull" ???
-    else
-        throw new RuntimeException("system error - the password could not be changed");
+    }else
+        header("Location: ./changePassword.php");
 }
 

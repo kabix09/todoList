@@ -3,7 +3,7 @@ return $logForm = [
     "password" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_PASSWORD,
-        "label" => "Get Password",
+        "label" => "New Password",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
             "id" => 'passwordID',
@@ -11,8 +11,8 @@ return $logForm = [
             'placeholder' => "password",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['password'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['password'] ?? NULL
     ],
 
     "repeatPassword" => [
@@ -26,8 +26,8 @@ return $logForm = [
             'placeholder' => "password",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['repeatPassword'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['repeatPassword'] ?? NULL
     ],
 
     "hidden" => [
@@ -43,10 +43,11 @@ return $logForm = [
     "submit" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_SUBMIT,
-        "label" => 'LogIn',
+        "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
-            "value" => 'submit'
+            "value" => 'submit',
+            "style" => 'float: right; margin-right: 10px;'
         ]
     ]
 ];

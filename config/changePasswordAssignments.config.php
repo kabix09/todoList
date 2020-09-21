@@ -7,5 +7,8 @@ return $changePasswordAssignments = [
     ],
     'password' => [
         ['key' => 'length', 'params' => ['min' => 8, 'max' => 35]]
+    ],
+    'repeatPassword' => [
+        ['key' => 'length', 'params' => ['min' => 8, 'max' => 35]]
     ]
 ];
