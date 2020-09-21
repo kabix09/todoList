@@ -15,14 +15,23 @@ class Connection extends PDOfactory
             $this->setData($data);
     }
 
-    public function connect(array $connectData = array()){
-        $pdoInstance = $this->makePDO();
+    public function connect(array $connectData = array())
+    {
+        try {
+            $pdoInstance = $this->makePDO();
 
-        if(is_null($pdoInstance))
-        {
-            throw new \RuntimeException("unrecognized PDO driver: this class don't support '". $this->data['driver'] . "'" . PHP_EOL);
-        }else{
-            $this->setConnection($pdoInstance);
+            if (is_null($pdoInstance))
+            {
+                throw new \RuntimeException("unrecognized PDO driver: this class don't support '" . $this->data['driver'] . "'" . PHP_EOL);
+            } else
+            {
+                $this->setConnection($pdoInstance);
+            }
+        }catch(\Throwable $e){
+            echo '<pre>';
+            var_dump($e->getMessage());
+            echo '</pre>';
+            die();
         }
 
     }
@@ -43,7 +52,12 @@ class Connection extends PDOfactory
     }
 
     private function factory(PDOfactory $PDOfactory){
-        return $PDOfactory->connect($this->data);
+        $pdo = $PDOfactory->connect($this->data);
+
+        if(is_null($pdo))
+            throw new \PDOException("unable to connect with database :/");
+
+        return $pdo;
     }
 
     protected function checkDriver(string $driver){
