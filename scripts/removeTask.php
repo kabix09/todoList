@@ -13,28 +13,36 @@ if(!isset($_SESSION['user']) && !isset($_SESSION['tasks']))
 $id = $_GET['id'] ?? NULL;
 $owner = $_GET['owner'] ?? NULL;
 
-if($id === NULL || $owner === NULL)
-    throw new RuntimeException("script error - unknown element");
+try {
+    if($id === NULL || $owner === NULL)
+        throw new RuntimeException("script error - missing elements");
 
-$taskRepository = new TaskRepository(new Connection(include DB_CONFIG));
-if($taskRepository->remove(
-    [
-        "WHERE" =>NULL,
-        "AND" => ["id = '{$id}'", "owner = '{$owner}'"]
-    ]))
-{
-    $i=0;
-    foreach ($_SESSION['tasks'] as $task)
+    if($owner != $_SESSION['user']->getNick())
+        throw new RuntimeException("script error - incorrect user");
+
+    if(!in_array($id, array_map(function($element){
+                                    return $element->getId();
+                                }, $_SESSION['tasks'])
+    ))
+        throw new RuntimeException("script error - incorrect task");
+
+    $taskRepository = new TaskRepository(new Connection(include DB_CONFIG));
+    if($taskRepository->remove(
+        [
+            "WHERE" =>NULL,
+            "AND" => ["id = '{$id}'", "owner = '{$owner}'"]
+        ]))
     {
-        if($task->getId() == $id)
-            break;
-        $i++;
+            // no need to remove from session because
+            // index.php automatically refresh task list
+        header("Location: ../index.php");
+    }else{
+        throw new RuntimeException("system error - couldn't remove task {$id}");
     }
-    unset($_SESSION['tasks'][$i]);
 
-    header("Location: ../index.php");
-}else{
-    throw new RuntimeException("system error - couldn't remove task {$id}");
+}catch (\Exception $e){
+    var_dump($e->getMessage());
+    die();
 }
 
 
