@@ -1,0 +1,19 @@
+.card {
+    height: 170px;
+    width: 300px;
+    margin: 5px 5px 20px 5px;
+    padding:10px;
+    box-sizing: content-box;
+    border-radius: 15px;
+    background-color: aliceblue;
+    -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+    box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+}
+.left{
+    float:left;
+}
+
+.right{
+    float: right;
+}

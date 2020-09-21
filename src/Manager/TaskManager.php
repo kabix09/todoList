@@ -2,9 +2,7 @@
 namespace App\Manager;
 
 use App\Entity\Factory\TaskFactory;
-use App\Entity\Factory\UserFactory;
 use App\Entity\Task;
-use App\Entity\User;
 use App\Repository\TaskRepository;
 
 final class TaskManager
@@ -103,4 +101,10 @@ final class TaskManager
         return
             (new \DateTime())->format('Y-m-d');
     }
+
+
+    public function toArray(): array {
+        return TaskFactory::entityToArray($this->task);
+    }
+
 }
