@@ -6,7 +6,7 @@ use App\Form\FormConstants;
 
 class Textarea extends Generic
 {
-    protected string $pattern = '<textarea name="%s" %s></textarea>';
+    protected string $pattern = '<textarea name="%s" type="%s" %s>%s</textarea>';
 
     public function __construct($name, $type, $label = '', array $wrappers = array(), array $attributes = array(), array $errors = array())
     {
@@ -19,14 +19,29 @@ class Textarea extends Generic
 
     protected function getTextarea()
     {
+        $value = $this->getContent();
+
         return sprintf($this->pattern,
             $this->name,
-            $this->getAttributes()
+            $this->type,
+            $this->getAttributes(),
+            $value
         ) . PHP_EOL;
     }
 
     public function getInput(): string
     {
         return $this->getTextarea();
+    }
+
+    private function getContent(): string
+    {
+        $value = "";
+        if(isset($this->attributes['value']))
+        {
+            $value = $this->attributes['value'];
+            unset($this->attributes['value']);
+        }
+        return $value;
     }
 }

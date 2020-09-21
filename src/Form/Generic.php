@@ -93,7 +93,7 @@ class Generic
         if(!$this->errors || count($this->errors) == 0)
             return '';
 
-        $errorPattern = '<li>%s</li>';
+        $errorPattern = '<li class="error">%s</li>';
 
         $html = '<ul>';
         foreach ($this->errors as $error)

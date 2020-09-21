@@ -18,7 +18,7 @@ class FormConstants
     const TYPE_SELECT = 'select';
     const TYPE_CHECKBOX = 'checkbox';
     const TYPE_DATE = 'date';
-
+    const TYPE_DATETIME = 'datetime';
     const TYPE_BUTTON = 'button';
     const TYPE_FILE = 'file';
 

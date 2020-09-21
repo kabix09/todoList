@@ -11,24 +11,25 @@ return $taskForm = [
             'placeholder' => "title",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['title'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['title'] ?? NULL
     ],
 
     "content" => [
         "class" => 'App\Form\Elements\Textarea',
-        "type" => App\Form\FormConstants::TEXTAREA,
+        "type" => App\Form\FormConstants::TYPE_TEXT,
         "label" => "Description",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
             "id" => 'contentID',
-            "maxLength" => 35,
+            "maxLength" => 255,
             'placeholder' => "content",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['content'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['content'] ?? NULL
     ],
+
 
     "start_date" => [
         "class" => 'App\Form\Generic',
@@ -41,8 +42,8 @@ return $taskForm = [
             'placeholder' => "startDate",
             'required' => "",
             'value' => (new \DateTime())->format('Y-m-d')
-        ],
-        "errors" => $_SESSION['formErrors']['startDate'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['startDate'] ?? NULL
     ],
 
     "target_end_date" => [
@@ -54,8 +55,8 @@ return $taskForm = [
             "id" => 'endDateID',
             "maxLength" => 35,
             'placeholder' => "endDate"
-        ],
-        "errors" => $_SESSION['formErrors']['endDate'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['endDate'] ?? NULL
     ],
 
     "hidden" => [
@@ -71,10 +72,11 @@ return $taskForm = [
     "submit" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_SUBMIT,
-        "label" => 'Create',
+        "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
-            "value" => 'submit'
+            "value" => 'Create',
+            "style" => 'float: right;'
         ]
     ]
 ];
