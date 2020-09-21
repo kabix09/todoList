@@ -3,7 +3,7 @@ return $regForm = [
     "nick" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_TEXT,
-        "label" => "Set Nick",
+        "label" => "Username",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
             "id" => 'nickID',
@@ -11,14 +11,14 @@ return $regForm = [
             'placeholder' => "nickname",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['nick'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['nick'] ?? NULL
     ],
 
     "email" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_EMAIL,
-        "label" => "Set Email",
+        "label" => "Email",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
             "id" => 'emailID',
@@ -26,14 +26,14 @@ return $regForm = [
             'placeholder' => "email",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['email'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['email'] ?? NULL
     ],
 
     "password" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_PASSWORD,
-        "label" => "Set Password",
+        "label" => "Password",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
             "id" => 'passwordID',
@@ -41,8 +41,8 @@ return $regForm = [
             'placeholder' => "password",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['password'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['password'] ?? NULL
     ],
 
     "repeatPassword" => [
@@ -56,8 +56,8 @@ return $regForm = [
             'placeholder' => "password",
             'required' => "",
             'value' => ""
-        ],
-        "errors" => $_SESSION['formErrors']['repeatPassword'] ?? NULL
+        ]
+        //"errors" => $_SESSION['formErrors']['repeatPassword'] ?? NULL
     ],
 
     "hidden" => [
@@ -73,10 +73,11 @@ return $regForm = [
     "submit" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_SUBMIT,
-        "label" => 'Register',
+        "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
-            "value" => 'submit'
+            "value" => 'Register',
+            "style" => 'float: right; margin-right: 10px;'
         ]
     ]
 ];

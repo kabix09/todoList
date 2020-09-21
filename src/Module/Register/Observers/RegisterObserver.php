@@ -1,5 +1,5 @@
 <?php
-namespace App\Module\Login\Observers;
+namespace App\Module\Register\Observers;
 
 use App\Module\Observer\Observer;
 use App\Module\Register\Register;

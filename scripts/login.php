@@ -3,7 +3,7 @@ require_once '../init.php';
 
 use App\Module\Login\Login;
 use App\Module\Login\Observers\DateObserver;
-use App\Module\Observer\ErrorObserver;
+use App\Module\ErrorObserver;
 use App\Token\Token;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
@@ -22,8 +22,8 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     header("Location: ../templates/errors/404.php");
 }else{
         // 0 - remove old errors
-    if(isset($_SESSION['formErrors']))
-        unset($_SESSION['formErrors']);
+    if(isset($_SESSION['loginErrors']))
+        unset($_SESSION['loginErrors']);
 
     unset($_POST['submit']);
 

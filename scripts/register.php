@@ -1,9 +1,8 @@
 <?php
 require_once '../init.php';
 
+use App\Module\ErrorObserver;
 use App\Module\Register\Register;
-use App\Module\Observer\ErrorObserver;
-use App\Module\Login\Observers\MailObserver;
 use App\Token\Token;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
@@ -22,8 +21,8 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     header("Location: ../templates/errors/404.php");
 }else{
         // 0 - remove old errors
-    if(isset($_SESSION['formErrors']))
-        unset($_SESSION['formErrors']);
+    if(isset($_SESSION['registerErrors']))
+        unset($_SESSION['registerErrors']);
 
     unset($_POST['submit']);
 
@@ -40,7 +39,6 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
 
             // create usefully observers
     new ErrorObserver($register);
-    new MailObserver($register);
 
             // execute register logic
     if($register->registerHandler($_SESSION['token'],
@@ -51,7 +49,7 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
         $_SESSION['login'] = TRUE;
         $_SESSION['user'] = $register->getUser(TRUE);
 
-            // 3 - set header
+            // 2 - set header
         if($_SESSION['user']->getStatus() === 'active')
             header("Location: ../index.php");
         else
