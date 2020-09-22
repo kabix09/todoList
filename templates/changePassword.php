@@ -9,7 +9,7 @@ define('CHANGE_PASSWORD_FORM', "../config/changePasswordForm.config.php");
 
 $formfactory = new Factory();
 $formfactory->generate(include CHANGE_PASSWORD_FORM,
-                        (new Token($_SESSION['token']))
+                        (new Token($session['token']))
                             ->hash()
                             ->encode()
                             ->getToken());

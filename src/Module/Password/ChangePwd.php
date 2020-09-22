@@ -13,7 +13,7 @@ use App\Token\Token;
 class ChangePwd implements Observable
 {
     const INCORRECT_PASSWORD = "password mus be the same";
-    const PROCESS_STATUS = ["errors", "correct"];
+    const PROCESS_STATUS = ["errors", "correct", "session"];
 
     private array $observers = [];
 
@@ -57,9 +57,8 @@ class ChangePwd implements Observable
     }
 
     // ######################################################################
-    public function passwordHandler(?string &$serverToken = NULL, array $filter, array $assignments): bool{
+    public function passwordHandler(?string $serverToken = NULL, array $filter, array $assignments): bool{
         try {
-
             if ($this->checkToken($serverToken)) {
 
                 if (!$this->validData($filter, $assignments))
@@ -71,14 +70,21 @@ class ChangePwd implements Observable
                     $this->processStatus = self::PROCESS_STATUS[0];
                 }
 
-                if ($this->processStatus === NULL)
+                if($this->processStatus == NULL)
                 {
-                    $userManager = new UserManager(NULL, $this->repository);
+                    $this->processStatus = self::PROCESS_STATUS[2];
 
-                    if(!$userManager->changePassword($this->user, $this->data['password']))
-                        throw new \RuntimeException("system error - the password could not be changed");
+                    $this->notify();
 
-                    $this->processStatus = self::PROCESS_STATUS[1];
+                    if ($this->processStatus === self::PROCESS_STATUS[2])
+                    {
+                        $userManager = new UserManager(NULL, $this->repository);
+
+                        if(!$userManager->changePassword($this->user, $this->data['password']))
+                            throw new \RuntimeException("system error - the password could not be changed");
+
+                        $this->processStatus = self::PROCESS_STATUS[1];
+                    }
                 }
 
                 $this->notify();
@@ -96,7 +102,7 @@ class ChangePwd implements Observable
     }
 
     // ----------------------------------------------------------------------
-    public function checkToken(?string &$serverToken = NULL): bool{
+    public function checkToken(?string $serverToken = NULL): bool{
         if(!isset($serverToken))
             throw new \RuntimeException("token doesn't exists on server side ://");
 
@@ -107,7 +113,6 @@ class ChangePwd implements Observable
         ) throw new \RuntimeException('detected cross-site attack on login form');
 
         unset($this->data['hidden']);
-        unset($serverToken);    // doesn't work --- WHY ???
 
         return TRUE;
     }
