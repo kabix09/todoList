@@ -4,13 +4,15 @@ require_once  '../../init.php';
 use App\Connection\Connection;
 use App\Repository\TaskRepository;
 use App\Manager\TaskManager;
+use App\Session\Session;
 
+$session = new Session();
 $tasksArray = [];
-if(isset($_SESSION['user']) && isset($_SESSION['tasks']))
+if(isset($session['user']) && isset($session['tasks']))
 {
     $taskRepo = new TaskRepository(new Connection(include DB_CONFIG));
     $tasksGenerator = $taskRepo->find(array(), [
-        "WHERE" => ["owner", "= '{$_SESSION['user']->getNick()}'"]
+        "WHERE" => ["owner", "= '{$session['user']->getNick()}'"]
     ]);
 
     foreach ($tasksGenerator as $task)
