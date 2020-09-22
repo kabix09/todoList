@@ -3,15 +3,17 @@ require_once '../vendor/autoload.php';
 
 use App\Entity\Factory\TaskFactory;
 use App\Form\Factory\Factory;
+use App\Session\Session;
 use App\Token\Token;
 
 define('FORM_CONFIG', "../config/form.config.php");
 define('TASK_FORM', "../config/editTaskForm.config.php");
 
+$session = new Session();
 $taskConfig = include TASK_FORM;
 $editedTask = NULL;
 
-foreach ($_SESSION['tasks'] as $task)
+foreach ($session['tasks'] as $task)
 {
     if($task->getId() == $id)
     {
@@ -31,7 +33,7 @@ foreach ($taskConfig as $element => &$values)
 
 $formFactory = new Factory();
 $formFactory->generate($taskConfig,
-    (new Token($_SESSION['token']))
+    (new Token($session['token']))
         ->hash()
         ->encode()
         ->getToken());

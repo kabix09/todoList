@@ -12,7 +12,7 @@ use App\Token\Token;
 
 class Edit implements Observable
 {
-    const PROCESS_STATUS = ["errors", "correct"];
+    const PROCESS_STATUS = ["errors", "correct", "session"];
     private array $observers = [];
 
     private array $data;
@@ -55,7 +55,7 @@ class Edit implements Observable
     }
 
     // ######################################################################
-    public function taskHandler(?string &$serverToken = NULL, array $filter, array $assignments): bool{
+    public function taskHandler(?string $serverToken = NULL, array $filter, array $assignments): bool{
         try{
 
             if ($this->checkToken($serverToken)) {
@@ -67,6 +67,10 @@ class Edit implements Observable
 
                 if($this->processStatus === NULL)
                 {
+                    $this->processStatus = self::PROCESS_STATUS[2];
+
+                    $this->notify();
+
                         // set other data
                     $taskManager = new TaskManager($this->data, $this->repository);
                     $taskManager->setStatus();
@@ -103,7 +107,7 @@ class Edit implements Observable
     }
 
     // ----------------------------------------------------------------------
-    public function checkToken(?string &$serverToken = NULL): bool{
+    public function checkToken(?string $serverToken = NULL): bool{
         if(!isset($serverToken))
             throw new \RuntimeException("token doesn't exists on server side ://");
 
@@ -114,7 +118,6 @@ class Edit implements Observable
         ) throw new \RuntimeException('detected cross-site attack on login form');
 
         unset($this->data['hidden']);
-        unset($serverToken);    // doesn't work --- WHY ???
 
         return TRUE;
     }
