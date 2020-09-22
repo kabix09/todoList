@@ -3,6 +3,7 @@ namespace App\Module;
 
 use App\Module\Observer\Observer;
 use App\Module\Observer\Observable;
+use App\Session\Session;
 
 final class ErrorObserver implements Observer
 {
@@ -23,7 +24,8 @@ final class ErrorObserver implements Observer
     {
         if($observable->getProcessStatus() === "errors")
         {
-            $_SESSION[$this->nameBuilder('Errors')] = $observable->getErrors();
+            $session = new Session();
+            $session[$this->nameBuilder('Errors')] = $observable->getErrors();
         }
     }
 
