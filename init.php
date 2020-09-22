@@ -12,7 +12,7 @@ ini_set('session.entropy_file', "/dev/urandom");
 ini_set('session.hash_function', "sha256");
 ini_set('session.hash_bits_per_character', 5);
 
-session_start();
+//session_start();
 
 define("ROOT_PATH", str_replace("\\", "/", dirname(__FILE__)) . '/');
 
