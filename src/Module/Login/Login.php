@@ -13,7 +13,7 @@ final class Login implements Observable
 {
     const INCORRECT_LOGIN = "incorrect login";
     const INCORRECT_PASSWORD = "incorrect password";
-    const PROCESS_STATUS = ["errors", "correct"];
+    const PROCESS_STATUS = ["errors", "correct" , "session"];
 
     private array $observers = [];
 
@@ -57,7 +57,7 @@ final class Login implements Observable
     }
 
     // ######################################################################
-    public function loginHandler(?string &$serverToken = NULL, array $filter, array $assignments): bool{
+    public function loginHandler(?string $serverToken = NULL, array $filter, array $assignments): bool{
 
         try {
 
@@ -77,7 +77,14 @@ final class Login implements Observable
                 }
 
                 if ($this->processStatus === NULL)
+                {
+                    $this->processStatus = self::PROCESS_STATUS[2];
+
+                    $this->notify();
+
                     $this->processStatus = self::PROCESS_STATUS[1];
+                }
+
 
                 $this->notify();
 
@@ -94,7 +101,7 @@ final class Login implements Observable
     }
 
     // ----------------------------------------------------------------------
-    public function checkToken(?string &$serverToken = NULL): bool{
+    public function checkToken(?string $serverToken = NULL): bool{
         if(!isset($serverToken))
             throw new \RuntimeException("token doesn't exists on server side ://");
 
@@ -105,7 +112,7 @@ final class Login implements Observable
         ) throw new \RuntimeException('detected cross-site attack on login form');
 
         unset($this->data['hidden']);
-        unset($serverToken);    // doesn't work --- WHY ???
+        //unset($serverToken);    // when arg is passing by reference -> doesn't work --- WHY ???
 
         return TRUE;
     }
