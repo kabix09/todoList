@@ -63,7 +63,7 @@ class TaskRepository extends BaseRepository
         $statement->bindValue(':title', $title, \PDO::PARAM_STR);
         $statement->execute();
 
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
         $statement->closeCursor();
 
         if($result)
@@ -82,7 +82,7 @@ class TaskRepository extends BaseRepository
         $statement->bindValue(':author', $author, \PDO::PARAM_STR);
         $statement->execute();
 
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
         $statement->closeCursor();
 
         if($result)
@@ -99,7 +99,7 @@ class TaskRepository extends BaseRepository
         $statement->bindValue(':owner', $owner, \PDO::PARAM_STR);
         $statement->execute();
 
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
         $statement->closeCursor();
 
         if($result)
