@@ -3,8 +3,12 @@ require_once '../init.php';
 
 use App\Connection\Connection;
 use App\Repository\TaskRepository;
+use App\Session\Session;
+use App\Session\SessionManager;
 
-if(!isset($_SESSION['user']) && !isset($_SESSION['tasks']))
+$session = new Session();
+
+if(!isset($session['user']) && !isset($session['tasks']))
 {
     header("Location: ../index.php");
     exit();
@@ -17,14 +21,21 @@ try {
     if($id === NULL || $owner === NULL)
         throw new RuntimeException("script error - missing elements");
 
-    if($owner != $_SESSION['user']->getNick())
+    if($owner != $session['user']->getNick())
         throw new RuntimeException("script error - incorrect user");
 
     if(!in_array($id, array_map(function($element){
                                     return $element->getId();
-                                }, $_SESSION['tasks'])
+                                }, $session['tasks'])
     ))
         throw new RuntimeException("script error - incorrect task");
+
+    $sessionManager = new SessionManager($session);
+    if(!$sessionManager->manage())
+    {
+        // logout and redirect to login page
+        die("toDo - user error in remove task script");
+    }
 
     $taskRepository = new TaskRepository(new Connection(include DB_CONFIG));
     if($taskRepository->remove(
