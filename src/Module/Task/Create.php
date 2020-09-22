@@ -3,6 +3,7 @@ namespace App\Module\Task;
 
 use App\Connection\Connection;
 use App\Entity\Task;
+use App\Entity\User;
 use App\Filter\Filter;
 use App\Manager\TaskManager;
 use App\Module\Observer\Observable;
@@ -13,11 +14,13 @@ use App\Token\Token;
 class Create implements Observable
 {
     const INCORECT_TITLE = "this task already exists";
-    const PROCESS_STATUS = ["errors", "correct"];
+    const PROCESS_STATUS = ["errors", "correct" , "session"];
+
     private array $observers = [];
 
     private array $data;
     private $task;
+    private $user;
     private array $errors = [];
 
     private $processStatus = NULL;
@@ -26,9 +29,10 @@ class Create implements Observable
      */
     private TaskRepository $repository;
 
-    public function __construct(array $formData, array $dbConfig)
+    public function __construct(array $formData, array $dbConfig, User $user)
     {
         $this->data = $formData;
+        $this->user = $user;
         $this->repository = new TaskRepository(new Connection($dbConfig));
     }
 
@@ -56,7 +60,7 @@ class Create implements Observable
     }
 
     // ######################################################################
-    public function taskHandler(?string &$serverToken = NULL, array $filter, array $assignments, string $author): bool{
+    public function taskHandler(?string $serverToken = NULL, array $filter, array $assignments, string $author): bool{
         try{
 
             if ($this->checkToken($serverToken)) {
@@ -72,6 +76,10 @@ class Create implements Observable
 
                 if ($this->processStatus === NULL)
                 {
+                    $this->processStatus = self::PROCESS_STATUS[2];
+
+                    $this->notify();
+
                         // set other data
                     $taskManager = new TaskManager($this->data, $this->repository);
 
@@ -106,7 +114,7 @@ class Create implements Observable
     }
 
     // ----------------------------------------------------------------------
-    public function checkToken(?string &$serverToken = NULL): bool{
+    public function checkToken(?string $serverToken = NULL): bool{
         if(!isset($serverToken))
             throw new \RuntimeException("token doesn't exists on server side ://");
 
@@ -117,7 +125,6 @@ class Create implements Observable
         ) throw new \RuntimeException('detected cross-site attack on login form');
 
         unset($this->data['hidden']);
-        unset($serverToken);    // doesn't work --- WHY ???
 
         return TRUE;
     }
@@ -140,7 +147,13 @@ class Create implements Observable
     }
 
     public function checkTitle(){
-        $this->task = $this->repository->fetchByTitle($this->data['title']);
+        $tasks = $this->repository->fetchByOwner($this->user->getNick());
+
+        foreach ($tasks as $task)
+        {
+            if($task->getTitle() === $this->data['title'])
+                $this->task = $task;
+        }
 
         if($this->task){
             return FALSE;

@@ -9,7 +9,7 @@ define('TASK_FORM', "../config/createTaskForm.config.php");
 
 $formFactory = new Factory();
 $formFactory->generate(include TASK_FORM,
-                        (new Token($_SESSION['token']))
+                        (new Token($session['token']))
                             ->hash()
                             ->encode()
                             ->getToken());
