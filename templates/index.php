@@ -12,10 +12,10 @@
 </head>
 
 <body>
-<header style="text-align: center; border-bottom: 1px solid black"><h2>My Todo List</h2></header>
+<header style="text-align: center; border: 2px solid #2196f3; border-top: none; border-radius: 15px;"><h2>My Todo List</h2></header>
     <nav>
         <ul>
-            <?php if(!isset($_SESSION['user'])):?>
+            <?php if(!isset($session['user'])):?>
                 <li><a href="./scripts/login.php">Login</a></li>
                 <li><a href="./scripts/register.php">Register</a></li>
             <?php else: ?>
@@ -27,13 +27,13 @@
     </nav>
     <main style="background-color: #c4dfef; padding: 10px; border-radius: 10px 10px 20px 20px;text-align: center;">
         <h3> Hello
-            <?php printf( isset($_SESSION['user']) ?
-                $_SESSION['user']->getNick() :
+            <?php printf( isset($session['user']) ?
+                $session['user']->getNick() :
                 "world :))");
             ?>
         </h3>
 
-        <?php if(isset($_SESSION['user'])): ?>
+        <?php if(isset($session['user'])): ?>
         <section id="mainBlock"
              style="display:flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly; text-align: left;" >
 
