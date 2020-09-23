@@ -14,7 +14,7 @@ class Session implements \ArrayAccess
     {
         $this->sessionDurationTime = $sessionDurationTime ?? self::DEFAULT_SESSION_DURATION_TIME;
 
-        session_start();
+        $this->create();
 
         $this->counter = Counter::init(
                                 $sessionRequestsAmount ?? self::DEFAULT_REQUESTS_COUNT,
@@ -23,15 +23,13 @@ class Session implements \ArrayAccess
         $this->initSessionTime();
     }
 
-    /*public function __set($name, $value): void
+    private function create(): void
     {
-        $_SESSION[$name] = $value;
+        session_start();
+            // session_start automatically generate ID and save this in cookie PHPSESSID, but
+            // in purpose to overwrite time in cookie PHPSESSID with time()-3600 in destroy() func
+        setcookie('PHPSESSID', session_id(), time() + 3600, "/");
     }
-
-    public function __get($name = NULL)
-    {
-        return $_SESSION[$name];
-    }*/
 
     public function getSession(): ?array
     {
@@ -44,9 +42,11 @@ class Session implements \ArrayAccess
     public function destroy(){
         session_unset();
         session_destroy();
+            // in session_start(), function don't read ID from cookie and successfully generate new token value
+        setcookie('PHPSESSID', "", time() - 3600, "/");
     }
 
-    public function regenerateID(bool $removeOldSession = false)
+    public function regenerateID(bool $removeOldSession = true)
     {
         session_regenerate_id($removeOldSession);
             // need to manually update cookie sess id value
