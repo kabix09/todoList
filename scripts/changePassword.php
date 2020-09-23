@@ -1,8 +1,9 @@
 <?php
 require_once '../init.php';
 
+use App\Connection\Connection;
 use App\Module\ErrorObserver;
-use App\Module\Password\ChangePwd;
+use App\Module\Form\Password\ChangePwd;
 use App\Module\SessionObserver;
 use App\Session\Session;
 use App\Token\Token;
@@ -37,14 +38,14 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
     unset($_POST);
 
         // 1 - create register logic instance
-    $changePwd = new ChangePwd($formData, include DB_CONFIG, $session['user']);
+    $changePwd = new ChangePwd($formData, new Connection(include DB_CONFIG), $session['user']);
 
             // create usefully observers
     new ErrorObserver($changePwd);
     new SessionObserver($changePwd);
 
             // execute register logic
-    if($changePwd->passwordHandler($session['token'],
+    if($changePwd->handler($session['token'],
         array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include CHANGE_PASSWORD_ASSIGNMENTS))
     {
         unset($session['token']);
