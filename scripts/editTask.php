@@ -1,9 +1,10 @@
 <?php
 require_once '../init.php';
 
+use App\Connection\Connection;
 use App\Module\ErrorObserver;
 use App\Module\SessionObserver;
-use App\Module\Task\Edit;
+use App\Module\Form\Task\Edit;
 use App\Session\Session;
 use App\Token\Token;
 
@@ -59,14 +60,14 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     unset($_POST);
 
         // 1 - create login logic instance
-    $updateTask = new Edit($formData, include DB_CONFIG);
+    $updateTask = new Edit($formData, new Connection(include DB_CONFIG));
 
             // create usefully observers
     new ErrorObserver($updateTask);
     new SessionObserver($updateTask);
 
             // execute create task logic
-    if($updateTask->taskHandler($session['token'],
+    if($updateTask->handler($session['token'],
         array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include TASK_ASSIGNMENTS))
     {
         unset($session['token']);
