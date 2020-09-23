@@ -1,8 +1,9 @@
 <?php
 require_once '../init.php';
 
+use App\Connection\Connection;
+use App\Module\Form\Task\Create;
 use App\Module\SessionObserver;
-use App\Module\Task\Create;
 use App\Module\ErrorObserver;
 use App\Session\Session;
 use App\Token\Token;
@@ -35,20 +36,19 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET') {
     unset($_POST);
 
         // 1 - create login logic instance
-    $createTask = new Create($formData, include DB_CONFIG, $session['user']);
+    $createTask = new Create($formData, new Connection(include DB_CONFIG), $session['user']);
 
         // create usefully observers
     new ErrorObserver($createTask);
     new SessionObserver($createTask);
 
         // execute create task logic
-    if($createTask->taskHandler($session['token'],
-        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include TASK_ASSIGNMENTS,
-        $session['user']->getNick()))
+    if($createTask->handler($session['token'],
+        array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include TASK_ASSIGNMENTS))
     {
         unset($session['token']);
 
-        $session["tasks"] = array_merge($session["tasks"] ?? array(), [$createTask->getTask()]);
+        $session["tasks"] = array_merge($session["tasks"] ?? array(), [$createTask->getObject()]);
 
             // 2 - set header
         header("Location: ../index.php");
