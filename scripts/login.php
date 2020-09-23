@@ -1,12 +1,14 @@
 <?php
 require_once '../init.php';
 
-use App\Module\Login\Login;
-use App\Module\Login\Observers\DateObserver;
+use App\Connection\Connection;
+use App\Module\Form\Login\Login;
+use App\Module\Form\Login\Observers\DateObserver;
 use App\Module\ErrorObserver;
 use App\Module\SessionObserver;
 use App\Session\Session;
 use App\Token\Token;
+use App\Entity\User;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
 define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
@@ -39,7 +41,7 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     unset($_POST);
 
         // 1 - create login logic instance
-    $login = new Login($formData, include DB_CONFIG);
+    $login = new Login($formData, new Connection(include DB_CONFIG));
 
             // create usefully observers
     new ErrorObserver($login);
@@ -47,13 +49,13 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     new DateObserver($login);
 
             // execute login logic
-    if($login->loginHandler($session['token'],
+    if($login->handler($session['token'],
         array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include LOG_ASSIGNMENTS))
     {
         unset($session['token']);
 
         $session['login'] = TRUE;
-        $session['user'] = $login->getUser();
+        $session['user'] = $login->getObject();
 
         if($session['user']->getStatus() === 'active')
             header("Location: ../index.php");

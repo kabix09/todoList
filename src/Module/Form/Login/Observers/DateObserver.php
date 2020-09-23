@@ -1,10 +1,10 @@
 <?php
-namespace App\Module\Login\Observers;
+namespace App\Module\Form\Login\Observers;
 
 use App\Connection\Connection;
 use App\Entity\User;
 use App\Manager\UserManager;
-use App\Module\Login\Login;
+use App\Module\Form\Login\Login;
 use App\Module\Observer\Observable;
 use App\Repository\UserRepository;
 
@@ -16,7 +16,7 @@ final class DateObserver extends LoginObserver
         if($login->getProcessStatus() === "correct")
         {
             try {
-                $this->updateLastLoginDate($login->getUser(),
+                $this->updateLastLoginDate($login->getObject(),
                                             new UserManager(NULL,
                                                 new UserRepository(
                                                     new Connection(include DB_CONFIG))));

@@ -1,8 +1,9 @@
 <?php
 require_once '../init.php';
 
+use App\Connection\Connection;
+use App\Module\Form\Register\Register;
 use App\Module\ErrorObserver;
-use App\Module\Register\Register;
 use App\Module\SessionObserver;
 use App\Session\Session;
 use App\Token\Token;
@@ -38,20 +39,20 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     unset($_POST);
 
         // 1 - create register logic instance
-    $register = new Register($formData, include DB_CONFIG);
+    $register = new Register($formData, new Connection(include DB_CONFIG));
 
             // create usefully observers
     new ErrorObserver($register);
     new SessionObserver($register);
 
             // execute register logic
-    if($register->registerHandler($session['token'],
+    if($register->handler($session['token'],
         array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include REG_ASSIGNMENTS))
     {
         unset($session['token']);
 
         $session['login'] = TRUE;
-        $session['user'] = $register->getUser(TRUE);
+        $session['user'] = $register->getObject(TRUE);
 
             // 2 - set header
         if($session['user']->getStatus() === 'active')
