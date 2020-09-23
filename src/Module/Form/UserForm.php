@@ -7,8 +7,8 @@ use App\Repository\UserRepository;
 
 abstract class UserForm extends FormGeneric
 {
-    private const LOGIN_ERROR = "";
-    private const PASSWORD_ERROR = "";
+    protected const LOGIN_ERROR = "";
+    protected const PASSWORD_ERROR = "";
 
     public function __construct(array $formData, Connection $connection)
     {

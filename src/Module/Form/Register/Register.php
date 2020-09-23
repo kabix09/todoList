@@ -3,12 +3,11 @@ namespace App\Module\Form\Register;
 
 use App\Entity\User;
 use App\Manager\UserManager;
-use App\Module\Form\UserForm;
+use App\Module\Form\PasswordForm;
 
-final class Register extends UserForm
+final class Register extends PasswordForm
 {
-    private const LOGIN_ERROR = "this login already exists";
-    private const PASSWORD_ERROR = "passwords must be the same";
+    protected const LOGIN_ERROR = "this login already exists";
 
     protected function doHandler()
     {
@@ -40,15 +39,6 @@ final class Register extends UserForm
             // change status
             $this->processStatus = self::PROCESS_STATUS[1];
         }
-    }
-
-    protected function checkPassword(): bool
-    {
-        if($this->data['password'] !== $this->data['repeatPassword']) {
-            return FALSE;
-        }
-
-        return TRUE;
     }
 
 

@@ -5,8 +5,8 @@ use App\Module\Form\UserForm;
 
 final class Login extends UserForm
 {
-    private const LOGIN_ERROR = "incorrect login";
-    private const PASSWORD_ERROR = "incorrect password";
+    protected const LOGIN_ERROR = "incorrect login";
+    protected const PASSWORD_ERROR = "incorrect password";
 
     protected function doHandler()
     {
@@ -29,8 +29,6 @@ final class Login extends UserForm
             $this->processStatus = self::PROCESS_STATUS[1];
         }
     }
-
-
 
     protected function checkPassword(): bool
     {
