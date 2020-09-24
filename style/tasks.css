@@ -1,15 +1,40 @@
 .card {
-    height: 170px;
+    height: 200px;
     width: 300px;
     margin: 5px 5px 20px 5px;
-    padding:10px;
+    padding:10px 10px 20px 10px;
     box-sizing: content-box;
     border-radius: 15px;
     background-color: aliceblue;
     -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
     box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+    position: relative;
+    overflow: auto;
 }
+.content{
+    min-height: 85px;
+    width: calc(100% - 10px);
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: rgb(222, 239, 255);
+    word-wrap: break-word;
+}
+
+.cardFooter{
+    box-sizing: content-box;
+    margin: 15px 0 20px 0;
+    position: static;
+    bottom: 0px;
+}
+
+.boxFlex{
+    width: calc(100% - 5px - 5px);
+    display: flex;
+    justify-content: space-around;
+}
+
 .left{
     float:left;
 }

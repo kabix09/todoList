@@ -35,9 +35,8 @@ const displayTasks = (tasks) => {
                             '<span><b>Author:</b> ' + task.author + '</span><br>' +
                             '<span><b>Create Date:</b> ' + task.create_date + '</span><br>' +
                             '<span><b>Content:</b></span><br>' +
-                            '<div style="margin:5px;">' + task.content + '</div><br>' +
-                            '<br>' +
-                            '<div style="width: 100%; display: flex; justify-content: space-around;">' +
+                            '<div class="content">' + task.content + '</div>' +
+                            '<div class="boxFlex cardFooter">' +
                                 '<a href="">finish</a>'+
                                 '<a href="./scripts/editTask.php?id=' + task.id + '&owner=' + task.owner + '">edit</a>' + /* bug - after click window is refresh and input value is deleted */
                                 '<a href="./scripts/removeTask.php?id=' + task.id +'&owner=' + task.owner + '">remove</a>' +

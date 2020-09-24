@@ -7,10 +7,10 @@
     <meta http-equiv = "Content-Type" content = "text/html; charset = UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="./style/main.css">
     <link rel="stylesheet" href="./style/list.css">
     <link rel="stylesheet" href="./style/tasks.css">
 </head>
-
 <body>
 <header style="text-align: center; border: 2px solid #2196f3; border-top: none; border-radius: 15px;"><h2>My Todo List</h2></header>
     <nav>
@@ -25,7 +25,7 @@
             <?php endif ?>
         </ul>
     </nav>
-    <main style="background-color: #c4dfef; padding: 10px; border-radius: 10px 10px 20px 20px;text-align: center;">
+    <main>
         <h3> Hello
             <?php printf( isset($session['user']) ?
                 $session['user']->getNick() :
@@ -43,10 +43,9 @@
         </div>
         <?php endif;?>
     </main>
-    <footer style="padding: 10px 15px 10px 15px; background-color: white; color: gray">
+    <footer>
         @kabix09 2020
     </footer>
     <script src="../js/tasks.js"></script>
 </body>
-
 </html> 
