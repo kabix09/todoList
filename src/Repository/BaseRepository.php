@@ -67,6 +67,8 @@ abstract class BaseRepository implements Repository
         if(!is_array($base))
             return FALSE;
 
+        $this->clearIdField($base);
+
         QueryBuilder::update($this->dbName)->set(array_keys($base));
 
         $this->buildCriteria($criteria);
@@ -134,6 +136,15 @@ abstract class BaseRepository implements Repository
         {
             if(is_null($value) || empty($value))
                 unset($data[$key]);
+        }
+    }
+
+    private function clearIdField(array &$data){
+        $keys = array_keys($data);
+        foreach ($keys as $number => $value)
+        {
+            if($value === "id")
+                unset($data["id"]);
         }
     }
 }
