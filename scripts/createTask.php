@@ -7,7 +7,6 @@ use App\Module\SessionObserver;
 use App\Module\ErrorObserver;
 use App\Session\Session;
 use App\Token\Token;
-use App\Entity\User;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
 define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');

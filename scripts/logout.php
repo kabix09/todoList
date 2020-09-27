@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once '../init.php';
 use App\Session\Session;
 
 $session = new Session();
