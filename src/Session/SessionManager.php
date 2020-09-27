@@ -33,6 +33,7 @@ final class SessionManager
     }
 
     public function checkRequestsAmount(): void{
+        echo $this->session->counter::getItem();
         if(!$this->session->counter->checkCounter())
         {
                 // if value out of range
@@ -44,6 +45,7 @@ final class SessionManager
     }
 
     public function checkSessionTime(): void{
+        echo $this->session->counter::getItem();
         if($this->session->isLoginSessionExpired())
         {
                 // if session expired
@@ -55,12 +57,15 @@ final class SessionManager
     private function revaluateSessionParameters(){
             // 1 regenerate session id
         $this->session->regenerateID();
-            // 2 renew time
-        $this->session->refreshSessionTime();
+
+            // 2 refresh session entity parameter
+        $this->session->refreshSessionEntity();
+
             // 3 refresh requests counter
         $this->session->counter::resetItem();
                 // save new value in session
             $this->session['counter'] = $this->session->counter::getItem();
+
     }
 
         // before function, call verifyUser function
