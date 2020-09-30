@@ -2,28 +2,29 @@
 namespace App\Session;
 use App\Connection\Connection;
 use App\Repository\SessionRepository;
+use App\Manager\SessionManager;
 use App\Session\Counter\Counter;
 
-class Session implements \ArrayAccess
+class Session extends SessionArray
 {
     const DEFAULT_REQUESTS_COUNT = 5;
-    const DEFAULT_SESSION_DURATION_TIME = 120;   // two minute
 
-    private int $sessionDurationTime;
+    public SessionVerify $verify;
     private SessionRepository $repository;
-    private ?\App\Entity\Session $session;
+    private SessionManager $manager;
+    protected \App\Entity\Session $session;
+
     public Counter $counter;
 
-
-    public function __construct(?int $sessionDurationTime = NULL, ?int $sessionRequestsAmount = NULL)
+    public function __construct(?int $sessionRequestsAmount = NULL)
     {
-        $this->sessionDurationTime = $sessionDurationTime ?? self::DEFAULT_SESSION_DURATION_TIME;
-
-
         $this->repository = new SessionRepository(new Connection(include DB_CONFIG));
 
-        $this->init();
+        $this->session = new \App\Entity\Session();
+        $this->verify = new SessionVerify($this->session);
+        $this->manager = new SessionManager($this->session);
 
+        $this->init();
 
         $this->counter = Counter::init(
                                 $sessionRequestsAmount ?? self::DEFAULT_REQUESTS_COUNT,
@@ -31,25 +32,20 @@ class Session implements \ArrayAccess
                                     );
     }
 
-    private function init(): void{   // TODO - add 0 garbage cllection -> remove old sessions in db ???
-        $this->session = NULL;
+    private function init(): void{
+        $this->garbageCollection();     // TODO - add 0 garbage cllection -> remove old sessions in db ???
+
             // 1 download session object from database
-        if(isset($_COOKIE['PHPSESSID']))
-        {
-            $this->session = $this->repository->fetchBySessionKey($_COOKIE['PHPSESSID']);
-        }else{
-            $this->session = $this->repository->find(array(),[
-                "WHERE" => NULL,
-                "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
-            ])->current();  // return first object from generator's array, tehnically there MUST be ONE object with this criteria in this case
-        }
+        $tmp = $this->fetchSession();
+
+        if($tmp instanceof \App\Entity\Session)
+            $this->manager->set($tmp);
+
             // 2 if not exist, create new session bd object
-        if(is_null($this->session))
+        if(is_null($tmp))
         {
                 // create new session object
-            $sessionManager = new \App\Manager\SessionManager(NULL);
-            $sessionManager->init();
-            $this->session = $sessionManager->return();
+            $this->manager->init();
 
                 // insert new session object
             $this->repository->insert($this->session);
@@ -60,7 +56,6 @@ class Session implements \ArrayAccess
         $this->create(
             empty($key) ? NULL : $key
         );
-
     }
 
     private function create(?string $sessionKey = NULL): void
@@ -70,114 +65,98 @@ class Session implements \ArrayAccess
                 session_id($sessionKey);
 
             session_start();
-            // session_start automatically generate ID and save this in cookie PHPSESSID, but
-            // in purpose to overwrite time in cookie PHPSESSID with time()-3600 in destroy() func
-            setcookie('PHPSESSID', session_id(), time() + 3600, "/");   // delegate create cookie task to other class?
+                    // session_start automatically generate ID and save this in cookie PHPSESSID, but
+                    // in purpose to overwrite time in cookie PHPSESSID with time() - gc.maxlifetime in destroy() func
+            setcookie('PHPSESSID', session_id(), time() + ini_get('session.gc_maxlifetime'), "/");   // delegate create cookie task to other class?
 
                 // 4 update session instance in database (key & session time) if that is a new session
+                //   a session which weren't initialize in database because its new client
             if(session_id() !== $this->session->getSessionKey())
             {
-                $sessionManager = new \App\Manager\SessionManager(NULL);
-                $sessionManager->init();
-                $sessionManager->updateSessionKey(session_id());
-                $session = $sessionManager->return();
+                $this->manager->updateSessionKey(session_id());
+                $this->manager->updateCreateTime();
 
-                if($this->repository->update($session, [
-                        "WHERE" => NULL,
-                        "AND" => ["user_ip = '{$session->getUserIP()}'", "browser_data = '{$session->getBrowserData()}'"]
-                    ]) === FALSE)
+                if(! $this->refreshSessionEntity())
                     throw new \Exception("couldn't update session instance in database");
             }
         }
 
             // 5 download correct session instance from
-        $this->session = $this->repository->find(array(),[
+         $this->manager->set($this->repository->find(array(),[
             "WHERE" => NULL,
             "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
-        ])->current();
+        ])->current());
     }
 
-    public function getSession(): ?array
-    {
-        if(isset($_SESSION))
-            return $_SESSION;
+    // remove old sessions
+    public function garbageCollection(){
+        return
+            $this->repository->remove([
+                "WHERE" => "session_create_time < '" . date(\App\Entity\Session::DATE_FORMAT, time() - ini_get("session.gc_maxlifetime")) . "'"
+            ]);
 
-        return NULL;
+        // ToDO - function also should remove file from tmp/ sess_[key]
     }
 
+    // remove current session
     public function destroy(){
+            // 1 remove session fingerprint in database
+        if(isset($_SESSION['user']))
+            $this->repository->remove([
+                "WHERE" => "user_nick = '{$_SESSION['user']->getNick()}'"
+            ]);
+        unset($this->session);
+
+            // 2 destroy data in server's file
         session_unset();
         session_destroy();
-            // in session_start(), function don't read ID from cookie and successfully generate new token value
-        setcookie('PHPSESSID', "", time() - 3600, "/");
+
+            // 3 destroy browser data
+            //   in session_start(), function don't read ID from cookie and successfully generate new token value
+        setcookie('PHPSESSID', "", time() - ini_get('session.gc_maxlifetime'), "/");
     }
 
+    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     public function regenerateID(bool $removeOldSession = true)
     {
         session_regenerate_id($removeOldSession);
             // need to manually update cookie sess id value
-        setcookie('PHPSESSID', session_id(), time() + 3600, "/");
+        setcookie('PHPSESSID', session_id(), time() + ini_get('session.gc_maxlifetime'), "/");
 
             // fetch new key
-        $this->session->setSessionKey(session_id());
+        $this->manager->updateSessionKey(session_id());
+    }
+
+    public function refreshSessionTime(): void{
+        $this->manager->updateCreateTime();
     }
 
     //#####################################################
-    public function checkUserAgent(): bool{
-        return
-            ($this->session->getBrowserData() === $_SERVER['HTTP_USER_AGENT']);
+    public function updateSessionUser(string $nick): bool{
+        if($this->session->getUserNick() !== NULL)
+            return TRUE;
+
+        $this->manager->updateUserNick($nick, $this->session);
+        $this->manager->updateCreateTime(NULL, $this->session);
+
+        return $this->refreshSessionEntity();
     }
 
-    public function checkUserIP(): bool{
-        return
-            ($this->session->getUserIP() === $_SERVER['REMOTE_ADDR']);
-    }
-
-    public function isLoginSessionExpired(): bool{
-        if(isset($_SESSION['user']) &&
-            (time() - \DateTime::createFromFormat(\App\Entity\Session::DATE_FORMAT, $this->session->getCreateTime())->getTimestamp()) > $this->sessionDurationTime) {
-                return TRUE;
-        }
-
-        return FALSE;
-    }
-
-    //-----------------------------------------------------
-
-    public function refreshSessionEntity(): void{
-        $sessionManager = new \App\Manager\SessionManager($this->session);
-        $sessionManager->updateCreateTime();
-
-        $this->repository->update($sessionManager->return(), [
+    public function refreshSessionEntity(): bool{
+        return $this->repository->update($this->session, [
             "WHERE" => NULL,
             "AND" => ["user_ip = '{$this->session->getUserIP()}'", "browser_data = '{$this->session->getBrowserData()}'"]
         ]);
     }
 
-    //**************************************************
-    public function offsetExists($offset) : bool
-    {
-        return isset($_SESSION[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->offsetExists($offset) ? $_SESSION[$offset] : NULL;
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        if(is_null($offset))
-            $_SESSION[] = $value;
+    //-----------------------------------------------------
+    private function fetchSession(){
+        if(isset($_COOKIE['PHPSESSID']))
+            return $this->repository->fetchBySessionKey($_COOKIE['PHPSESSID']);
         else
-            $_SESSION[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        if(is_null($offset))
-            unset($_SESSION);
-        else
-            unset($_SESSION[$offset]);
+            return $this->repository->find(array(),[
+                "WHERE" => NULL,
+                "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
+            ])->current();  // return first object from generator's array, tehnically there MUST be ONE object with this criteria in this case
     }
 }

@@ -9,7 +9,7 @@ class SessionManager
     private Session $session;
     //private SessionRepository $repository;
 
-    public function __construct($data)
+    public function __construct($data = NULL)
     {
         if(is_array($data))
             $this->session = SessionFactory::arrayToEntity($data);
@@ -25,6 +25,19 @@ class SessionManager
         //$this->repository = $userRepository;
     }
 
+
+
+    public function set(Session $session){
+        foreach (get_class_methods(Session::class) as $functionName)
+        {
+            if(strpos($functionName, "set") === 0)
+            {
+                $getter = "get" . substr($functionName, 3);
+                $this->session->$functionName($session->$getter());
+            }
+
+        }
+    }
     public function return():Session{
         return $this->session;
     }
@@ -42,14 +55,17 @@ class SessionManager
     private function setBrowserData(){
         $this->session->setBrowserData($_SERVER['HTTP_USER_AGENT']);
     }
-    public function updateSessionKey(string $sessionKey){
-            $this->session->setSessionKey($sessionKey);
+    public function updateSessionKey(string $sessionKey, ?Session $session = NULL){
+        ($session ?? $this->session)->setSessionKey($sessionKey);
     }
-    public function updateCreateTime(?string $newTime = NULL){
+    public function updateUserNick(?string $userNick = NULL, ?Session $session = NULL){
+        ($session ?? $this->session)->setUserNick($userNick);
+    }
+    public function updateCreateTime(?string $newTime = NULL, ?Session $session = NULL){
         if(is_null($newTime))
             $newTime = $this->getDate();
 
-        $this->session->setCreateTime($newTime);
+        ($session ?? $this->session)->setCreateTime($newTime);
 
     }
 

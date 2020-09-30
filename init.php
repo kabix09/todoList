@@ -6,6 +6,7 @@ ini_set('session.auto_start', 0);
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_trans_sid', 0);
 ini_set('session.cookie_domain', "todolist.localhost:8000");
+ini_set('session.cookie_lifetime', ini_get('session.gc_maxlifetime'));
 ini_set('session.cookie_httponly', 1);
 ini_set('session.entropy_length', 32);
 ini_set('session.entropy_file', "/dev/urandom");

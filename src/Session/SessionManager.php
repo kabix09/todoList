@@ -23,17 +23,19 @@ final class SessionManager
             return FALSE; // redirect to logout script and force user to login again
     }
 
+    public function changeSessionUser(string $nick): bool{
+        return $this->session->updateSessionUser($nick);
+    }
     //-----------------------------------------------------------------------
     public function verifyUser(): bool
     {
-        if($this->session->checkUserAgent() && $this->session->checkUserIP())
+        if($this->session->verify->checkUserAgent() && $this->session->verify->checkUserIP())
             return TRUE;
 
         return FALSE;
     }
 
     public function checkRequestsAmount(): void{
-        echo $this->session->counter::getItem();
         if(!$this->session->counter->checkCounter())
         {
                 // if value out of range
@@ -45,8 +47,7 @@ final class SessionManager
     }
 
     public function checkSessionTime(): void{
-        echo $this->session->counter::getItem();
-        if($this->session->isLoginSessionExpired())
+        if($this->session->verify->isLoginSessionExpired())
         {
                 // if session expired
             $this->revaluateSessionParameters();
@@ -58,10 +59,13 @@ final class SessionManager
             // 1 regenerate session id
         $this->session->regenerateID();
 
-            // 2 refresh session entity parameter
+            // 2 update session time
+        $this->session->refreshSessionTime();
+
+            // 3 refresh session entity parameter
         $this->session->refreshSessionEntity();
 
-            // 3 refresh requests counter
+            // 4 refresh requests counter
         $this->session->counter::resetItem();
                 // save new value in session
             $this->session['counter'] = $this->session->counter::getItem();
