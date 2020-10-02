@@ -39,10 +39,24 @@ final class Create extends TaskForm
             if(!$this->repository->insert($this->object))
             {
                 throw new \RuntimeException("couldn't create new task :/");
+            }else
+            {
+                $this->logger->info("Successfully created new task with title: {$this->object->getTitle()}", [
+                    "personalLog" => TRUE,
+                    "userFingerprint" => $this->object->getOwner(),
+                    "fileName" => __FILE__
+                ]);
             }
 
             // change status
             $this->processStatus = self::PROCESS_STATUS[1];
+        }else
+        {
+            $this->logger->warning("An attempt to create new task has failed", [
+                "personalLog" => TRUE,
+                "userFingerprint" => $this->user->getNick(),
+                "fileName" => __FILE__
+            ]);
         }
     }
 

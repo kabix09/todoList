@@ -1,16 +1,21 @@
 <?php declare(strict_types = 1);
 namespace App\Connection;
+use App\Logger\Logger;
 use App\Connection\AbstractFactory\{mysqlFactory, odbcFactory, PDOfactory};
 use \PDO;
 
 class Connection extends PDOfactory
 {
+    private $logger;
+
     const PDOdrivers = ['odbc'=>'odbc', 'mysql' =>'mysql'];
     private $connection;
     private $data = array();
 
     public function __construct(array $data)
     {
+        $this->logger = new Logger();
+
         if($this->validData($data))
             $this->setData($data);
     }
@@ -28,9 +33,11 @@ class Connection extends PDOfactory
                 $this->setConnection($pdoInstance);
             }
         }catch(\Throwable $e){
-            echo '<pre>';
-            var_dump($e->getMessage());
-            echo '</pre>';
+            $this->logger->error($e->getMessage(), [
+                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
+                "fileName" => $e->getFile(),
+                "line" => $e->getLine()
+            ]);
             die();
         }
 

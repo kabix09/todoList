@@ -5,7 +5,7 @@ use Psr\Log\AbstractLogger;
 
 class Logger extends AbstractLogger{
     const LOG_FILE_PATH = 'H:/xampp/tmp/todoList_log';
-    const LOG_DEFAULT_FORMAT = "[%s] - %s - %s : %s line: %s - %s\r\n";
+    const LOG_DEFAULT_FORMAT = "[%s] - %s - %s : %s - %s\r\n";
 
     private string $filePath;
     private string $logFormat;
@@ -23,22 +23,34 @@ class Logger extends AbstractLogger{
 
     public function log($level, $message, array $context = array())
     {
-            // every time check path
-        if(!$this->check($context['personalLog'] ?? FALSE, $context['userFingerprint'] ?? NULL))
-            throw new \ErrorException("failed to open log file");
+        try{
+                // every time check path
+            if(!$this->check($context['personalLog'] ?? FALSE, $context['userFingerprint'] ?? NULL))
+            {
+                throw new \ErrorException("Failed to open log folder/file - {$context['userFingerprint']}");
+            }
 
-            // append content
-        $fileHandler = fopen($this->fullPath, "a");
+                // append content
+            $fileHandler = fopen($this->fullPath, "a");
 
-        fwrite($fileHandler, $this->createLog(
-            $context['userFingerprint'],
-            $level,
-            $context['fileName'],
-            $context['line'],
-            $message
-        ));
+            fwrite($fileHandler, $this->createLog(
+                $context['userFingerprint'],
+                $level,
+                $context['fileName'],
+                $message
+            ));
 
-        fclose($fileHandler);
+            fclose($fileHandler);
+        }catch(\Exception $e)
+        {
+            $this->critical($e->getMessage(), [
+                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
+                "fileName" => __FILE__
+            ]);
+            var_dump($e->getFile() . " " . $e->getMessage());
+            die();
+        }
+
     }
 
     private function check(bool $flag = FALSE, ?string $userFingerprint = NULL) : bool
@@ -55,8 +67,11 @@ class Logger extends AbstractLogger{
         {
             $fullPath .= $userFingerprint . "/";
 
-            if(!$this->checkFile($fullPath))
-                return FALSE;
+            if(!$this->checkFile($fullPath, FALSE))     // flag - don't throw error and  let create sub directory
+            {
+                if(!mkdir($fullPath))   // try create if not exists
+                    return FALSE;
+            }
         }
 
 
@@ -68,22 +83,23 @@ class Logger extends AbstractLogger{
         return TRUE;
     }
 
-    private function checkFile(string $path){
-        try{
-            if(!is_dir($path))
-                throw new \Exception("folder/file don't exists - {$path}");
+    private function checkFile(string $path, bool $flag = TRUE){
+        if(!is_dir($path))
+            if($flag)
+                throw new \RuntimeException("Log folder/file don't exists - {$path}");
+            else
+                return FALSE;
 
-            if(!is_writable($path))
-                throw new \Exception("target folder/file is not writable - {$path}");
+        if(!is_writable($path))
+            if($flag)
+                throw new \RuntimeException("Target log folder/file is not writable - {$path}");
+            else
+                return FALSE;
 
-            return TRUE;
-        }catch(\Exception $e)
-        {
-            var_dump($e->getFile() . " " . $e->getMessage());
-        }
+        return TRUE;
     }
 
-    public function createLog(string $userFingerprint, string $logLevel, string $fileName, string $line, string $message)
+    public function createLog(string $userFingerprint, string $logLevel, string $fileName, string $message)
     {
         return
             sprintf($this->logFormat,
@@ -91,7 +107,6 @@ class Logger extends AbstractLogger{
                 $userFingerprint,
                 $logLevel,
                 $fileName,
-                $line,
                 $message
             );
     }

@@ -27,17 +27,28 @@ final class Register extends PasswordForm
 
             $this->notify();
 
-            // prepare object
+                // prepare object
             $this->object = $this->prepareUserObject();
 
-            // insert new user
+                // insert new user
             if(!$this->repository->insert($this->object))
             {
                 throw new \RuntimeException("couldn't create new user :/");
+            }else{
+                $this->logger->info("Successfully registered user: \"{$this->object->getNick()}\"", [
+                    "personalLog" => TRUE,
+                    "userFingerprint" => $this->object->getNick(),
+                    "fileName" => __FILE__
+                ]);
             }
 
-            // change status
+                // change status
             $this->processStatus = self::PROCESS_STATUS[1];
+        }else{
+            $this->logger->warning("The attempt to register has failed", [
+                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
+                "fileName" => __FILE__
+            ]);
         }
     }
 

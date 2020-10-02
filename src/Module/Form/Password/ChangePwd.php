@@ -36,11 +36,24 @@ final class ChangePwd extends PasswordForm
                 if(!$userManager->changePassword($this->object, $this->data['password']))
                 {
                     throw new \RuntimeException("password couldn't be changed");
+                }else
+                {
+                    $this->logger->info("Successfully changed password", [
+                        "personalLog" => TRUE,
+                        "userFingerprint" => $this->object->getNick(),
+                        "fileName" => __FILE__
+                    ]);
                 }
 
                 // change status
                 $this->processStatus = self::PROCESS_STATUS[1];
             }
+        }else{
+            $this->logger->warning("An attempt to change password on \"{$this->object->getNick()}\" account has failed", [
+                "personalLog" => TRUE,
+                "userFingerprint" => $this->object->getNick(),
+                "fileName" => __FILE__
+            ]);
         }
     }
 

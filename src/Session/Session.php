@@ -1,6 +1,7 @@
 <?php
 namespace App\Session;
 use App\Connection\Connection;
+use App\Logger\Logger;
 use App\Repository\SessionRepository;
 use App\Manager\SessionManager;
 use App\Session\Counter\Counter;
@@ -18,13 +19,24 @@ class Session extends SessionArray
 
     public function __construct(?int $sessionRequestsAmount = NULL)
     {
+        $this->logger = new Logger();
+
         $this->repository = new SessionRepository(new Connection(include DB_CONFIG));
 
         $this->session = new \App\Entity\Session();
         $this->verify = new SessionVerify($this->session);
         $this->manager = new SessionManager($this->session);
 
-        $this->init();
+        try {
+            $this->init();
+        }catch (\Exception $e)
+        {
+            $this->logger->error($e->getMessage(), [
+                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
+                "fileName" => $e->getFile(),
+                "line" => $e->getLine()
+            ]);
+        }
 
         $this->counter = Counter::init(
                                 $sessionRequestsAmount ?? self::DEFAULT_REQUESTS_COUNT,

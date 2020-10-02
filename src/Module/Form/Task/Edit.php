@@ -26,11 +26,25 @@ final class Edit extends TaskForm
                 "AND" => ["id='{$this->object->getId()}'","owner='{$this->object->getOwner()}'"]
             ]))
             {
-                throw new \RuntimeException("system error - couldn't update task id: {$this->task->getId()} :/");
+                throw new \RuntimeException("couldn't update task id: {$this->object->getId()} :/");
+            }else
+            {
+                $this->logger->info("Successfully edited task with id: {$this->object->getId()}", [
+                    "personalLog" => TRUE,
+                    "userFingerprint" => $this->object->getOwner(),
+                    "fileName" => __FILE__
+                ]);
             }
 
             // change status
             $this->processStatus = self::PROCESS_STATUS[1];
+        }else
+        {
+            $this->logger->warning("An attempt to edit task with id: {$this->data['id']} has failed", [
+                "personalLog" => TRUE,
+                "userFingerprint" => $this->data['owner'],
+                "fileName" => __FILE__
+            ]);
         }
     }
 

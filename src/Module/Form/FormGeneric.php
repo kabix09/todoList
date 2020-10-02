@@ -2,6 +2,7 @@
 namespace App\Module\Form;
 
 use App\Filter\Filter;
+use App\Logger\Logger;
 use App\Module\Observer\Observable;
 use App\Module\Observer\Observer;
 use App\Repository\BaseRepository;
@@ -20,10 +21,14 @@ abstract class FormGeneric implements Observable
     protected $object;     // entity result object
     protected array $errors = [];     // valid / script errors
 
+    protected Logger $logger;
+
     public function __construct(array $formData, BaseRepository $repository)
     {
         $this->data = $formData;
         $this->repository = $repository;
+
+        $this->logger = new Logger();
     }
 
     // observable methods
@@ -69,7 +74,15 @@ abstract class FormGeneric implements Observable
                     return TRUE;
             }
         }catch (\Exception $e){
-            var_dump($e->getFile() . " : " . $e->getLine() . " - " . $e->getMessage() . "\n\r");
+            echo '<pre>';
+            var_dump($e);
+            echo '</pre>';
+
+            $this->logger->error($e->getMessage(), [
+                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
+                "fileName" => $e->getFile()
+            ]);
+
             die();
         }
         return FALSE;

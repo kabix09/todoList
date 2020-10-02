@@ -27,6 +27,17 @@ final class Login extends UserForm
             $this->notify();
 
             $this->processStatus = self::PROCESS_STATUS[1];
+
+            $this->logger->info("Successfully logged in", [
+                "personalLog" => TRUE,
+                "userFingerprint" => $this->object->getNick(),
+                "fileName" => __FILE__
+            ]);
+        }else{
+            $this->logger->warning("An attempt to log into the \"{$this->data['nick']}\" account has failed", [
+                    "userFingerprint" => $_SERVER['REMOTE_ADDR'],
+                    "fileName" => __FILE__
+                ]);
         }
     }
 
