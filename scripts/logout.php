@@ -12,7 +12,8 @@ if(isset($session['user'])) {
     $logger->info("Successfully logout user", [
         "personalLog" => TRUE,
         "userFingerprint" => $user,
-        "fileName" => __FILE__
+        "className" => __CLASS__,
+        "functionName" => __FUNCTION__
     ]);
 }
 

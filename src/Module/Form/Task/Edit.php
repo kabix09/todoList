@@ -32,7 +32,8 @@ final class Edit extends TaskForm
                 $this->logger->info("Successfully edited task with id: {$this->object->getId()}", [
                     "personalLog" => TRUE,
                     "userFingerprint" => $this->object->getOwner(),
-                    "fileName" => __FILE__
+                    "className" => __CLASS__,
+                    "functionName" => __FUNCTION__
                 ]);
             }
 
@@ -40,10 +41,11 @@ final class Edit extends TaskForm
             $this->processStatus = self::PROCESS_STATUS[1];
         }else
         {
-            $this->logger->warning("An attempt to edit task with id: {$this->data['id']} has failed", [
+            $this->logger->error("An attempt to edit task with id: {$this->data['id']} has failed", [
                 "personalLog" => TRUE,
                 "userFingerprint" => $this->data['owner'],
-                "fileName" => __FILE__
+                "className" => __CLASS__,
+                "functionName" => __FUNCTION__
             ]);
         }
     }

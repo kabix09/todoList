@@ -17,6 +17,8 @@ if(!isset($session['user']) && !isset($session['tasks']))
 $id = $_GET['id'] ?? NULL;
 $owner = $_GET['owner'] ?? NULL;
 
+$logger = new \App\Logger\Logger();
+
 try {
     if($id === NULL || $owner === NULL)
         throw new RuntimeException("script error - missing elements");
@@ -44,15 +46,27 @@ try {
             "AND" => ["id = '{$id}'", "owner = '{$owner}'"]
         ]))
     {
+        // log event
+        $logger->info("Successfully removed task with id: {$id}", [
+            "personalLog" => TRUE,
+            "userFingerprint" => $session['user']->getNick(),
+            "className" => __CLASS__,
+            "functionName" => __FUNCTION__
+        ]);
             // no need to remove from session because
             // index.php automatically refresh task list
         header("Location: ../index.php");
     }else{
-        throw new RuntimeException("system error - couldn't remove task {$id}");
+        throw new RuntimeException("An attempt to remove task with id: {$id} has failed");
     }
 
 }catch (\Exception $e){
-    var_dump($e->getMessage());
+    $logger->error($e->getMessage(), [
+        "personalLog" => TRUE,
+        "userFingerprint" => $session['user']->getNick(),
+        "className" => __CLASS__,
+        "functionName" => __FUNCTION__
+    ]);
     die();
 }
 

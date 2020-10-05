@@ -16,7 +16,8 @@ if(!$sessionManager->manage())
 {
     $logger->critical("The user requesting access to the session could not be verified", [
         "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-        "fileName" => __FILE__
+        "className" => __CLASS__,
+        "functionName" => __FUNCTION__
     ]);
 
     die("The user requesting access to the session could not be verified");
@@ -31,7 +32,8 @@ try{
         $logger->info("Successfully activated account", [
             "personalLog" => TRUE,
             "userFingerprint" => $session['user']->getNick(),
-            "fileName" => __FILE__
+            "className" => __CLASS__,
+            "functionName" => __FUNCTION__
         ]);
             // redirect page
         header("Location: ../index.php");
@@ -43,7 +45,8 @@ try{
     $logger->warning($e->getMessage(), [
         "personalLog" => TRUE,
         "userFingerprint" => $session['user']->getNick(),
-        "fileName" => __FILE__
+        "className" => __CLASS__,
+        "functionName" => __FUNCTION__
     ]);
 }
 

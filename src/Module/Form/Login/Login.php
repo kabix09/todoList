@@ -31,12 +31,14 @@ final class Login extends UserForm
             $this->logger->info("Successfully logged in", [
                 "personalLog" => TRUE,
                 "userFingerprint" => $this->object->getNick(),
-                "fileName" => __FILE__
+                "className" => __CLASS__,
+                "functionName" => __FUNCTION__
             ]);
         }else{
-            $this->logger->warning("An attempt to log into the \"{$this->data['nick']}\" account has failed", [
+            $this->logger->error("An attempt to log into the \"{$this->data['nick']}\" account has failed", [
                     "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                    "fileName" => __FILE__
+                    "className" => __CLASS__,
+                    "functionName" => __FUNCTION__
                 ]);
         }
     }

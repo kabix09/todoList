@@ -80,7 +80,8 @@ abstract class FormGeneric implements Observable
 
             $this->logger->error($e->getMessage(), [
                 "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                "fileName" => $e->getFile()
+                "className" => __CLASS__,
+                "functionName" => __FUNCTION__
             ]);
 
             die();

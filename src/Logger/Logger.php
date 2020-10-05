@@ -5,7 +5,7 @@ use Psr\Log\AbstractLogger;
 
 class Logger extends AbstractLogger{
     const LOG_FILE_PATH = 'H:/xampp/tmp/todoList_log';
-    const LOG_DEFAULT_FORMAT = "[%s] - %s - %s : %s - %s\r\n";
+    const LOG_DEFAULT_FORMAT = "[%s] [%s] [%s] [%s::%s] - %s\r\n";
 
     private string $filePath;
     private string $logFormat;
@@ -36,7 +36,8 @@ class Logger extends AbstractLogger{
             fwrite($fileHandler, $this->createLog(
                 $context['userFingerprint'],
                 $level,
-                $context['fileName'],
+                $context['className'],
+                $context['functionName'],
                 $message
             ));
 
@@ -99,14 +100,15 @@ class Logger extends AbstractLogger{
         return TRUE;
     }
 
-    public function createLog(string $userFingerprint, string $logLevel, string $fileName, string $message)
+    public function createLog(string $userFingerprint, string $logLevel, string $className, string $functionName, string $message)
     {
         return
             sprintf($this->logFormat,
-                (new \DateTime())->format("H:i:s"),
+                (new \DateTime())->format("l, d-m-Y H:i:s") . " UTC " . (new \DateTime())->format("P"),
                 $userFingerprint,
-                $logLevel,
-                $fileName,
+                strtoupper($logLevel),
+                $className,
+                $functionName,
                 $message
             );
     }

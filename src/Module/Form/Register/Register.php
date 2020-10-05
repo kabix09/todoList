@@ -38,16 +38,18 @@ final class Register extends PasswordForm
                 $this->logger->info("Successfully registered user: \"{$this->object->getNick()}\"", [
                     "personalLog" => TRUE,
                     "userFingerprint" => $this->object->getNick(),
-                    "fileName" => __FILE__
+                    "className" => __CLASS__,
+                    "functionName" => __FUNCTION__
                 ]);
             }
 
                 // change status
             $this->processStatus = self::PROCESS_STATUS[1];
         }else{
-            $this->logger->warning("The attempt to register has failed", [
+            $this->logger->error("The attempt to register has failed", [
                 "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                "fileName" => __FILE__
+                "className" => __CLASS__,
+                "functionName" => __FUNCTION__
             ]);
         }
     }

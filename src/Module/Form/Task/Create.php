@@ -44,7 +44,8 @@ final class Create extends TaskForm
                 $this->logger->info("Successfully created new task with title: {$this->object->getTitle()}", [
                     "personalLog" => TRUE,
                     "userFingerprint" => $this->object->getOwner(),
-                    "fileName" => __FILE__
+                    "className" => __CLASS__,
+                    "functionName" => __FUNCTION__
                 ]);
             }
 
@@ -52,10 +53,11 @@ final class Create extends TaskForm
             $this->processStatus = self::PROCESS_STATUS[1];
         }else
         {
-            $this->logger->warning("An attempt to create new task has failed", [
+            $this->logger->error("An attempt to create new task has failed", [
                 "personalLog" => TRUE,
                 "userFingerprint" => $this->user->getNick(),
-                "fileName" => __FILE__
+                "className" => __CLASS__,
+                "functionName" => __FUNCTION__
             ]);
         }
     }

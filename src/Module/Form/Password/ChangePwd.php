@@ -41,7 +41,8 @@ final class ChangePwd extends PasswordForm
                     $this->logger->info("Successfully changed password", [
                         "personalLog" => TRUE,
                         "userFingerprint" => $this->object->getNick(),
-                        "fileName" => __FILE__
+                        "className" => __CLASS__,
+                        "functionName" => __FUNCTION__
                     ]);
                 }
 
@@ -49,10 +50,11 @@ final class ChangePwd extends PasswordForm
                 $this->processStatus = self::PROCESS_STATUS[1];
             }
         }else{
-            $this->logger->warning("An attempt to change password on \"{$this->object->getNick()}\" account has failed", [
+            $this->logger->error("An attempt to change password on \"{$this->object->getNick()}\" account has failed", [
                 "personalLog" => TRUE,
                 "userFingerprint" => $this->object->getNick(),
-                "fileName" => __FILE__
+                "className" => __CLASS__,
+                "functionName" => __FUNCTION__
             ]);
         }
     }
