@@ -2,6 +2,7 @@
 require_once '../init.php';
 
 use App\Connection\Connection;
+use App\Logger\MessageSheme;
 use App\Repository\TaskRepository;
 use App\Session\Session;
 use App\Session\SessionManager;
@@ -47,12 +48,8 @@ try {
         ]))
     {
         // log event
-        $logger->info("Successfully removed task with id: {$id}", [
-            "personalLog" => TRUE,
-            "userFingerprint" => $session['user']->getNick(),
-            "className" => __CLASS__,
-            "functionName" => __FUNCTION__
-        ]);
+        $config = new MessageSheme($session['user']->getNick(), __CLASS__, __FUNCTION__, TRUE);
+        $logger->info("Successfully removed task with id: {$id}", [$config]);
             // no need to remove from session because
             // index.php automatically refresh task list
         header("Location: ../index.php");
@@ -61,12 +58,8 @@ try {
     }
 
 }catch (\Exception $e){
-    $logger->error($e->getMessage(), [
-        "personalLog" => TRUE,
-        "userFingerprint" => $session['user']->getNick(),
-        "className" => __CLASS__,
-        "functionName" => __FUNCTION__
-    ]);
+    $config = new MessageSheme($session['user']->getNick(), __CLASS__, __FUNCTION__, TRUE);
+    $logger->error($e->getMessage(), [$config]);
     die();
 }
 

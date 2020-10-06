@@ -4,6 +4,7 @@ namespace App\Module\Form\Task;
 use App\Connection\Connection;
 use App\Entity\User;
 use App\Entity\Task;
+use App\Logger\MessageSheme;
 use App\Manager\TaskManager;
 use App\Module\Form\TaskForm;
 
@@ -41,24 +42,17 @@ final class Create extends TaskForm
                 throw new \RuntimeException("couldn't create new task :/");
             }else
             {
-                $this->logger->info("Successfully created new task with title: {$this->object->getTitle()}", [
-                    "personalLog" => TRUE,
-                    "userFingerprint" => $this->object->getOwner(),
-                    "className" => __CLASS__,
-                    "functionName" => __FUNCTION__
-                ]);
+                $config = new MessageSheme($this->object->getOwner(), __CLASS__, __FUNCTION__, TRUE);
+                $this->logger->info("Successfully created new task with title: {$this->object->getTitle()}", [$config]);
             }
 
             // change status
             $this->processStatus = self::PROCESS_STATUS[1];
         }else
         {
-            $this->logger->error("An attempt to create new task has failed", [
-                "personalLog" => TRUE,
-                "userFingerprint" => $this->user->getNick(),
-                "className" => __CLASS__,
-                "functionName" => __FUNCTION__
-            ]);
+            $config = new MessageSheme($this->user->getNick(), __CLASS__, __FUNCTION__, TRUE);
+
+            $this->logger->error("An attempt to create new task has failed", [$config]);
         }
     }
 

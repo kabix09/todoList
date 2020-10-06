@@ -1,6 +1,7 @@
 <?php
 namespace App\Module\Form\Login;
 
+use App\Logger\MessageSheme;
 use App\Module\Form\UserForm;
 
 final class Login extends UserForm
@@ -28,18 +29,12 @@ final class Login extends UserForm
 
             $this->processStatus = self::PROCESS_STATUS[1];
 
-            $this->logger->info("Successfully logged in", [
-                "personalLog" => TRUE,
-                "userFingerprint" => $this->object->getNick(),
-                "className" => __CLASS__,
-                "functionName" => __FUNCTION__
-            ]);
+
+            $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);
+            $this->logger->info("Successfully logged in", [$config]);
         }else{
-            $this->logger->error("An attempt to log into the \"{$this->data['nick']}\" account has failed", [
-                    "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                    "className" => __CLASS__,
-                    "functionName" => __FUNCTION__
-                ]);
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $this->logger->error("An attempt to log into the \"{$this->data['nick']}\" account has failed", [$config]);
         }
     }
 

@@ -12,6 +12,7 @@ class Logger extends AbstractLogger{
 
     private string $loggerFileName;
     protected string $fullPath;
+    private MessageSheme $config;
 
     public function __construct(?string $filePath = NULL, ?string $logFormat = NULL)
     {
@@ -24,37 +25,37 @@ class Logger extends AbstractLogger{
     public function log($level, $message, array $context = array())
     {
         try{
+            $this->config = current($context);
                 // every time check path
-            if(!$this->check($context['personalLog'] ?? FALSE, $context['userFingerprint'] ?? NULL))
+            if(!$this->check($this->config->isPersonalLog(), $this->config->getUserFingerprint()))
             {
-                throw new \ErrorException("Failed to open log folder/file - {$context['userFingerprint']}");
+                throw new \ErrorException("Failed to open log folder/file - {$this->config->getUserFingerprint()}");
             }
 
                 // append content
             $fileHandler = fopen($this->fullPath, "a");
 
             fwrite($fileHandler, $this->createLog(
-                $context['userFingerprint'],
+                $this->config->getUserFingerprint(),
                 $level,
-                $context['className'],
-                $context['functionName'],
+                $this->config->getClassName(),
+                $this->config->getFunctionName(),
                 $message
             ));
 
             fclose($fileHandler);
         }catch(\Exception $e)
         {
-            $this->critical($e->getMessage(), [
-                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                "fileName" => __FILE__
-            ]);
+            $newConfig = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $this->critical($e->getMessage(), [ $newConfig]);
+
             var_dump($e->getFile() . " " . $e->getMessage());
             die();
         }
 
     }
 
-    private function check(bool $flag = FALSE, ?string $userFingerprint = NULL) : bool
+    private function check(bool $flag = FALSE, string $userFingerprint = "") : bool
     {
             // 1 check MAIN path
         $fullPath = $this->filePath . "/";

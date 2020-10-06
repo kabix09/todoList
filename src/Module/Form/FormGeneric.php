@@ -3,6 +3,7 @@ namespace App\Module\Form;
 
 use App\Filter\Filter;
 use App\Logger\Logger;
+use App\Logger\MessageSheme;
 use App\Module\Observer\Observable;
 use App\Module\Observer\Observer;
 use App\Repository\BaseRepository;
@@ -78,11 +79,8 @@ abstract class FormGeneric implements Observable
             var_dump($e);
             echo '</pre>';
 
-            $this->logger->error($e->getMessage(), [
-                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                "className" => __CLASS__,
-                "functionName" => __FUNCTION__
-            ]);
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $this->logger->error($e->getMessage(), [$config]);
 
             die();
         }

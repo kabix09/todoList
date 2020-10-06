@@ -1,6 +1,7 @@
 <?php declare(strict_types = 1);
 namespace App\Connection;
 use App\Logger\Logger;
+use App\Logger\MessageSheme;
 use App\Connection\AbstractFactory\{mysqlFactory, odbcFactory, PDOfactory};
 use \PDO;
 
@@ -33,11 +34,8 @@ class Connection extends PDOfactory
                 $this->setConnection($pdoInstance);
             }
         }catch(\Throwable $e){
-            $this->logger->error($e->getMessage(), [
-                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                "fileName" => $e->getFile(),
-                "line" => $e->getLine()
-            ]);
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $this->logger->error($e->getMessage(), [$config]);
             die();
         }
 

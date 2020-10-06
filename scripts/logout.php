@@ -1,5 +1,7 @@
 <?php
 require_once '../init.php';
+
+use App\Logger\MessageSheme;
 use App\Session\Session;
 
 $session = new Session();
@@ -8,13 +10,9 @@ if(isset($session['user'])) {
 
     $session->destroy();
 
+    $config = new MessageSheme($user, __CLASS__, __FUNCTION__, TRUE);
     $logger = new \App\Logger\Logger();
-    $logger->info("Successfully logout user", [
-        "personalLog" => TRUE,
-        "userFingerprint" => $user,
-        "className" => __CLASS__,
-        "functionName" => __FUNCTION__
-    ]);
+    $logger->info("Successfully logout user", [$config]);
 }
 
 header("Location: ../index.php");

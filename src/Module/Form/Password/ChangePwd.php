@@ -3,6 +3,7 @@ namespace App\Module\Form\Password;
 
 use App\Connection\Connection;
 use App\Entity\User;
+use App\Logger\MessageSheme;
 use App\Manager\UserManager;
 use App\Module\Form\PasswordForm;
 
@@ -38,24 +39,16 @@ final class ChangePwd extends PasswordForm
                     throw new \RuntimeException("password couldn't be changed");
                 }else
                 {
-                    $this->logger->info("Successfully changed password", [
-                        "personalLog" => TRUE,
-                        "userFingerprint" => $this->object->getNick(),
-                        "className" => __CLASS__,
-                        "functionName" => __FUNCTION__
-                    ]);
+                    $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__);
+                    $this->logger->info("Successfully changed password", [$config]);
                 }
 
                 // change status
                 $this->processStatus = self::PROCESS_STATUS[1];
             }
         }else{
-            $this->logger->error("An attempt to change password on \"{$this->object->getNick()}\" account has failed", [
-                "personalLog" => TRUE,
-                "userFingerprint" => $this->object->getNick(),
-                "className" => __CLASS__,
-                "functionName" => __FUNCTION__
-            ]);
+            $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);
+            $this->logger->error("An attempt to change password on \"{$this->object->getNick()}\" account has failed", [$config]);
         }
     }
 

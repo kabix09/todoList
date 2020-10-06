@@ -2,6 +2,7 @@
 namespace App\Module\Form\Register;
 
 use App\Entity\User;
+use App\Logger\MessageSheme;
 use App\Manager\UserManager;
 use App\Module\Form\PasswordForm;
 
@@ -35,22 +36,15 @@ final class Register extends PasswordForm
             {
                 throw new \RuntimeException("couldn't create new user :/");
             }else{
-                $this->logger->info("Successfully registered user: \"{$this->object->getNick()}\"", [
-                    "personalLog" => TRUE,
-                    "userFingerprint" => $this->object->getNick(),
-                    "className" => __CLASS__,
-                    "functionName" => __FUNCTION__
-                ]);
+                $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);
+                $this->logger->info("Successfully registered user: \"{$this->object->getNick()}\"", [$config]);
             }
 
                 // change status
             $this->processStatus = self::PROCESS_STATUS[1];
         }else{
-            $this->logger->error("The attempt to register has failed", [
-                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                "className" => __CLASS__,
-                "functionName" => __FUNCTION__
-            ]);
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $this->logger->error("The attempt to register has failed", [$config]);
         }
     }
 
