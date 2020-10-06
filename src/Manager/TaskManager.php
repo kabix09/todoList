@@ -51,19 +51,32 @@ final class TaskManager
         ($task ?? $this->task)->setOwner($newOwner);
     }
 
+    /*
+     * status:
+     * 1) start data > current data || start data == null -> planned
+     * 2) start data <= current data && (finsh data <= current data || finish data == null) -> started
+     * 3) finish data < current data -> finished
+     */
     public function setStatus(?Task $task = NULL) : void {
-        // nie sprawdzam czy rozpoczęto to robi inna funkcja...
-        if(($task ?? $this->task)->getStartDate() === "" ||
-            ($task ?? $this->task)->getStartDate() === (new \DateTime())->format("Y-m-d"))
+        if(is_null(($task ?? $this->task)->getStartDate()))
+        {
             ($task ?? $this->task)->setStatus("prepared");
-        elseif (($task ?? $this->task)->getStartDate() > (new \DateTime())->format("Y-m-d"))
-            ($task ?? $this->task)->setStatus("planned");
-        elseif (($task ?? $this->task)->getTargetEndDate() !== "" &&
-            ($task ?? $this->task)->getTargetEndDate() < (new \DateTime())->format("Y-m-d"))
-            ($task ?? $this->task)->setStatus("finished");
+        }else
+        {
+            if(($task ?? $this->task)->getStartDate() > (new \DateTime())->format("Y-m-d"))
+            {
+                ($task ?? $this->task)->setStatus("planned");
+            }else
+            {
+                if(is_null(($task ?? $this->task)->getTargetEndDate()) ||  ($task ?? $this->task)->getTargetEndDate() <= (new \DateTime())->format("Y-m-d"))
+                {
+                    ($task ?? $this->task)->setStatus("started");
+                }else{
+                    ($task ?? $this->task)->setStatus("finished");
+                }
+            }
+        }
     }
-
-
 
     public function changeOwner(Task $task, string $newOwner) : bool{
         $task->setOwner($newOwner);
@@ -73,10 +86,6 @@ final class TaskManager
                 "where" => ["id", "= '{$task->getId()}'"]
             ]);
     }
-
-    // if start date > current date -> task inactive
-    // if start date <= current date -> task active
-    // if end date <= current date -> task finished
 
     public function changeStatus(Task $task, string $newStatus) : bool {
         if(!$this->validStatus($newStatus))

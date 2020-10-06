@@ -4,7 +4,7 @@ namespace App\Entity;
 final class Task extends Base
 {
     const TABLE_NAME = "task";
-    const STATUS = ["prepared", "planned", "active", "paused", "finished"];
+    const STATUS = ["prepared", "planned", "started", "paused", "finished"];
 
     const MAPPING = [
         "id" => "id",
