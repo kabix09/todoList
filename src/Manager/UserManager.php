@@ -1,125 +1,122 @@
 <?php
 namespace App\Manager;
-use App\Entity\Factory\UserFactory;
+use App\Connection\Connection;
+use App\Entity\Mapper\UserMapper;
 use App\Entity\User;
+use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 
-final class UserManager
+final class UserManager extends BaseManager
 {
-    private User $user;
-    private UserRepository $repository;
-
     public function __construct($data, UserRepository $userRepository)
     {
-        if(is_array($data))
-            $this->user = UserFactory::arrayToEntity($data);
-        elseif($data instanceof User)
-            $this->user = $data;
-        else
-            $this->user = (new UserFactory())->newUser();
+        $this->setObject($data);
 
-        $this->repository = $userRepository;
+        parent::__construct($userRepository);
+    }
+
+    protected function setObject($data)
+    {
+        if(is_array($data))
+            $this->object = UserMapper::arrayToEntity($data);
+        elseif($data instanceof User)
+            $this->object = $data;
+        else
+            $this->object = new User();
     }
 
     public function return(): User
     {
-        return $this->user;
+        return $this->object;
     }
 
-    public function hashPassword(string $password, ?User $user = NULL) : void{
-        ($user ?? $this->user)->setPassword(
-            password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3])
-        );
+    public function update(): bool
+    {
+        return $this->doUpdate([
+            "where" => NULL,
+            "AND" => ["nick = '{$this->object->getNick()}'", "email = '{$this->object->getEmail()}'"]
+        ]);
     }
 
-
-    public function setLastLogin(?User $user = NULL){
-        ($user ?? $this->user)->setLastLoginDate(
+    // ---- base entity config functions ----
+    public function changePassword(string $newPassword): void
+    {
+        $newHashedPassword = $this->hashPassword($newPassword);
+        if($newHashedPassword !== FALSE && !is_null($newHashedPassword)) {
+            $this->object->setPassword($newHashedPassword);
+        }else
+            throw new \Exception("try password hash failed");
+    }
+    public function setLastLogin(): void
+    {
+        $this->object->setLastLoginDate(
             $this->getDate()
         );
     }
-    public function setCreateAccount(?User $user = NULL){
-        ($user ?? $this->user)->setCreateAccountDate(
+    public function setCreateAccount(): void
+    {
+        $this->object->setCreateAccountDate(
             $this->getDate()
         );
     }
-    public function setDefaultStatus(?User $user = NULL){
-        ($user ?? $this->user)->setStatus(
+    public function setDefaultStatus(): void
+    {
+        $this->object->setStatus(
             "inactive"
         );
     }
 
-
-    public function changePassword(User $user, string $password)
+    public function getUserTasks(TaskRepository $taskRepository): void
     {
-        $user->setPassword(
-            password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3])
+        $this->object->setTaskCollection(
+            iterator_to_array(
+                $taskRepository->fetchByOwner(
+                    $this->object->getNick()
+                ), TRUE)
         );
-
-        return
-            $this->repository->update($user, [
-                    "where" => NULL,
-                    "AND" => ["nick = '{$user->getNick()}'", "email = '{$user->getEmail()}'"]
-                ]);
     }
 
-    public function activateTheAccount(User $user){
-        $user->setStatus('active');
+    // ---- action functions
+    public function activateTheAccount(): bool{
+        $this->object->setStatus('active');
 
-        return
-            $this->repository->update($user, [
-                "where" => NULL,
-                "AND" => ["nick = '{$user->getNick()}'", "email = '{$user->getEmail()}'"]
-            ]);
+        return $this->update();
     }
 
-    public function blockTheAccount(User $user){
-        $user->setStatus('blocked');
+    public function blockTheAccount(): bool{
+        $this->object->setStatus('blocked');
 
-        return
-            $this->repository->update($user, [
-                "where" => NULL,
-                "AND" => ["nick = '{$user->getNick()}'", "email = '{$user->getEmail()}'"]
-            ]);
+        return $this->update();
     }
 
-    public function upgradeLastLogin(User $user){
-        $this->setLastLogin($user);
+    public function upgradeLastLogin(): bool{
+        $this->setLastLogin();
 
-        return
-            $this->repository->update($user, [
-                "where" => NULL,
-                "AND" => ["nick = '{$user->getNick()}'", "email = '{$user->getEmail()}'"]
-            ]);
+        return $this->update();
     }
 
-    // finish ban and activate account
-    public function upgradeBan(User $user, string $time){
-        $banDate = $user->getEndBan();
-
-        if(isset($banDate) && ($banDate < $this->getDate()))
-        {
-            $user->setEndBan();
-            $this->activateTheAccount($user);
-        }
-    }
-
-    // set ban time
-    public function ban(User $user, int $days = 3){
-
-        $user->setEndBan(
+    public function banUser(int $days = 3): bool{
+        $this->object->setEndBan(
             $this->getDate(strtotime("+{$days} days"))
         );
 
-        return
-            $this->repository->update($user, [
-                "where" => NULL,
-                "AND" => ["nick = '{$user->getNick()}'", "email = '{$user->getEmail()}'"]
-            ]);
+        return $this->update();
+    }
+        // finish ban and activate account
+    public function manageBanStatus(User $user, string $time): ?bool{
+        $banDate = $this->object->getEndBan();
+
+        if(isset($banDate) && ($banDate < $this->getDate()))
+        {
+            $this->object->setEndBan();     // change date
+            return $this->activateTheAccount();    // change status to active
+        }
+        return NULL;
     }
 
-    private function getDate($date = NULL) : string {
+    // ---- ---- support functions
+    public function hashPassword(string $password): ?string{
         return
-            (new \DateTime())->format(User::DATE_FORMAT);
+            password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3]);
     }
 }

@@ -16,8 +16,8 @@ final class DateObserver extends LoginObserver
         if($login->getProcessStatus() === "correct")
         {
             try {
-                $this->updateLastLoginDate($login->getObject(),
-                                            new UserManager(NULL,
+                $this->updateLastLoginDate(new UserManager(
+                                                $login->getObject(),
                                                 new UserRepository(
                                                     new Connection(include DB_CONFIG))));
             } catch (\RuntimeException $e) {
@@ -33,9 +33,9 @@ final class DateObserver extends LoginObserver
             $this->doUpdate($observable);
     }
 
-    private function updateLastLoginDate(User $user, UserManager $userManager){
+    private function updateLastLoginDate(UserManager $userManager){
 
-        if($userManager->upgradeLastLogin($user))
+        if($userManager->upgradeLastLogin())
             return TRUE;
         else
             throw new \RuntimeException("system error - couldn't update last login date");

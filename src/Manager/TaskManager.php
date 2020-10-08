@@ -1,54 +1,55 @@
 <?php
 namespace App\Manager;
 
-use App\Entity\Factory\TaskFactory;
+use App\Entity\Mapper\TaskMapper;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
 
-final class TaskManager
+final class TaskManager extends BaseManager
 {
-    private Task $task;
-    private TaskRepository $repository;
-
     public function __construct($data, TaskRepository $taskRepository)
     {
+        $this->setObject($data);
+
+        parent::__construct($taskRepository);
+    }
+
+    protected function setObject($data)
+    {
         if(is_array($data))
-            $this->task = TaskFactory::arrayToEntity($data);
+            $this->object = TaskMapper::arrayToEntity($data);
         elseif($data instanceof Task)
-            $this->task = $data;
+            $this->object = $data;
         else
-            $this->task = (new TaskFactory())->newTask();
-
-        $this->repository = $taskRepository;
+            $this->object = new Task();
     }
 
-    public function return():Task{
-        return $this->task;
+    public function return(): Task{
+        return $this->object;
     }
 
+    public function update(): bool
+    {
+        $this->doUpdate([
+            "where" => ["id", "= '{$this->object->getId()}'"]
+        ]);
+    }
 
-    public function setCreateDate(?Task $task = NULL){
-        ($task ?? $this->task)->setCreateDate(
+    // ---- base entity config functions ----
+    public function setCreateDate(): void
+    {
+        $this->object->setCreateDate(
             $this->getDate()
         );
     }
-
-    public function setAuthor(string $author, bool $flag = FALSE, ?Task $task = NULL) : void {
-        ($task ?? $this->task)->setAuthor($author);
+    public function setAuthor(string $author, bool $flag = FALSE): void {
+        $this->object->setAuthor($author);
 
         if($flag)
-            ($task ?? $this->task)->setOwner($author);
-
-        /* return
-            $this->repository->update($this, [
-                "where" => ["id", "= '{$task->getId()}'"]
-            ]);
-
-        */
+            ($task ?? $this->object)->setOwner($author);
     }
-
-    public function setOwner(string $newOwner, ?Task $task = NULL) : void{
-        ($task ?? $this->task)->setOwner($newOwner);
+    public function setOwner(string $newOwner): void{
+        $this->object->setOwner($newOwner);
     }
 
     /*
@@ -57,48 +58,44 @@ final class TaskManager
      * 2) start data <= current data && (finsh data <= current data || finish data == null) -> started
      * 3) finish data < current data -> finished
      */
-    public function setStatus(?Task $task = NULL) : void {
-        if(is_null(($task ?? $this->task)->getStartDate()))
+    public function setStatus(): void {
+        if(is_null($this->object->getStartDate()))
         {
-            ($task ?? $this->task)->setStatus("prepared");
+            $this->object->setStatus("prepared");
         }else
         {
-            if(($task ?? $this->task)->getStartDate() > (new \DateTime())->format("Y-m-d"))
+            if($this->object->getStartDate() > (new \DateTime())->format("Y-m-d"))
             {
-                ($task ?? $this->task)->setStatus("planned");
+                $this->object->setStatus("planned");
             }else
             {
-                if(is_null(($task ?? $this->task)->getTargetEndDate()) ||  ($task ?? $this->task)->getTargetEndDate() <= (new \DateTime())->format("Y-m-d"))
+                if(is_null($this->object->getTargetEndDate()) ||  $this->object->getTargetEndDate() <= (new \DateTime())->format("Y-m-d"))
                 {
-                    ($task ?? $this->task)->setStatus("started");
+                    $this->object->setStatus("started");
                 }else{
-                    ($task ?? $this->task)->setStatus("finished");
+                    $this->object->setStatus("finished");
                 }
             }
         }
     }
 
-    public function changeOwner(Task $task, string $newOwner) : bool{
-        $task->setOwner($newOwner);
+    // ---- action functions
+    public function changeOwner(string $newOwner): bool{
+        $this->object->setOwner($newOwner);
 
-        return
-            $this->repository->update($this, [
-                "where" => ["id", "= '{$task->getId()}'"]
-            ]);
+        return $this->update();
     }
 
-    public function changeStatus(Task $task, string $newStatus) : bool {
+    public function changeStatus(string $newStatus): bool {
         if(!$this->validStatus($newStatus))
             return FALSE;
 
-        $task->setStatus($newStatus);
+        $this->object->setStatus($newStatus);
 
-        return
-            $this->repository->update($this, [
-                "where" => ["id", "= '{$task->getId()}'"]
-            ]);
+        return $this->update();
     }
 
+    // ---- ---- support functions
     private function validStatus(string $newStatus) : bool{
         if(!in_array($newStatus, Task::STATUS))
             throw new \RuntimeException("illegal status");
@@ -106,14 +103,7 @@ final class TaskManager
         return TRUE;
     }
 
-    private function getDate($date = NULL) : string {
-        return
-            (new \DateTime())->format('Y-m-d');
-    }
-
-
     public function toArray(): array {
-        return TaskFactory::entityToArray($this->task);
-    }
-
+        return TaskMapper::entityToArray($this->object);
+    } // is it really necessary??
 }

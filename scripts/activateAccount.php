@@ -25,9 +25,9 @@ if(!$sessionManager->manage())
 }
 
 try{
-    $new = new UserManager(NULL, new UserRepository(new Connection(include DB_CONFIG)));
+    $new = new UserManager($session['user'], new UserRepository(new Connection(include DB_CONFIG)));
 
-    if($new->activateTheAccount($session['user']))
+    if($new->activateTheAccount())
     {
             // log event
         $config = new MessageSheme($session['user']->getNick(), __CLASS__, __FUNCTION__, TRUE);

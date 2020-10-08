@@ -31,16 +31,22 @@ final class ChangePwd extends PasswordForm
 
             if ($this->processStatus === self::PROCESS_STATUS[2])
             {
-                $userManager = new UserManager(NULL, $this->repository);
+                $userManager = new UserManager($this->object, $this->repository);
 
-                // insert new user
-                if(!$userManager->changePassword($this->object, $this->data['password']))
-                {
-                    throw new \RuntimeException("password couldn't be changed");
-                }else
+                try{
+                    $userManager->changePassword($this->data['password']);
+
+                    if(!$userManager->update())
+                    {
+                        throw new \RuntimeException("password couldn't be changed");
+                    }else{
+                        $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__);
+                        $this->logger->info("Successfully changed password", [$config]);
+                    }
+                }catch (\Exception $e)
                 {
                     $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__);
-                    $this->logger->info("Successfully changed password", [$config]);
+                    $this->logger->error($e->getMessage(), [$config]);
                 }
 
                 // change status

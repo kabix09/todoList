@@ -1,76 +1,72 @@
 <?php
 namespace App\Manager;
 
-use App\Entity\Factory\SessionFactory;
+use App\Entity\Mapper\SessionMapper;
 use App\Entity\Session;
 
-class SessionManager
+class SessionManager extends BaseManager
 {
-    private Session $session;
-    //private SessionRepository $repository;
-
     public function __construct($data = NULL)
     {
+        $this->setObject($data);
+
+        parent::__construct(NULL);
+    }
+
+    protected function setObject($data)
+    {
         if(is_array($data))
-            $this->session = SessionFactory::arrayToEntity($data);
+            $this->object = SessionMapper::arrayToEntity($data);
         elseif($data instanceof Session)
-            $this->session = $data;
+            $this->object = $data;
         else
         {
-            $this->session = (new SessionFactory())->newSession();
+            $this->object = new Session();
             $this->init();
         }
-
-
-        //$this->repository = $userRepository;
     }
 
-
-
-    public function set(Session $session){
-        foreach (get_class_methods(Session::class) as $functionName)
-        {
-            if(strpos($functionName, "set") === 0)
-            {
-                $getter = "get" . substr($functionName, 3);
-                $this->session->$functionName($session->$getter());
-            }
-
-        }
-    }
-    public function return():Session{
-        return $this->session;
+    public function return(): Session{
+        return $this->object;
     }
 
+    public function update(): bool
+    {
+        // TODO: Implement update() method.
+    }
+
+    // ---- base entity setting functions ----
+    private function setUserIP(): void
+    {
+        $this->object->setUserIP($_SERVER['REMOTE_ADDR']);
+    }
+    private function setBrowserData(): void
+    {
+        $this->object->setBrowserData($_SERVER['HTTP_USER_AGENT']);
+    }
+
+    // ---- base entity config functions ----
+    public function updateSessionKey(string $sessionKey): void
+    {
+        $this->object->setSessionKey($sessionKey);
+    }
+    public function updateUserNick(?string $userNick = NULL): void
+    {
+        $this->object->setUserNick($userNick);
+    }
+    public function updateCreateTime(?string $newTime = NULL): void
+    {
+        if(is_null($newTime))
+            $newTime = $this->getDate();
+
+        $this->object->setCreateTime($newTime);
+    }
+
+    // ---- ---- support functions
     public function init(){
         $this->setUserIP();
         $this->setBrowserData();
 
         //$this->updateCreateTime();
-    }
-
-    private function setUserIP(){
-        $this->session->setUserIP($_SERVER['REMOTE_ADDR']);
-    }
-    private function setBrowserData(){
-        $this->session->setBrowserData($_SERVER['HTTP_USER_AGENT']);
-    }
-    public function updateSessionKey(string $sessionKey, ?Session $session = NULL){
-        ($session ?? $this->session)->setSessionKey($sessionKey);
-    }
-    public function updateUserNick(?string $userNick = NULL, ?Session $session = NULL){
-        ($session ?? $this->session)->setUserNick($userNick);
-    }
-    public function updateCreateTime(?string $newTime = NULL, ?Session $session = NULL){
-        if(is_null($newTime))
-            $newTime = $this->getDate();
-
-        ($session ?? $this->session)->setCreateTime($newTime);
-
-    }
-
-    private function getDate() : string {
-        return
-            (new \DateTime())->format(Session::DATE_FORMAT);
     }
 }
