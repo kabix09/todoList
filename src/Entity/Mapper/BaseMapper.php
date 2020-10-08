@@ -1,9 +1,9 @@
 <?php
-namespace App\Entity\Factory;
+namespace App\Entity\Mapper;
 
 use App\Entity\Base;
 
-abstract class BaseFactory implements EntityFactory
+abstract class BaseMapper implements EntityMapper
 {
     public function createEntity(array $data){
         return static::arrayToEntity($data);

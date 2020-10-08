@@ -1,9 +1,9 @@
 <?php
-namespace App\Entity\Factory;
+namespace App\Entity\Mapper;
 
 use App\Entity\ { Task, Base};
 
-class TaskFactory extends BaseFactory
+class TaskMapper extends BaseMapper
 {
     public static function arrayToEntity(array $data)
     {
@@ -21,9 +21,5 @@ class TaskFactory extends BaseFactory
     public static function targetClass(): string
     {
         return Task::class;
-    }
-
-    public function newTask(): Task{
-        return new Task();
     }
 }

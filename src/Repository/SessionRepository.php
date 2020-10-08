@@ -4,14 +4,14 @@ namespace App\Repository;
 
 use App\Connection\Connection;
 use App\Connection\QueryBuilder;
-use App\Entity\Factory\SessionFactory;
+use App\Entity\Mapper\SessionMapper;
 use App\Entity\Session;
 
 class SessionRepository extends BaseRepository
 {
     public function __construct(Connection $connection)
     {
-        parent::__construct($connection, Session::TABLE_NAME, new SessionFactory());
+        parent::__construct($connection, Session::TABLE_NAME, new SessionMapper());
     }
 
     public function find(array $columns = array(), array $criteria = array())

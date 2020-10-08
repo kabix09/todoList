@@ -2,14 +2,14 @@
 namespace App\Repository;
 use App\Connection\Connection;
 use App\Connection\QueryBuilder;
-use App\Entity\Factory\TaskFactory;
+use App\Entity\Mapper\TaskMapper;
 use App\Entity\Task;
 
 class TaskRepository extends BaseRepository
 {
     public function __construct(Connection $connection)
     {
-        parent::__construct($connection, Task::TABLE_NAME, new TaskFactory());
+        parent::__construct($connection, Task::TABLE_NAME, new TaskMapper());
     }
 
     public function find(array $columns = array(), array $criteria = array())

@@ -1,7 +1,7 @@
 <?php
-namespace App\Entity\Factory;
+namespace App\Entity\Mapper;
 
-interface EntityFactory
+interface EntityMapper
 {
     public function createEntity(array $data);
     public function createEntityCollection(array $data); // return generator

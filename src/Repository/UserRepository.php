@@ -2,7 +2,7 @@
 namespace App\Repository;
 use App\Connection\Connection;
 use App\Connection\QueryBuilder;
-use App\Entity\Factory\UserFactory;
+use App\Entity\Mapper\UserMapper;
 use App\Entity\User;
 
 final class UserRepository extends BaseRepository
@@ -10,7 +10,7 @@ final class UserRepository extends BaseRepository
 
     public function __construct(Connection $connection)
     {
-        parent::__construct($connection, User::TABLE_NAME, new UserFactory());
+        parent::__construct($connection, User::TABLE_NAME, new UserMapper());
     }
 
     public function find(array $columns = array(), array $criteria = array())

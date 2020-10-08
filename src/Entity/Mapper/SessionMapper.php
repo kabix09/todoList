@@ -1,9 +1,9 @@
 <?php
-namespace App\Entity\Factory;
+namespace App\Entity\Mapper;
 
 use App\Entity\{Base, Session};
 
-class SessionFactory extends BaseFactory
+class SessionMapper extends BaseMapper
 {
 
     public static function targetClass(): string
@@ -23,9 +23,5 @@ class SessionFactory extends BaseFactory
             return parent::doEntityToArray($objectInstance);
 
         return NULL;
-    }
-
-    public function newSession(){
-        return new Session();
     }
 }

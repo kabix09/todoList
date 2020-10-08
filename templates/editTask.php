@@ -1,7 +1,7 @@
 <?php
 require_once '../vendor/autoload.php';
 
-use App\Entity\Factory\TaskFactory;
+use App\Entity\Mapper\TaskMapper;
 use App\Form\Factory\Factory;
 use App\Session\Session;
 use App\Token\Token;
@@ -21,7 +21,7 @@ foreach ($session['tasks'] as $task)
     }
 }
 
-$editedTask = TaskFactory::entityToArray($editedTask);
+$editedTask = TaskMapper::entityToArray($editedTask);
 
 foreach ($taskConfig as $element => &$values)
 {

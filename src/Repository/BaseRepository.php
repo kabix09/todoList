@@ -4,7 +4,7 @@ namespace App\Repository;
 use App\Connection\Connection;
 use App\Connection\QueryBuilder;
 use App\Entity\Base;
-use App\Entity\Factory\BaseFactory;
+use App\Entity\Mapper\BaseMapper;
 
 abstract class BaseRepository implements Repository
 {
@@ -12,7 +12,7 @@ abstract class BaseRepository implements Repository
     protected $entityFactory;
     protected $dbName = "";
 
-    public function __construct(Connection $connection, string $dbName, BaseFactory $baseFactory){
+    public function __construct(Connection $connection, string $dbName, BaseMapper $baseFactory){
         $this->connection = $connection;
         $this->dbName = $dbName;
         $this->entityFactory = $baseFactory;

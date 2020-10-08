@@ -1,9 +1,9 @@
 <?php
-namespace App\Entity\Factory;
+namespace App\Entity\Mapper;
 
 use App\Entity\ {Base, User};
 
-final class UserFactory extends BaseFactory
+final class UserMapper extends BaseMapper
 {
     public static function arrayToEntity(array $data): ?Base
     {
@@ -21,9 +21,5 @@ final class UserFactory extends BaseFactory
     public static function targetClass(): string
     {
         return User::class;
-    }
-
-    public function newUser() : User{
-        return new User();
     }
 }
