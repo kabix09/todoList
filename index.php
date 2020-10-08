@@ -2,7 +2,9 @@
 require_once './init.php';
 
 use App\Connection\Connection;
+use App\Manager\UserManager;
 use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use App\Session\Session;
 
 $session = new Session();
@@ -31,22 +33,5 @@ foreach ($sessionKeys as $key)
     }
 }
 
-    // refresh task list if user is logged
-if(isset($session["user"]))   //  && !isset($_SESSION['tasks'])
-{
-        // if exists remove old tasks
-    if(isset($session["tasks"]))
-        unset($session["tasks"]);
-
-        // download all tasks
-    $taskRepo = new TaskRepository(new Connection(include DB_CONFIG));
-    $tasks = $taskRepo->find(array(), [
-        "WHERE" => ["owner", "= '{$session["user"]->getNick()}'"]
-    ]);
-
-    foreach ($tasks as $task)
-        $session["tasks"] = array_merge($session["tasks"] ?? array(), [$task]);
-
-}
     // main page
 include ROOT_PATH . './templates/index.php';

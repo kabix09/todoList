@@ -2,9 +2,12 @@
 require_once '../init.php';
 
 use App\Connection\Connection;
+use App\Manager\UserManager;
 use App\Module\Form\Task\Create;
 use App\Module\SessionObserver;
 use App\Module\ErrorObserver;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use App\Session\Session;
 use App\Token\Token;
 
@@ -47,9 +50,24 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET') {
     {
         unset($session['token']);
 
-        $session["tasks"] = array_merge($session["tasks"] ?? array(), [$createTask->getObject()]);
 
-            // 2 - set header
+            // 2 - refresh task list
+
+            // if exists remove old tasks
+        if(isset($session["tasks"]))
+            unset($session["tasks"]);
+
+            // download all tasks - v 2.0
+        $connection = new Connection(include DB_CONFIG);
+
+        $userManager = new UserManager($session['user'],
+                                        new UserRepository($connection));
+        $userManager->getUserTasks(new TaskRepository($connection));
+
+        foreach ($session['user']->getTaskCollection() as $task)
+            $session["tasks"] = array_merge($session["tasks"] ?? array(), [$task]);
+
+            // 3 - set header
         header("Location: ../index.php");
     }else
         header("Location: ./createTask.php");

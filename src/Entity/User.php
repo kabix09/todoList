@@ -26,6 +26,8 @@ final class User extends Base
     private string $status;
     private ?string $endBan;
 
+    private $taskCollection;
+
     public function __construct()
     {
         $this->nick = "";
@@ -35,6 +37,8 @@ final class User extends Base
         $this->createAccountDate = "";
         $this->status = "";
         $this->endBan  = NULL;
+
+        $this->taskCollection = [];
     }
 
     /**
@@ -151,6 +155,22 @@ final class User extends Base
     public function setEndBan(?string $endBan): void
     {
         $this->endBan = $endBan;
+    }
+
+    /**
+     * @param array $taskCollection
+     */
+    public function setTaskCollection(array $taskCollection): void
+    {
+        $this->taskCollection = $taskCollection;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTaskCollection(): array
+    {
+        return $this->taskCollection;
     }
 
 }

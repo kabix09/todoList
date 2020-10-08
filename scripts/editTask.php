@@ -2,9 +2,12 @@
 require_once '../init.php';
 
 use App\Connection\Connection;
+use App\Manager\UserManager;
 use App\Module\ErrorObserver;
 use App\Module\SessionObserver;
 use App\Module\Form\Task\Edit;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use App\Session\Session;
 use App\Token\Token;
 
@@ -72,8 +75,22 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     {
         unset($session['token']);
 
-        // index.php automatically refresh task list stored in session['tasks']
-        // next tasks.js read this data and create list view
+            // 2 - refresh task list
+                // if exists remove old tasks
+        if(isset($session["tasks"]))
+            unset($session["tasks"]);
+
+                // download all tasks - v 2.0
+        $connection = new Connection(include DB_CONFIG);
+
+        $userManager = new UserManager($session['user'],
+            new UserRepository($connection));
+        $userManager->getUserTasks(new TaskRepository($connection));
+
+        foreach ($session['user']->getTaskCollection() as $task)
+            $session["tasks"] = array_merge($session["tasks"] ?? array(), [$task]);
+
+        // index.php don't refresh automatically task list in purpose to recuse query amount
 
             // 2 - set header
         header("Location: ../index.php");

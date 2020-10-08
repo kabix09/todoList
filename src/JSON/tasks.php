@@ -2,23 +2,27 @@
 require_once  '../../init.php';
 
 use App\Connection\Connection;
+use App\Manager\UserManager;
 use App\Repository\TaskRepository;
-use App\Manager\TaskManager;
+use App\Repository\UserRepository;
 use App\Session\Session;
 
 $session = new Session();
 $tasksArray = [];
 if(isset($session['user']) && isset($session['tasks']))
 {
-    $taskRepo = new TaskRepository(new Connection(include DB_CONFIG));
-    $tasksGenerator = $taskRepo->find(array(), [
-        "WHERE" => ["owner", "= '{$session['user']->getNick()}'"]
-    ]);
+    // download all tasks - v 2.0
+    $connection = new Connection(include DB_CONFIG);
 
-    foreach ($tasksGenerator as $task)
+    if(empty($session['user']->getTaskCollection()))
     {
-        $tasksArray[] = (new TaskManager($task, $taskRepo))->toArray();
+        $userManager = new UserManager($session['user'],
+                                        new UserRepository($connection));
+        $userManager->getUserTasks(new TaskRepository($connection));
     }
+
+    foreach ($session['user']->getTasks() as $task)
+        $tasksArray[] = json_encode($task);
 }
 
 header('Content-Type: application/json');
