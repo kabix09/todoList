@@ -9,7 +9,7 @@ abstract class BaseManager
     protected $repository;
     protected $object;
 
-    public function __construct(BaseRepository $repository)
+    public function __construct(?BaseRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -34,10 +34,9 @@ abstract class BaseManager
         {
             if(strpos($functionName, "set") === 0)
             {
-                $getter = "get" . substr($functionName, 3);
+                $getter = "get" . ucfirst(substr($functionName, 3));
                 $this->object->$functionName($copiedObject->$getter());
             }
-
         }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Manager;
 use App\Connection\Connection;
+use App\Entity\Mapper\TaskMapper;
 use App\Entity\Mapper\UserMapper;
 use App\Entity\User;
 use App\Repository\TaskRepository;
@@ -68,12 +69,16 @@ final class UserManager extends BaseManager
 
     public function getUserTasks(TaskRepository $taskRepository): void
     {
-        $this->object->setTaskCollection(
-            iterator_to_array(
-                $taskRepository->fetchByOwner(
-                    $this->object->getNick()
-                ), TRUE)
-        );
+        $rawList = iterator_to_array(
+            $taskRepository->fetchByOwner(
+                $this->object->getNick()
+            ), TRUE);
+
+        foreach ($rawList as $key => $object){
+            $rawList[$key] = TaskMapper::entityToArray($object);
+        }
+
+        $this->object->setTaskCollection($rawList);
     }
 
     // ---- action functions

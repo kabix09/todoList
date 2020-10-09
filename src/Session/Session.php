@@ -39,9 +39,9 @@ class Session extends SessionArray
         }
 
         $this->counter = Counter::init(
-                                $sessionRequestsAmount ?? self::DEFAULT_REQUESTS_COUNT,
-                                $_SESSION['counter'] ?? NULL
-                                    );
+                            $sessionRequestsAmount ?? self::DEFAULT_REQUESTS_COUNT,
+                            $_SESSION['counter'] ?? NULL
+                                );
     }
 
     private function init(): void{
@@ -50,14 +50,16 @@ class Session extends SessionArray
             // 1 download session object from database
         $tmp = $this->fetchSession();
 
-        if($tmp instanceof \App\Entity\Session)
-            $this->manager->set($tmp);
 
-            // 2 if not exist, create new session bd object
-        if(is_null($tmp))
+        if($tmp instanceof \App\Entity\Session)
+        {
+            $this->manager->set($tmp, \App\Entity\Session::class);
+
+        }elseif(is_null($tmp))      // 2 if not exist, create new session bd object
         {
                 // create new session object
             $this->manager->init();
+
 
                 // insert new session object
             $this->repository->insert($this->session);
@@ -94,10 +96,13 @@ class Session extends SessionArray
         }
 
             // 5 download correct session instance from
-         $this->manager->set($this->repository->find(array(),[
-            "WHERE" => NULL,
-            "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
-        ])->current());
+         $this->manager->set(
+             $this->repository->find(array(),
+                 [
+                     "WHERE" => NULL,
+                     "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
+                 ])->current(),
+             \App\Entity\Session::class);
     }
 
     // remove old sessions
@@ -148,8 +153,8 @@ class Session extends SessionArray
         if($this->session->getUserNick() !== NULL)
             return TRUE;
 
-        $this->manager->updateUserNick($nick, $this->session);
-        $this->manager->updateCreateTime(NULL, $this->session);
+        $this->manager->updateUserNick($nick);
+        $this->manager->updateCreateTime(NULL);
 
         return $this->refreshSessionEntity();
     }
