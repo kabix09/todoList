@@ -54,6 +54,7 @@ final class Register extends PasswordForm
         $userManager = new UserManager($this->data, $this->repository);
             // hash password
         $userManager->changePassword($this->data['password']);
+        $userManager->generateKey();
 
         return $userManager->return();
     }

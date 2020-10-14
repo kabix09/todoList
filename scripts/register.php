@@ -2,6 +2,7 @@
 require_once '../init.php';
 
 use App\Connection\Connection;
+use App\Module\Form\Register\Observers\MailObserver;
 use App\Module\Form\Register\Register;
 use App\Module\ErrorObserver;
 use App\Module\SessionObserver;
@@ -44,6 +45,7 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
             // create usefully observers
     new ErrorObserver($register);
     new SessionObserver($register);
+    new MailObserver($register);
 
             // execute register logic
     if($register->handler($session['token'],
