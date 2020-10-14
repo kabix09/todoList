@@ -10,8 +10,8 @@ class Token
         $this->token = $token;
     }
 
-    public function generate(int $length = 16) : Token{
-        $this->token = random_bytes($length);
+    public function generate(int $length = 32) : Token{
+        $this->token = (new \DateTime())->getTimestamp() . random_bytes($length);
         return $this;
     }
 
@@ -35,8 +35,8 @@ class Token
         return $this;
     }
 
-    public function hash() : Token {
-        $this->token = sodium_crypto_generichash($this->token);
+    public function hash(int $length = 64, string $key = '') : Token {
+        $this->token = sodium_crypto_generichash($this->token, $key, $length);
         return $this;
     }
 
