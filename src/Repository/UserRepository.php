@@ -89,4 +89,24 @@ final class UserRepository extends BaseRepository
         else
             return NULL;
     }
+
+    public function fetchByKey(string $key){
+        $statement = $this->connection->getConnection()->prepare(
+            QueryBuilder::select($this->dbName)->where("account_key = :account_key")::getSQL()
+        );
+
+        $statement->bindValue(':account_key', $key, \PDO::PARAM_STR);
+        $statement->execute();
+
+        if($statement->rowCount() === 1)
+        {
+            $result = $statement->fetch(\PDO::FETCH_ASSOC);
+            $statement->closeCursor();
+
+            if($result)
+                return $this->entityFactory->createEntity($result);
+        }
+
+        return NULL;
+    }
 }

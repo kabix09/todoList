@@ -6,6 +6,7 @@ use App\Entity\Mapper\UserMapper;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
+use App\Token\Token;
 
 final class UserManager extends BaseManager
 {
@@ -67,6 +68,13 @@ final class UserManager extends BaseManager
         );
     }
 
+    public function generateKey(){
+        $this->object->setKey(
+            (new Token())->generate(50)->hash()->binToHex()->getToken()
+        );
+    }
+
+
     public function getUserTasks(TaskRepository $taskRepository): void
     {
         $rawList = iterator_to_array(
@@ -104,6 +112,13 @@ final class UserManager extends BaseManager
         $this->object->setEndBan(
             $this->getDate(strtotime("+{$days} days"))
         );
+
+        return $this->update();
+    }
+
+    public function changeAccountKey(?string $newKey = NULL)
+    {
+        $this->object->setKey($newKey);
 
         return $this->update();
     }

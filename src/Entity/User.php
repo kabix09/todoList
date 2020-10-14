@@ -15,7 +15,8 @@ final class User extends Base
         "last_login_date" => "lastLoginDate",
         "create_account_date" => "createAccountDate",
         "account_status" => "status",
-        "end_ban" => "endBan"
+        "end_ban" => "endBan",
+        "account_key" => "key"
     ];
 
     private string $nick;
@@ -25,6 +26,7 @@ final class User extends Base
     private string $createAccountDate;
     private string $status;
     private ?string $endBan;
+    private ?string $key;
 
     private $taskCollection;
 
@@ -37,6 +39,7 @@ final class User extends Base
         $this->createAccountDate = "";
         $this->status = "";
         $this->endBan  = NULL;
+        $this->key = NULL;
 
         $this->taskCollection = [];
     }
@@ -158,6 +161,22 @@ final class User extends Base
     }
 
     /**
+     * @param string|null $key
+     */
+    public function setKey(?string $key): void
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getKey(): ?string
+    {
+        return $this->key;
+    }
+
+    /**
      * @param array $taskCollection
      */
     public function setTaskCollection(array $taskCollection): void
@@ -172,5 +191,4 @@ final class User extends Base
     {
         return $this->taskCollection;
     }
-
 }
