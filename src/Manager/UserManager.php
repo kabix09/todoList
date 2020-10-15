@@ -77,13 +77,9 @@ final class UserManager extends BaseManager
 
     public function getUserTasks(TaskRepository $taskRepository): void
     {
-        $rawList = iterator_to_array(
-            $taskRepository->fetchByOwner(
-                $this->object->getNick()
-            ), TRUE);
-
-        foreach ($rawList as $key => $object){
-            $rawList[$key] = TaskMapper::entityToArray($object);
+        $rawList = [];
+        foreach ($taskRepository->fetchByOwner($this->object->getNick()) as $key => $object){
+            $rawList[$key] = $object;
         }
 
         $this->object->setTaskCollection($rawList);

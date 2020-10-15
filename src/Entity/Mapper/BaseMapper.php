@@ -2,6 +2,7 @@
 namespace App\Entity\Mapper;
 
 use App\Entity\Base;
+use App\Entity\Task;
 
 abstract class BaseMapper implements EntityMapper
 {
@@ -42,6 +43,7 @@ abstract class BaseMapper implements EntityMapper
             $method = "get" . ucfirst($objectPropertyName);
             $data[$dbColumnName] = $objectInstance->$method() ?? NULL;
         }
+
         return $data;
     }
 }

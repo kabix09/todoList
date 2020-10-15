@@ -75,22 +75,8 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     {
         unset($session['token']);
 
-            // 2 - refresh task list
-                // if exists remove old tasks
-        if(isset($session["tasks"]))
-            unset($session["tasks"]);
-
-                // download all tasks - v 2.0
-        $connection = new Connection(include DB_CONFIG);
-
-        $userManager = new UserManager($session['user'],
-            new UserRepository($connection));
-        $userManager->getUserTasks(new TaskRepository($connection));
-
-        foreach ($session['user']->getTaskCollection() as $task)
-            $session["tasks"] = array_merge($session["tasks"] ?? array(), [$task]);
-
-        // index.php don't refresh automatically task list in purpose to recuse query amount
+            // 2 - don't touch task list, only index file manage to download and handle it
+            // index.php refresh automatically task list in purpose to always handle lasted version
 
             // 2 - set header
         header("Location: ../index.php");

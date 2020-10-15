@@ -28,7 +28,7 @@ final class User extends Base
     private ?string $endBan;
     private ?string $key;
 
-    private $taskCollection;
+    private array $taskCollection;
 
     public function __construct()
     {
@@ -107,7 +107,7 @@ final class User extends Base
     /**
      * @param string|null $lastLoginDate
      */
-    public function setLastLoginDate(?string $lastLoginDate = NULL): void
+    public function setLastLoginDate(string $lastLoginDate): void
     {
         $this->lastLoginDate = $lastLoginDate;
     }
@@ -123,7 +123,7 @@ final class User extends Base
     /**
      * @param string|null $createAccountDate
      */
-    public function setCreateAccountDate(?string $createAccountDate = NULL): void
+    public function setCreateAccountDate(string $createAccountDate): void
     {
         $this->createAccountDate = $createAccountDate;
     }
@@ -181,7 +181,7 @@ final class User extends Base
      */
     public function setTaskCollection(array $taskCollection): void
     {
-        $this->taskCollection = $taskCollection;
+            $this->taskCollection = $taskCollection;
     }
 
     /**
@@ -191,4 +191,5 @@ final class User extends Base
     {
         return $this->taskCollection;
     }
+
 }
