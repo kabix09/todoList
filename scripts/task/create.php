@@ -1,5 +1,5 @@
 <?php
-require_once '../init.php';
+require_once '../../init.php';
 
 use App\Connection\Connection;
 use App\Manager\UserManager;
@@ -24,7 +24,7 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET') {
     include ROOT_PATH . './templates/createTask.php';
     exit();
 } elseif ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../templates/errors/404.php");
+    header("Location: ../../templates/errors/404.php");
 } else {
         // 0 - remove old errors
     if (isset($session['createErrors']))
@@ -54,9 +54,9 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET') {
             // index.php refresh automatically task list in purpose to always handle lasted version
 
             // 3 - set header
-        header("Location: ../index.php");
+        header("Location: ../../index.php");
     }else
-        header("Location: ./createTask.php");
+        header("Location: ./create.php");
 
         /*
          * $tasks = $taskRepo->find(array(), [

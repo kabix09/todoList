@@ -1,10 +1,6 @@
 <?php
 require_once './init.php';
 
-use App\Connection\Connection;
-use App\Manager\UserManager;
-use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
 use App\Session\Session;
 
 $session = new Session();

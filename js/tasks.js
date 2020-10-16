@@ -31,7 +31,7 @@ const displayTasks = (tasks) => {
         .map(
             (task) => {
                 return '<div class="card">' +
-                            '<span><b>Title:</b> ' + task.title + '</span><br>' +
+                            /*'<span><b>Title:</b> ' + task.title + '</span><br>' +
                             '<span><b>Author:</b> ' + task.author + '</span><br>' +
                             '<span><b>Create Date:</b> ' + task.create_date + '</span><br>' +
                             '<span><b>Content:</b></span><br>' +
@@ -39,13 +39,29 @@ const displayTasks = (tasks) => {
                             '<div class="boxFlex cardFooter">' +
                                 '<a href="">finish</a>'+
                                 '<a href="./scripts/editTask.php?id=' + task.id + '&owner=' + task.owner + '">edit</a>' + /* bug - after click window is refresh and input value is deleted */
-                                '<a href="./scripts/removeTask.php?id=' + task.id +'&owner=' + task.owner + '">remove</a>' +
+                            /*    '<a href="./scripts/removeTask.php?id=' + task.id +'&owner=' + task.owner + '">remove</a>' +
+                            '</div>' +*/
+                            '<span class="title"><b>' + task.title + '</b></span><br>' +
+                            '<span><b>Status: </b>' + task.status + '</span><br>' +
+                            '<span><b>Content: </b></span><br>' +
+                            '<div class="content">' + task.content + '</div>' +
+                            '<div class="boxFlex">' +
+
+                            (task.status != "finished" ?
+                                '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + task.owner +'&new=finished">finish</a>' :
+                                    '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + task.owner +'&new=started">activate</a>')
+
+                                +'<a href="./scripts/task/edit.php?id=' + task.id + '&owner=' + task.owner + '">edit</a>' + /* bug - after click window is refresh and input value is deleted */
+                                '<a href="./scripts/task/remove.php?id=' + task.id +'&owner=' + task.owner + '">remove</a>' +
+                            '</div>' +
+                            '<div class="boxFlex cardFooter">' +
+                                '<a href="#id=' + task.id + '" onclick="modalCard()">info</a>' +
                             '</div>' +
                         '</div>';
             }
-        )
-        .join('');
-    tasksList.innerHTML = htmlTasks;
+        ).join('');
+
+        tasksList.innerHTML = htmlTasks;
 };
 
 loadTasks().then(

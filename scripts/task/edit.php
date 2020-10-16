@@ -1,5 +1,5 @@
 <?php
-require_once '../init.php';
+require_once '../../init.php';
 
 use App\Connection\Connection;
 use App\Manager\UserManager;
@@ -28,9 +28,16 @@ try {
     if($owner != $session['user']->getNick())
         throw new \RuntimeException("script error - incorrect user");
 
+    $connection = new Connection(include DB_CONFIG);
+    $userRepository = new UserRepository($connection);
+    $taskRepository = new TaskRepository($connection);
+
+    $userManager = new UserManager($session['user'], $userRepository);
+    $userManager->getUserTasks($taskRepository);
+
     if(!in_array($id, array_map(function($element){
             return $element->getId();
-        }, $session['tasks'])
+        }, $session['user']->getTaskCollection())
     ))
         throw new \RuntimeException("script error - incorrect task");
 }catch (\Exception $e){
@@ -48,7 +55,7 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     exit();
 } elseif ($_SERVER['REQUEST_METHOD'] !== 'POST')
 {
-    header("Location: ../templates/errors/404.php");
+    header("Location: ../../templates/errors/404.php");
 } else {
         // 0 - remove old errors
     if (isset($session['editErrors']))
@@ -63,7 +70,7 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     unset($_POST);
 
         // 1 - create login logic instance
-    $updateTask = new Edit($formData, new Connection(include DB_CONFIG));
+    $updateTask = new Edit($formData, $connection);
 
             // create usefully observers
     new ErrorObserver($updateTask);
@@ -79,7 +86,7 @@ if (!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
             // index.php refresh automatically task list in purpose to always handle lasted version
 
             // 2 - set header
-        header("Location: ../index.php");
+        header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/index.php");
     }else
         header("Location: ./editTask.php?id={$id}&owner={$owner}");
 }
