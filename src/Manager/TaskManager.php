@@ -30,7 +30,7 @@ final class TaskManager extends BaseManager
 
     public function update(): bool
     {
-        $this->doUpdate([
+        return $this->doUpdate([
             "where" => ["id", "= '{$this->object->getId()}'"]
         ]);
     }
@@ -71,9 +71,9 @@ final class TaskManager extends BaseManager
             {
                 if(is_null($this->object->getTargetEndDate()) ||  $this->object->getTargetEndDate() <= (new \DateTime())->format("Y-m-d"))
                 {
-                    $this->object->setStatus("started");
-                }else{
                     $this->object->setStatus("finished");
+                }else{
+                    $this->object->setStatus("started");
                 }
             }
         }
