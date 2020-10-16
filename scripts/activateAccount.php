@@ -25,19 +25,24 @@ if(!$sessionManager->manage())
     $logger->error("missing parameter: 'email' or 'key' get variable", [$config]);
 
 }else{
-    $key = urlencode($_GET['key']);
-    $email = urlencode($_GET['email']);
+    $key = urldecode($_GET['key']);
+    $email = urldecode($_GET['email']);
 
     try{
-        // now we are sure, we catch varification parameters
+        // now we are sure, we catch verifications parameters
         // try find user by key
         $userRepository = new UserRepository(new Connection(include DB_CONFIG));
-        $user = $userRepository->fetchByEmail($email);
+        $userCollection = $userRepository->fetchByEmail($email);
 
-        if(is_null($user))
+        if(is_null($userCollection) || empty($userCollection))
             throw new \Exception("account with that email doesn't exists");
 
-        if($user->getKey() !== $key)
+        $user = NULL;
+        foreach ($userCollection as $element)
+            if($element->getKey() == $key)
+                $user = $element;
+
+        if(is_null($user))
             throw new \Exception('incorrect activation key');
 
         $new = new UserManager($user, $userRepository);
@@ -53,16 +58,26 @@ if(!$sessionManager->manage())
 
             // save user in session
             $session['user'] = $user;
+
+            // redirect to confirm page
+            include_once ROOT_PATH . "./templates/Mails/verificationSuccess.php";
+            die();
         }
         else
             throw new RuntimeException("The account with id: {$session['user']->getId()} couldn't be activated");
     }catch (\Exception $e)
     {
-        $config = new MessageSheme($session['user']->getNick() ?? $_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__, TRUE);
+        $config = NULL;
+        if(isset($session['user']))
+            $config = new MessageSheme($session['user']->getNick(), __CLASS__, __FUNCTION__, TRUE);
+        else
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+
         $logger->error($e->getMessage(), [$config]);
 
-        header("Location: ../index.php");
+        include_once ROOT_PATH . "./templates/Mails/verificationFailed.php";
+        die();
     }
 }
 
-header("Location: ../index.php");
+header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/index.php");
