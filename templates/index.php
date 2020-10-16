@@ -7,20 +7,21 @@
     <meta http-equiv = "Content-Type" content = "text/html; charset = UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="./style/main.css">
-    <link rel="stylesheet" href="./style/list.css">
-    <link rel="stylesheet" href="./style/tasks.css">
+    <link rel="stylesheet" href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/style/main.css>
+    <link rel="stylesheet" href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/style/list.css>
+    <link rel="stylesheet" href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/style/tasks.css>
+    <link rel="stylesheet" href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/style/modal.css>
 </head>
 <body>
 <header style="text-align: center; border: 2px solid #2196f3; border-top: none; border-radius: 15px;"><h2>My Todo List</h2></header>
     <nav>
         <ul>
             <?php if(!isset($session['user'])):?>
-                <li><a href="./scripts/login.php">Login</a></li>
-                <li><a href="./scripts/register.php">Register</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/login.php>Login</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/register.php>Register</a></li>
             <?php else: ?>
-                <li><a href="./scripts/logout.php">Logout</a></li>
-                <li><a href="./scripts/changePassword.php">Change password</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/logout.php>Logout</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/changePassword.php>Change password</a></li>
                 <input type="text" name="searchBar" id="searchBar" placeholder="search for task"/>
             <?php endif ?>
         </ul>
@@ -39,13 +40,15 @@
 
         </section>
         <div style="padding: 10px;">
-            <a href="./scripts/createTask.php">Create Task</a>
+            <a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/createTask.php>Create Task</a>
         </div>
         <?php endif;?>
+        <div id="modalContainer"></div>
     </main>
     <footer>
         @kabix09 2020
     </footer>
-    <script src="../js/tasks.js"></script>
+    <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/js/tasks.js></script>
+    <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/js/modalCard.js></script>
 </body>
 </html> 

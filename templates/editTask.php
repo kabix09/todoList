@@ -1,19 +1,19 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once __DIR__ . './../vendor/autoload.php';
 
 use App\Entity\Mapper\TaskMapper;
 use App\Form\Factory\Factory;
 use App\Session\Session;
 use App\Token\Token;
 
-define('FORM_CONFIG', "../config/form.config.php");
-define('TASK_FORM', "../config/editTaskForm.config.php");
+define('FORM_CONFIG', __DIR__ . "./../config/form.config.php");
+define('TASK_FORM', __DIR__ . "./../config/editTaskForm.config.php");
 
 $session = new Session();
 $taskConfig = include TASK_FORM;
 $editedTask = NULL;
 
-foreach ($session['tasks'] as $task)
+foreach ($session['user']->getTaskCollection() as $task)
 {
     if($task->getId() == $id)
     {
@@ -47,14 +47,14 @@ $formFactory->generate($taskConfig,
     <meta http-equiv = "Content-Type" content = "text/html; charset = UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="../style/form.css">
-    <link rel="stylesheet" href="../style/js-snackbar.css">
+    <link rel="stylesheet" href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/style/form.css>
+    <link rel="stylesheet" href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/style/js-snackbar.css>
 
-    <script src="../js/js-snackbar.js"></script>
+    <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/js/js-snackbar.js></script>
     <script>
         path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/src/JSON/variables.php?name=editErrors";
     </script>
-    <script src="../js/formErrors.js"></script>
+    <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/js/formErrors.js></script>
 </head>
 <body style="font-size: 18px;">
 <main style="background-color: ivory;
