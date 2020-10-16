@@ -40,12 +40,12 @@ final class ChangePwd extends PasswordForm
                     {
                         throw new \RuntimeException("password couldn't be changed");
                     }else{
-                        $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__);
+                        $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);
                         $this->logger->info("Successfully changed password", [$config]);
                     }
                 }catch (\Exception $e)
                 {
-                    $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__);
+                    $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);
                     $this->logger->error($e->getMessage(), [$config]);
                 }
 
