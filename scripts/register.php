@@ -24,7 +24,8 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
     exit();
 }elseif($_SERVER['REQUEST_METHOD'] !== 'POST')
 {
-    header("Location: ../templates/errors/404.php");
+
+    header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/templates/errors/404.php");
 }else{
         // 0 - remove old errors
     unset($session['registerErrors']);
@@ -58,10 +59,9 @@ if(!isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] === 'GET')
 
             // 2 - set header
         if($session['user']->getStatus() === 'active')
-            header("Location: ../index.php");
+            header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/index.php");
         else
-            header("Location: ../templates/accountStatus.php");
-
+            include $_SERVER['DOCUMENT_ROOT'] . "/templates/mails/checkEmail.php";
     }else
         header("Location: ./register.php");
 
