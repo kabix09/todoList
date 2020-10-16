@@ -38,7 +38,7 @@ class TaskRepository extends BaseRepository
         return parent::remove($criteria);
     }
 
-    public function fetchById(int $id){
+    public function fetchById(int $id): ?Task{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("id = :id")->getSQL()
         );
@@ -55,7 +55,7 @@ class TaskRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByTitle(string $title){
+    public function fetchByTitle(string $title): ?\Generator{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("title = :title")->getSQL()
         );
@@ -72,9 +72,9 @@ class TaskRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByCreateDate(){}
+    public function fetchByCreateDate(): ?\Generator{}
 
-    public function fetchByAuthor(string $author){
+    public function fetchByAuthor(string $author): ?\Generator{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("author = :author")->getSQL()
         );
@@ -91,7 +91,7 @@ class TaskRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByOwner(string $owner){
+    public function fetchByOwner(string $owner): ?\Generator{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("owner = :owner")->getSQL()
         );
@@ -108,9 +108,9 @@ class TaskRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByTargetEndDate(){}
+    public function fetchByTargetEndDate(): ?\Generator{}
 
-    public function fetchByStatus(string $status){
+    public function fetchByStatus(string $status): ?\Generator{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("status = :status")::getSQL()
         );

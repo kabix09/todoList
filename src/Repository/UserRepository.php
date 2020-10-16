@@ -52,7 +52,7 @@ final class UserRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByEmail(string $email) : ?User{
+    public function fetchByEmail(string $email): ?\Generator{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("email = :email")::getSQL()
         );
@@ -60,20 +60,20 @@ final class UserRepository extends BaseRepository
         $statement->bindValue(':email', $email, \PDO::PARAM_STR);
         $statement->execute();
 
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
         $statement->closeCursor();
 
         if($result)
-            return $this->entityFactory->createEntity($result);
+            return $this->entityFactory->createEntityCollection($result);
         else
             return NULL;
     }
 
-    public function fetchByLastLoginDate(){}
+    public function fetchByLastLoginDate(): ?\Generator{}
 
-    public function fetchByCreateAccountDate(){}
+    public function fetchByCreateAccountDate(): ?\Generator{}
 
-    public function fetchByStatus(string $status){
+    public function fetchByStatus(string $status): ?\Generator{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("account_status = :status")::getSQL()
         );
@@ -90,7 +90,7 @@ final class UserRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByKey(string $key){
+    public function fetchByKey(string $key): ?User{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("account_key = :account_key")::getSQL()
         );

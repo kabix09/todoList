@@ -41,7 +41,7 @@ class SessionRepository extends BaseRepository
     }
 
     //--------------------------------------------------------------
-    public function fetchById(int $id){
+    public function fetchById(int $id): ?Session{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("id = :id")->getSQL()
         );
@@ -58,7 +58,7 @@ class SessionRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchBySessionKey(string $sessionKey){      // must be only one result
+    public function fetchBySessionKey(string $sessionKey): ?Session{      // must be only one result
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("session_key = :session_key")->getSQL()
         );
@@ -75,7 +75,7 @@ class SessionRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByUserIP(string $userIP){
+    public function fetchByUserIP(string $userIP): ?\Generator{
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("user_ip = :user_ip")->getSQL()
         );
@@ -92,7 +92,7 @@ class SessionRepository extends BaseRepository
             return NULL;
     }
 
-    public function fetchByUserNick(?string $userNick = NULL)
+    public function fetchByUserNick(?string $userNick = NULL): ?\Generator
     {
         $statement = $this->connection->getConnection()->prepare(
             QueryBuilder::select($this->dbName)->where("user_nick = :user_nick")->getSQL()
