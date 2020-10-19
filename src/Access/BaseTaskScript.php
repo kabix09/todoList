@@ -11,31 +11,25 @@ use App\Repository\UserRepository;
 use App\Session\Session;
 use App\Session\SessionManager;
 
-abstract class BaseTaskScript
+abstract class BaseTaskScript extends Access
 {
     protected const ID = "ID";
     protected const OWNER = "OWNER";
     protected const QUERY_VARIABLES = [self::ID => "id", self::OWNER => "owner"];
 
     protected Logger $logger;
-    protected Session $session;
     private UserRepository $userRepository;
     protected TaskRepository $taskRepository;
     private UserManager $userManager;
 
     public function __construct(Session $session, Connection $connection)
     {
-        $this->session = $session;
         $this->logger = new Logger;
+
+        parent::__construct($session);
 
         $this->userRepository = new UserRepository($connection);
         $this->taskRepository = new TaskRepository($connection);
-    }
-
-    private function isLogged() : bool
-    {
-        return
-            isset($this->session['user']) && $this->session['user'] instanceof User;
     }
 
     private function setUserTask(): void{
@@ -43,9 +37,13 @@ abstract class BaseTaskScript
             $this->userManager->getUserTasks($this->taskRepository);
     }
 
-    private function getURLquery(): ?array
+    private function getURLquery(): array
     {
-        return $_GET;
+        $queryData = [];
+        foreach($_GET as $key => $value)
+            $queryData[$key] = urldecode($value);
+
+        return $queryData;
     }
 
     private function checkURLquery(array $queryParams): bool
