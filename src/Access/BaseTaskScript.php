@@ -13,10 +13,6 @@ use App\Session\SessionManager;
 
 abstract class BaseTaskScript extends Access
 {
-    protected const ID = "ID";
-    protected const OWNER = "OWNER";
-    protected const QUERY_VARIABLES = [self::ID => "id", self::OWNER => "owner"];
-
     protected Logger $logger;
     private UserRepository $userRepository;
     protected TaskRepository $taskRepository;

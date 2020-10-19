@@ -1,13 +1,14 @@
 <?php
-require_once __DIR__ . './../vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
+use App\Access\Access;
 use App\Entity\Mapper\TaskMapper;
 use App\Form\Factory\Factory;
 use App\Session\Session;
 use App\Token\Token;
 
-define('FORM_CONFIG', __DIR__ . "./../config/form.config.php");
-define('TASK_FORM', __DIR__ . "./../config/editTaskForm.config.php");
+define('FORM_CONFIG', ROOT_PATH . "./config/form.config.php");
+define('TASK_FORM', ROOT_PATH . "./config/editTaskForm.config.php");
 
 $session = new Session();
 $taskConfig = include TASK_FORM;
@@ -15,7 +16,7 @@ $editedTask = NULL;
 
 foreach ($session['user']->getTaskCollection() as $task)
 {
-    if($task->getId() == $id)
+    if($task->getId() == $_GET['id'])
     {
         $editedTask = $task;
     }
