@@ -1,15 +1,15 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] .'./vendor/autoload.php';
 
 use App\Form\Factory\Factory;
 use App\Token\Token;
 
-define('FORM_CONFIG', "../config/form.config.php");
-define('TASK_FORM', "../config/createTaskForm.config.php");
+define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
+define('TASK_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/createTaskForm.config.php");
 
 $formFactory = new Factory();
 $formFactory->generate(include TASK_FORM,
-                        (new Token($session['token']))
+                        (new Token($this->session['token']))
                             ->hash()
                             ->encode()
                             ->getToken());
