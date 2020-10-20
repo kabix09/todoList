@@ -19,7 +19,7 @@ define('REG_FORM', "../config/regForm.config.php");
 
 $formfactory = new Factory();
 $formfactory->generate(include REG_FORM,
-                        (new Token($session['token']))
+                        (new Token($this->session['token']))
                             ->hash()
                             ->binToHex()
                             ->getToken());

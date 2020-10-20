@@ -2,16 +2,14 @@
 namespace App\Access;
 
 use App\Connection\Connection;
-use App\Entity\User;
 use App\Logger\Logger;
 use App\Logger\MessageSheme;
 use App\Manager\UserManager;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use App\Session\Session;
-use App\Session\SessionManager;
 
-abstract class BaseTaskScript extends Access
+abstract class BaseTaskAccess extends BaseAccess implements TaskParameters
 {
     protected Logger $logger;
     private UserRepository $userRepository;
@@ -47,7 +45,7 @@ abstract class BaseTaskScript extends Access
         if(count(static::QUERY_VARIABLES) !== count($queryParams))
             return FALSE;
 
-        foreach (self::QUERY_VARIABLES as $value)
+        foreach (static::QUERY_VARIABLES as $value)
             if(!isset($queryParams[$value]))
                 return FALSE;
 
@@ -70,22 +68,6 @@ abstract class BaseTaskScript extends Access
         return TRUE;
     }
 
-    private function sessionManage(): void
-    {
-        $sessionManager = new SessionManager($this->session);
-        if(!$sessionManager->manage())
-        {
-            // logout and redirect to login page
-            die("session error - try to refresh page :/"); // TODO - fix error and behaviour
-        }
-    }
-
-    protected function redirectToHome(): void
-    {
-        header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/index.php");
-        exit();
-    }
-
     public function checkAccess()
     {
         if(!$this->isLogged())
@@ -97,17 +79,20 @@ abstract class BaseTaskScript extends Access
         $queryParams = $this->getURLquery();
 
         try{
-            if(!$this->checkURLquery($queryParams))
-                throw new \RuntimeException("script error - missing elements");
+            if(!empty(static::QUERY_VARIABLES))
+            {
+                if(!$this->checkURLquery($queryParams))
+                    throw new \RuntimeException("script error - missing elements");
 
-            if(!$this->checkUserTask($queryParams[self::QUERY_VARIABLES[self::OWNER]]))
-                throw new \RuntimeException("script error - incorrect user");
+                if(!$this->checkUserTask($queryParams[static::QUERY_VARIABLES[static::OWNER]]))
+                    throw new \RuntimeException("script error - incorrect user");
 
-            $this->userManager = new UserManager($this->session['user'], $this->userRepository);
-            $this->setUserTask();
+                $this->userManager = new UserManager($this->session['user'], $this->userRepository);
+                $this->setUserTask();
 
-            if(!$this->checkTaskID($queryParams[self::QUERY_VARIABLES[self::ID]]))
-                throw new \RuntimeException("incorrect task - this user has no such task");
+                if(!$this->checkTaskID($queryParams[static::QUERY_VARIABLES[static::ID]]))
+                    throw new \RuntimeException("incorrect task - this user has no such task");
+            }
 
             // session operation - when we have sure that request is correct
             $this->sessionManage();

@@ -1,8 +1,11 @@
 <?php
 namespace App\Access\TaskScript;
 
-class Create extends \App\Access\BaseTaskScript
+use App\Access\BaseTaskAccess;
+
+class Create extends BaseTaskAccess
 {
+    public const QUERY_VARIABLES = [];
 
     protected function main(array $queryParams): void
     {

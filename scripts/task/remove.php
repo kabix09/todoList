@@ -1,11 +1,8 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+require_once '../index.php';
 
 use App\Access\TaskScript\Remove;
-use App\Connection\Connection;
-use App\Session\Session;
 
-$remove = new Remove(new Session(), new Connection(include DB_CONFIG));
-
+$remove = new Remove($session, $connection);
 $remove->checkAccess();
 $remove->core();

@@ -1,10 +1,10 @@
 <?php
 namespace App\Access\TaskScript;
 
-use App\Access\BaseTaskScript;
+use App\Access\BaseTaskAccess;
 use App\Logger\MessageSheme;
 
-final class Remove extends BaseTaskScript
+final class Remove extends BaseTaskAccess
 {
     protected function main(array $queryParams): void
     {

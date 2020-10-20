@@ -1,23 +1,23 @@
 <?php
-namespace App\Access\FormScript;
+namespace App\Access\FormScript\Task;
 
-use App\Access\BaseFormScript;
+use App\Access\BaseFormAccess;
 use App\Connection\Connection;
 use App\Module\ErrorObserver;
-use App\Module\Form\Task\Edit;
+use App\Module\Form\Task\Create;
 use App\Module\SessionObserver;
 
-final class EditTask extends BaseFormScript
+final class CreateTask extends BaseFormAccess
 {
     protected function clearErrors(): void
     {
-        if (isset($this->session['editErrors']))
-            unset($this->session['editErrors']);
+        if (isset($this->session['createErrors']))
+            unset($this->session['createErrors']);
     }
 
     protected function setupObserverLogic(array $formData, Connection $connection): void
     {
-        $this->mainLogicObject = new Edit($formData, $connection);
+        $this->mainLogicObject = new Create($formData, $connection, $this->session['user']);
 
         // create usefully observers
         new ErrorObserver($this->mainLogicObject);
@@ -33,11 +33,11 @@ final class EditTask extends BaseFormScript
         {
             unset($this->session['token']);
 
-            // 2 - don't touch task list, only index file manage to download and handle it
+            // don't touch task list, only index file manage to download and handle it
             // index.php refresh automatically task list in purpose to always handle lasted version
 
-            header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/index.php");
+            $this->redirectToHome();
         }else
-            header("Location: ./editTask.php?id={$queryParams[self::QUERY_VARIABLES[self::ID]]}&owner={$queryParams[self::QUERY_VARIABLES[self::OWNER]]}");
+            header("Location: ./create.php");
     }
 }

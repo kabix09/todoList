@@ -5,18 +5,15 @@ use App\Connection\Connection;
 use App\Session\Session;
 use App\Token\Token;
 
-abstract class BaseFormScript extends Access
+abstract class BaseFormAccess extends BaseAccess implements FormStatus
 {
-    private const GET = "GET";
-    private const POST = "POST";
-    private const OTHER = "OTHER";
-    private const STATUS = [self::GET => "GET", self::POST => "POST", self::OTHER => "OTHER"];
     static string $PATH_404;
 
     protected Session $session;
     private Connection $connection;
 
     protected $mainLogicObject;
+    private $templateScriptPath;
 
     public function __construct(Session $session, Connection $connection)
     {
@@ -27,6 +24,11 @@ abstract class BaseFormScript extends Access
         if (!isset(self::$PATH_404) || empty(self::$PATH_404))
             self::$PATH_404 = $_SERVER['REQUEST_SCHEME']. "://" . $_SERVER['HTTP_HOST'] . "/templates/error/404.php";
 
+    }
+
+    public function setTemplatePath(string $templatePath)
+    {
+        $this->templateScriptPath = $templatePath;
     }
 
     public function generateToken() : void
@@ -48,13 +50,13 @@ abstract class BaseFormScript extends Access
 
     abstract protected function setupObserverLogic(array $formData, Connection $connection): void;
 
-    public function core(string $templateFormPath)
+    public function core()
     {
         switch($_SERVER['REQUEST_METHOD'])
         {
-            case self::STATUS[self::GET]:
+            case static::STATUS[self::GET]:
             {
-                return include $templateFormPath;
+                return include $this->templateScriptPath;
                 break;
             }
 

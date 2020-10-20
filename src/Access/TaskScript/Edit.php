@@ -1,9 +1,9 @@
 <?php
 namespace App\Access\TaskScript;
 
-use App\Access\BaseTaskScript;
+use App\Access\BaseTaskAccess;
 
-class Edit extends BaseTaskScript
+class Edit extends BaseTaskAccess
 {
 
     protected function main(array $queryParams): void

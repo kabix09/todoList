@@ -1,12 +1,12 @@
 <?php
 namespace App\Access\TaskScript;
 
-use App\Access\BaseTaskScript;
+use App\Access\BaseTaskAccess;
 use App\Entity\Task;
 use App\Logger\MessageSheme;
 use App\Manager\TaskManager;
 
-final class ChangeStatus extends BaseTaskScript
+final class ChangeStatus extends BaseTaskAccess
 {
     protected const NEW_STATUS = "NEW_STATUS";
     public const QUERY_VARIABLES = [self::ID => "id", self::OWNER => "owner", self::NEW_STATUS => "new"];

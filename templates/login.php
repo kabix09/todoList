@@ -19,7 +19,7 @@ define('LOG_FORM', "../config/logForm.config.php");
 
 $formFactory = new Factory();
 $formFactory->generate(include LOG_FORM,
-                        (new Token($session['token']))
+                        (new Token($this->session['token']))
                             ->hash()
                             ->binToHex()
                             ->getToken());
