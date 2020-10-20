@@ -11,7 +11,7 @@ $formFactory = new Factory();
 $formFactory->generate(include TASK_FORM,
                         (new Token($this->session['token']))
                             ->hash()
-                            ->encode()
+                            ->binToHex()
                             ->getToken());
 ?>
 

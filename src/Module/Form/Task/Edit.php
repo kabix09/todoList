@@ -10,6 +10,10 @@ use App\Module\Form\TaskForm;
 
 final class Edit extends TaskForm
 {
+    public function __construct(array $formData, Connection $connection)
+    {
+        parent::__construct($formData, $connection);
+    }
 
     protected function doHandler()
     {
@@ -24,7 +28,7 @@ final class Edit extends TaskForm
             // update existing task
             if(!$this->repository->update($this->object, [
                 "WHERE" => NULL,
-                "AND" => ["id='{$this->object->getId()}'","owner='{$this->object->getOwner()}'"]
+                "AND" => ["title='{$this->object->getTitle()}'","owner='{$this->object->getOwner()}'"]
             ]))
             {
                 throw new \RuntimeException("couldn't update task id: {$this->object->getId()} :/");

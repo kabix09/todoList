@@ -19,6 +19,6 @@ $editAccess->checkAccess();
 $editAccess->core();
 
 // edit task form logic: valid & add
-$editTask = new EditTask($session, new Connection(include DB_CONFIG));
+$editTask = new EditTask($session, $connection);
 $editTask->generateToken();
 $editTask->core(ROOT_PATH . './templates/editTask.php');

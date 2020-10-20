@@ -79,7 +79,7 @@ abstract class FormGeneric implements Observable
             var_dump($e);
             echo '</pre>';
 
-            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], static::class, __FUNCTION__);
             $this->logger->error($e->getMessage(), [$config]);
 
             die();
@@ -96,7 +96,7 @@ abstract class FormGeneric implements Observable
 
         if(sodium_compare(
                 (new Token($serverToken))->hash()->getToken(),
-                (new Token($this->data['hidden']))->decode()->getToken()
+                (new Token($this->data['hidden']))->hexToBin()->getToken()
             ) !== 0
         ) throw new \RuntimeException('detected cross-site attack on login form');
 

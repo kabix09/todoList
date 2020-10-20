@@ -25,16 +25,6 @@ class Token
         return $this;
     }
 
-    public function encode() : Token{
-        $this->token = base64_encode($this->token);
-        return $this;
-    }
-
-    public function decode() : Token{
-        $this->token = base64_decode($this->token);
-        return $this;
-    }
-
     public function hash(int $length = 64, string $key = '') : Token {
         $this->token = sodium_crypto_generichash($this->token, $key, $length);
         return $this;

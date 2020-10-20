@@ -9,7 +9,7 @@ use App\Manager\TaskManager;
 final class ChangeStatus extends BaseTaskScript
 {
     protected const NEW_STATUS = "NEW_STATUS";
-    protected const QUERY_VARIABLES = [self::ID => "id", self::OWNER => "owner", self::NEW_STATUS => "new"];
+    public const QUERY_VARIABLES = [self::ID => "id", self::OWNER => "owner", self::NEW_STATUS => "new"];
 
     private TaskManager $taskManager;
 

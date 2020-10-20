@@ -21,7 +21,7 @@ $formfactory = new Factory();
 $formfactory->generate(include REG_FORM,
                         (new Token($session['token']))
                             ->hash()
-                            ->encode()
+                            ->binToHex()
                             ->getToken());
 ?>
 

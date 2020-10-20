@@ -9,7 +9,6 @@ use App\Module\SessionObserver;
 
 final class CreateTask extends BaseFormScript
 {
-
     protected function clearErrors(): void
     {
         if (isset($this->session['createErrors']))

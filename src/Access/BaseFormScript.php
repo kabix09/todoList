@@ -69,6 +69,9 @@ abstract class BaseFormScript extends Access
                 // 3) fetch data
                 $formData = $this->catchData();
 
+                // with this, key is regenerated every time after page refresh
+                unset($_POST);
+
                 // 4) setup observer and observers
                 $this->setupObserverLogic($formData, $this->connection);
 

@@ -21,7 +21,7 @@ $formFactory = new Factory();
 $formFactory->generate(include LOG_FORM,
                         (new Token($session['token']))
                             ->hash()
-                            ->encode()
+                            ->binToHex()
                             ->getToken());
 ?>
 

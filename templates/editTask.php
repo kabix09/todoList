@@ -10,11 +10,10 @@ use App\Token\Token;
 define('FORM_CONFIG', ROOT_PATH . "./config/form.config.php");
 define('TASK_FORM', ROOT_PATH . "./config/editTaskForm.config.php");
 
-$session = new Session();
 $taskConfig = include TASK_FORM;
 $editedTask = NULL;
 
-foreach ($session['user']->getTaskCollection() as $task)
+foreach ($this->session['user']->getTaskCollection() as $task)
 {
     if($task->getId() == $_GET['id'])
     {
@@ -34,10 +33,10 @@ foreach ($taskConfig as $element => &$values)
 
 $formFactory = new Factory();
 $formFactory->generate($taskConfig,
-    (new Token($session['token']))
-        ->hash()
-        ->encode()
-        ->getToken());
+                        (new Token($this->session['token']))
+                            ->hash()
+                            ->binToHex()
+                            ->getToken());
 ?>
 
 <!DOCTYPE html>

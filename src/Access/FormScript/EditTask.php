@@ -7,12 +7,12 @@ use App\Module\ErrorObserver;
 use App\Module\Form\Task\Edit;
 use App\Module\SessionObserver;
 
-class EditTask extends BaseFormScript
+final class EditTask extends BaseFormScript
 {
     protected function clearErrors(): void
     {
-        if (isset($session['editErrors']))
-            unset($session['editErrors']);
+        if (isset($this->session['editErrors']))
+            unset($this->session['editErrors']);
     }
 
     protected function setupObserverLogic(array $formData, Connection $connection): void
