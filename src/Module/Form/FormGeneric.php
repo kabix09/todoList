@@ -4,17 +4,13 @@ namespace App\Module\Form;
 use App\Filter\Filter;
 use App\Logger\Logger;
 use App\Logger\MessageSheme;
-use App\Module\Observer\Observable;
-use App\Module\Observer\Observer;
 use App\Repository\BaseRepository;
 use App\Token\Token;
 
-abstract class FormGeneric implements Observable
+abstract class FormGeneric extends Observable implements FormInterface
 {
     const PROCESS_STATUS = ["errors", "correct" , "session"];
     protected ?string $processStatus = NULL;
-
-    private array $observers = [];
 
     protected $repository;
 
@@ -32,34 +28,9 @@ abstract class FormGeneric implements Observable
         $this->logger = new Logger();
     }
 
-    // observable methods
-    public function attach(Observer $observer)
-    {
-        $this->observers[] = $observer;
-    }
-
-    public function detach(Observer $observer)
-    {
-        $this->observers = array_filter(
-            $this->observers,
-            function($object) use ($observer){
-                return (!($object === $observer));
-            }
-        );
-    }
-
-    public function notify()
-    {
-        foreach ($this->observers as $observer)
-        {
-            $observer->update($this);
-        }
-    }
-
         // main method
     public function handler(?string $serverToken = NULL, array $filter, array $assignments): bool{
         try{
-
             if($this->checkToken($serverToken)){
                 if (!$this->validData($filter, $assignments))
                 {
