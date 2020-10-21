@@ -1,17 +1,14 @@
 <?php
 namespace App\Module;
 
-use App\Module\Observer\Observer;
 use App\Module\Observer\Observable;
 use App\Session\Session;
 
-final class ErrorObserver implements Observer
+final class ErrorObserver extends GenericObserver
 {
-    private $observable;
     public function __construct(Observable $observable)
     {
-        $this->observable = $observable;
-        $observable->attach($this);
+        parent::__construct($observable);
     }
 
     public function update(Observable $observable)

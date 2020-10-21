@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Module;
 
 use App\Logger\Logger;
@@ -7,23 +6,21 @@ use App\Logger\MessageSheme;
 use App\Module\Form\Login\Login;
 use App\Module\Form\Register\Register;
 use App\Module\Observer\Observable;
-use App\Module\Observer\Observer;
 use App\Session\Session;
 use App\Session\SessionManager;
 
-class SessionObserver implements Observer
+class SessionObserver extends GenericObserver
 {
     private $sessionManager;
-    private $observable;
     private $logger;
+
     public function __construct(Observable $observable)
     {
         $this->logger = new Logger();
 
         $this->sessionManager = new SessionManager(new Session());
 
-        $this->observable = $observable;
-        $observable->attach($this);
+        parent::__construct($observable);
     }
 
     public function update(Observable $observable)
@@ -32,7 +29,7 @@ class SessionObserver implements Observer
             $this->doUpdate($observable);
     }
 
-    private function doUpdate(Observable $observable)
+    protected function doUpdate(Observable $observable)
     {
         if($observable->getProcessStatus() === "session")
         {
