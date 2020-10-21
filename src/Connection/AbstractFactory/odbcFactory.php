@@ -5,7 +5,7 @@ use PDO;
 
 class odbcFactory extends PDOfactory
 {
-    public function connect(array $connectData)
+    public function connect(array $connectData = array())
     {
         /* [$connectData['driver'], "Driver" => $connectData['Driver'], "Server" => $connectData['Server'], "Database" => $connectData['Database'], "charset" => $connectData['charset'] ?? "UTF8" ] */
 

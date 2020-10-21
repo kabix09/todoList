@@ -5,7 +5,7 @@ use PDO;
 
 class mysqlFactory extends  PDOfactory
 {
-    public function connect(array $connectData)
+    public function connect(array $connectData = array())
     {
         /* ["host" => $connectData["host"], "dbname" => $connectData["dbname"], "charset" => $connectData['charset'] ?? "utf8"] */
 

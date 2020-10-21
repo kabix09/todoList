@@ -1,15 +1,17 @@
 <?php declare(strict_types = 1);
 namespace App\Connection;
+
 use App\Logger\Logger;
 use App\Logger\MessageSheme;
 use App\Connection\AbstractFactory\{mysqlFactory, odbcFactory, PDOfactory};
 use \PDO;
 
-class Connection extends PDOfactory
+final class Connection implements ConnectionInterface
 {
+    const PDOdrivers = ['odbc'=>'odbc', 'mysql' =>'mysql'];
+
     private $logger;
 
-    const PDOdrivers = ['odbc'=>'odbc', 'mysql' =>'mysql'];
     private $connection;
     private $data = array();
 
@@ -21,7 +23,7 @@ class Connection extends PDOfactory
             $this->setData($data);
     }
 
-    public function connect(array $connectData = array())
+    public function connect(array $connectData = array()): void
     {
         try {
             $pdoInstance = $this->makePDO();
