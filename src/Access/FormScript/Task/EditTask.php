@@ -2,7 +2,7 @@
 namespace App\Access\FormScript\Task;
 
 use App\Access\BaseFormAccess;
-use App\Access\TaskParameters;
+use App\Access\QueryParameters;
 use App\Connection\Connection;
 use App\Module\ErrorObserver;
 use App\Module\Form\Task\Edit;
@@ -39,6 +39,6 @@ final class EditTask extends BaseFormAccess
 
             $this->redirectToHome();
         }else
-            header("Location: ./editTask.php?id={$queryParams[TaskParameters::QUERY_VARIABLES[TaskParameters::ID]]}&owner={$queryParams[TaskParameters::QUERY_VARIABLES[TaskParameters::OWNER]]}");
+            header("Location: ./editTask.php?id={$queryParams[QueryParameters::QUERY_PARAMETERS[QueryParameters::ID]]}&owner={$queryParams[QueryParameters::QUERY_PARAMETERS[QueryParameters::OWNER]]}");
     }
 }

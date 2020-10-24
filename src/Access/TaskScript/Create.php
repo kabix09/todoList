@@ -5,7 +5,7 @@ use App\Access\BaseTaskAccess;
 
 class Create extends BaseTaskAccess
 {
-    public const QUERY_VARIABLES = [];
+    public const QUERY_PARAMETERS = [];
 
     protected function main(array $queryParams): void
     {

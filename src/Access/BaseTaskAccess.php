@@ -9,47 +9,25 @@ use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use App\Session\Session;
 
-abstract class BaseTaskAccess extends BaseAccess implements TaskParameters
+abstract class BaseTaskAccess extends GenericAccess
 {
-    protected Logger $logger;
-    private UserRepository $userRepository;
+    public const ID = 1;
+    public const OWNER = 2;
+    public const QUERY_PARAMETERS = [self::ID => 'id', self::OWNER => 'owner'];
+
     protected TaskRepository $taskRepository;
     private UserManager $userManager;
 
     public function __construct(Session $session, Connection $connection)
     {
-        $this->logger = new Logger;
+        parent::__construct($session, $connection);
 
-        parent::__construct($session);
-
-        $this->userRepository = new UserRepository($connection);
         $this->taskRepository = new TaskRepository($connection);
     }
 
     private function setUserTask(): void{
         if(empty($this->session['user']->getTaskCollection()))
             $this->userManager->getUserTasks($this->taskRepository);
-    }
-
-    private function getURLquery(): array
-    {
-        $queryData = [];
-        foreach($_GET as $key => $value)
-            $queryData[$key] = urldecode($value);
-
-        return $queryData;
-    }
-
-    private function checkURLquery(array $queryParams): bool
-    {
-        if(count(static::QUERY_VARIABLES) !== count($queryParams))
-            return FALSE;
-
-        foreach (static::QUERY_VARIABLES as $value)
-            if(!isset($queryParams[$value]))
-                return FALSE;
-
-        return TRUE;
     }
 
     private function checkUserTask(string $owner) : bool
@@ -68,29 +46,25 @@ abstract class BaseTaskAccess extends BaseAccess implements TaskParameters
         return TRUE;
     }
 
-    public function checkAccess()
-    {
-        if(!$this->isLogged())
-            $this->redirectToHome();
-    }
+
 
     public function core()
     {
-        $queryParams = $this->getURLquery();
+        $queryParams = $this->getQueryParameters();
 
         try{
-            if(!empty(static::QUERY_VARIABLES))
+            if(!empty(static::QUERY_PARAMETERS))
             {
-                if(!$this->checkURLquery($queryParams))
+                if(!$this->checkQueryParameters($queryParams))
                     throw new \RuntimeException("script error - missing elements");
 
-                if(!$this->checkUserTask($queryParams[static::QUERY_VARIABLES[static::OWNER]]))
+                if(!$this->checkUserTask($queryParams[static::QUERY_PARAMETERS[static::OWNER]]))
                     throw new \RuntimeException("script error - incorrect user");
 
                 $this->userManager = new UserManager($this->session['user'], $this->userRepository);
                 $this->setUserTask();
 
-                if(!$this->checkTaskID($queryParams[static::QUERY_VARIABLES[static::ID]]))
+                if(!$this->checkTaskID($queryParams[static::QUERY_PARAMETERS[static::ID]]))
                     throw new \RuntimeException("incorrect task - this user has no such task");
             }
 
