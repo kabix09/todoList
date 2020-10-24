@@ -1,7 +1,7 @@
 <?php
 require_once '../init.php';
 
-define("LINK", '%s://%s:%s/scripts/activateAccount.php?email=%s&key=%s');
+define("LINK", '%s://%s:%s/scripts/activateAccount.php?email=%s&nick=%s&key=%s');
 define("HREF", '<a href="%s">%s</a>');
 
 $session = new \App\Session\Session();
@@ -10,6 +10,7 @@ $href = sprintf(LINK,
             $_SERVER['SERVER_NAME'],
             $_SERVER['SERVER_PORT'],
             urlencode($user->getEmail()),
+            urlencode($user->getNick()),
             urlencode($user->getKey())
         );
 $link = sprintf(HREF,
