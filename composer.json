@@ -5,6 +5,7 @@
     }
   },
   "require": {
-    "psr/log": "dev-master"
+    "psr/log": "dev-master",
+    "phpmailer/phpmailer": "^6.1"
   }
 }
