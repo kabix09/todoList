@@ -3,7 +3,7 @@ label {
     display: inline-block;
     width: 130px;
 }
-input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="datetime"], textarea {
+input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="datetime"], input[type='time'], textarea {
     border: none;
     border-bottom: 1px solid #000;
     outline: none;

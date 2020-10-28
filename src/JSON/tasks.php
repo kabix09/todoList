@@ -3,6 +3,7 @@ require_once  '../../init.php';
 
 use App\Connection\Connection;
 use App\Entity\Mapper\TaskMapper;
+use App\Manager\TaskManager;
 use App\Manager\UserManager;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
@@ -19,9 +20,39 @@ if(isset($session['user']))
     $userManager = new UserManager($session['user'],
                                     new UserRepository($connection));
 
-    $userManager->getUserTasks(new TaskRepository($connection));
+    $taskRepository = new TaskRepository($connection);
+
+    $userManager->getUserTasks($taskRepository);
+
 
     foreach ($session['user']->getTaskCollection() as $key => $object){
+            // 1 check time & fix status
+        $taskManager = new TaskManager($object, $taskRepository);
+
+        $status = $object->getStatus();
+
+        if($status === 'planned' && !empty($object->getStartDate()))
+        {
+            $startTime = new DateTime($object->getStartDate());
+            $currentTime = new DateTime();
+
+            if($currentTime->getTimestamp() - $startTime->getTimestamp() >= 0)
+            {
+                $taskManager->changeStatus('started');
+                $taskManager->update();
+            }
+        }else if($status === 'started' && !empty($object->getTargetEndDate())){
+            $endDate = new DateTime($object->getTargetEndDate());
+            $currentTime = new DateTime();
+
+            if($currentTime->getTimestamp() - $endDate->getTimestamp() >= 0)
+            {
+                $taskManager->changeStatus('finished');
+                $taskManager->update();
+            }
+        }
+
+        // 1 map object
         $tasksArray[$key] = TaskMapper::entityToArray($object);
     }
 }

@@ -21,6 +21,8 @@ final class Create extends TaskForm
 
     protected function doHandler()
     {
+        $this->fixDate();
+
         if (!$this->checkTitle())
         {
             $this->errors['title'][] = self::TITLE_ERROR;

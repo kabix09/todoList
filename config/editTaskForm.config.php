@@ -72,31 +72,54 @@ return $taskForm = [
 
     "start_date" => [
         "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_DATETIME,
+        "type" => App\Form\FormConstants::TYPE_DATE,
         "label" => "Start date",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
             "id" => 'startDateID',
             "maxLength" => 35,
-            'placeholder' => "startDate",
             'required' => "",
             'value' => ""
         ]
         //"errors" => $_SESSION['formErrors']['startDate'] ?? NULL
     ],
 
+    "start_time" => [
+        "class" => 'App\Form\Generic',
+        "type" => App\Form\FormConstants::TYPE_TIME,
+        "label" => "Start time",
+        "wrappers" => include "formWrapper.config.php",
+        "attributes" => [
+            "id" => 'startTimeID',
+            "maxLength" => 35,
+            'required' => "",
+            'value' => (new \DateTime())->format('H:i')
+        ]
+    ],
+
     "target_end_date" => [
         "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_DATETIME,
+        "type" => App\Form\FormConstants::TYPE_DATE,
         "label" => "End date",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
             "id" => 'endDateID',
-            "maxLength" => 35,
-            'placeholder' => Base::DATE_FORMAT,
-            'value' => ""
+            "maxLength" => 35
         ]
         //"errors" => $_SESSION['formErrors']['endDate'] ?? NULL
+    ],
+
+    "end_time" => [
+        "class" => 'App\Form\Generic',
+        "type" => App\Form\FormConstants::TYPE_TIME,
+        "label" => "End time",
+        "wrappers" => include "formWrapper.config.php",
+        "attributes" => [
+            "id" => 'endTimeID',
+            "maxLength" => 35,
+            'value' => (new \DateTime())->format('H:i')
+        ]
+        //"errors" => $_SESSION['formErrors']['startDate'] ?? NULL
     ],
 
     "hidden" => [

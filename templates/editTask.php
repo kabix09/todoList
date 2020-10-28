@@ -23,6 +23,23 @@ foreach ($this->session['user']->getTaskCollection() as $task)
 
 $editedTask = TaskMapper::entityToArray($editedTask);
 
+// split time fields
+$ex1 = explode(" ", $editedTask['start_date']);
+$editedTask['start_date'] = $ex1[0];
+$editedTask['start_time'] = substr($ex1[1], 0 , -3);
+
+if(is_null($editedTask['target_end_date']))
+{
+    $editedTask['target_end_date'] = NULL;
+    $editedTask['end_time'] = NULL;
+}else{
+    $ex2 = explode(" ", $editedTask['target_end_date']);
+    $editedTask['target_end_date'] = $ex2[0];
+    $editedTask['end_time'] = substr($ex2[1], 0 , -3);
+}
+
+
+
 foreach ($taskConfig as $element => &$values)
 {
     if($element !== 'hidden' && $element !== 'submit')

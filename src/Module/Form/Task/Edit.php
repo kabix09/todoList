@@ -17,6 +17,8 @@ final class Edit extends TaskForm
 
     protected function doHandler()
     {
+        $this->fixDate();
+
         if($this->processStatus === NULL)
         {
             $this->processStatus = self::PROCESS_STATUS[2];
