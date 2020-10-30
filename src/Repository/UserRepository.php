@@ -109,4 +109,22 @@ final class UserRepository extends BaseRepository
 
         return NULL;
     }
+
+    public function getNickList(): ?array{
+        $statement = $this->connection->getConnection()->prepare(
+            QueryBuilder::select($this->dbName, ["nick"])::getSQL()
+        );
+
+        $statement->execute();
+
+        if($statement->rowCount() != 0)
+        {
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $statement->closeCursor();
+
+            return $result;
+        }
+
+        return NULL;
+    }
 }
