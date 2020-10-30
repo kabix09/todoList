@@ -13,11 +13,16 @@ searchBar.addEventListener('keyup', (e) => {
     displayTasks(filteredTasks);
 });
 
+const parseJSONtasks = async() => {
+    return await JSON.parse(localStorage.getItem("userTasks"));
+}
 
 const loadTasks = async() => {
     try{
         const result = await fetch('http://todolist.localhost:8000/src/JSON/tasks.php')
         tasks = await result.json();
+
+        localStorage.setItem("userTasks", JSON.stringify(tasks));
 
     }catch (error) {
         console.error(error);
@@ -31,31 +36,24 @@ const displayTasks = (tasks) => {
         .map(
             (task) => {
                 return '<div class="card">' +
-                            /*'<span><b>Title:</b> ' + task.title + '</span><br>' +
-                            '<span><b>Author:</b> ' + task.author + '</span><br>' +
-                            '<span><b>Create Date:</b> ' + task.create_date + '</span><br>' +
-                            '<span><b>Content:</b></span><br>' +
-                            '<div class="content">' + task.content + '</div>' +
-                            '<div class="boxFlex cardFooter">' +
-                                '<a href="">finish</a>'+
-                                '<a href="./scripts/editTask.php?id=' + task.id + '&owner=' + task.owner + '">edit</a>' + /* bug - after click window is refresh and input value is deleted */
-                            /*    '<a href="./scripts/removeTask.php?id=' + task.id +'&owner=' + task.owner + '">remove</a>' +
-                            '</div>' +*/
                             '<span class="title"><b>' + task.title + '</b></span><br>' +
                             '<span><b>Status: </b>' + task.status + '</span><br>' +
                             '<span><b>Content: </b></span><br>' +
                             '<div class="content">' + task.content + '</div>' +
                             '<div class="boxFlex">' +
 
-                            (task.status != "finished" ?
-                                '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + task.owner +'&new=finished">finish</a>' :
-                                    '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + task.owner +'&new=started">activate</a>')
-
-                                +'<a href="./scripts/task/edit.php?id=' + task.id + '&owner=' + task.owner + '">edit</a>' + /* bug - after click window is refresh and input value is deleted */
-                                '<a href="./scripts/task/remove.php?id=' + task.id +'&owner=' + task.owner + '">remove</a>' +
+                                (task.status === "prepared" ?
+                                        '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=planned">plan</a>':
+                                    (task.status === "planned" || task.status === "paused" ?
+                                        '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=started">activate</a>':
+                                        (task.status === 'started' ?
+                                            '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=finished">finish</a>' +
+                                            '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=paused">stop</a>':
+                                            '')))
+                                +'<a href="./scripts/task/remove.php?id=' + task.id +'&owner=' + encodeURIComponent(task.owner) + '">remove</a>' +
                             '</div>' +
                             '<div class="boxFlex cardFooter">' +
-                                '<a href="#id=' + task.id + '" onclick="modalCard()">info</a>' +
+                                '<a href="#id=' + task.id + '" onclick="modalCard(' + task.id + ')">info</a>' +
                             '</div>' +
                         '</div>';
             }

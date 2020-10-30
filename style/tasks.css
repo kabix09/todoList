@@ -12,10 +12,19 @@
     position: relative;
     overflow: auto;
 }
+.title {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
 .content{
     min-height: 85px;
     width: calc(100% - 10px);
     padding: 5px;
+    margin-bottom: 10px;
     box-sizing: border-box;
     border-radius: 10px;
     background-color: rgb(222, 239, 255);
@@ -24,7 +33,7 @@
 
 .cardFooter{
     box-sizing: content-box;
-    margin: 15px 0 20px 0;
+    margin: 5px 0 15px 0;
     position: static;
     bottom: 0px;
 }

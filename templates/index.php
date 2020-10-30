@@ -40,7 +40,7 @@
 
         </section>
         <div style="padding: 10px;">
-            <a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/createTask.php>Create Task</a>
+            <a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/task/create.php>Create Task</a>
         </div>
         <?php endif;?>
         <div id="modalContainer"></div>
