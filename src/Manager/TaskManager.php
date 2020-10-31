@@ -64,12 +64,12 @@ final class TaskManager extends BaseManager
             $this->object->setStatus("prepared");
         }else
         {
-            if($this->object->getStartDate() > (new \DateTime())->format("Y-m-d"))
+            if((new \DateTime($this->object->getStartDate()))->getTimestamp() > (new \DateTime())->getTimestamp())
             {
                 $this->object->setStatus("planned");
             }else
             {
-                if(is_null($this->object->getTargetEndDate()) ||  $this->object->getTargetEndDate() <= (new \DateTime())->format("Y-m-d"))
+                if(is_null($this->object->getTargetEndDate()) ||  (new \DateTime($this->object->getTargetEndDate()))->getTimestamp() <= (new \DateTime())->getTimestamp())
                 {
                     $this->object->setStatus("finished");
                 }else{
