@@ -11,6 +11,18 @@ return $taskForm = [
             'value' => ""
         ]
     ],
+
+    "recaptchaResponse" => [
+        "class" => 'App\Form\Generic',
+        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "label" => '',
+        "wrappers" => include "formWrapper.config.php",
+        "attributes" => [
+            "id" => 'recaptchaResponse',
+            "value" => ''
+        ]
+    ],
+
     "hidden" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_HIDDEN,

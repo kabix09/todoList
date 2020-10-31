@@ -33,6 +33,7 @@ $formfactory->generate(include CHANGE_PASSWORD_FORM,
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/js/formErrors.js></script>
 
+    <?php include_once ("recaptchaScript.php"); ?>
 </head>
 <body style="font-size: 18px;">
 <main style="background-color: ivory;

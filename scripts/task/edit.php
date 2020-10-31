@@ -17,5 +17,6 @@ $editAccess->core();
 $editTask = new EditTask($session, $connection);
 $editTask->generateToken();
 $editTask->setTemplatePath(ROOT_PATH . './templates/editTask.php');
+$editTask->setRecaptchaKey((include(RECAPTCHA))["secretKey"]);
 $editTask->setTaskID($_GET['id']);
 $editTask->core();

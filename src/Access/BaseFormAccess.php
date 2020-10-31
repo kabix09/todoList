@@ -8,7 +8,7 @@ use App\Token\Token;
 abstract class BaseFormAccess extends BaseAccess implements FormStatus
 {
     static string $PATH_400;
-
+    private string $recaptchaKey;
     protected Session $session;
     private Connection $connection;
 
@@ -76,6 +76,7 @@ abstract class BaseFormAccess extends BaseAccess implements FormStatus
 
                 // 4) setup observer and observers
                 $this->setupObserverLogic($formData, $this->connection);
+                $this->mainLogicObject->setRecaptchaKey($this->recaptchaKey);
 
                 $this->main($formData);
                 break;
@@ -91,4 +92,9 @@ abstract class BaseFormAccess extends BaseAccess implements FormStatus
     }
 
     abstract protected function main(array $queryParams): void;
+
+    public function setRecaptchaKey(string $key): void
+    {
+        $this->recaptchaKey = $key;
+    }
 }

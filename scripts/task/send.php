@@ -22,6 +22,7 @@ $task = $taskRepository->fetchById($_GET['id']);
 $sendTask = new SendTask($session, $connection);
 $sendTask->generateToken();
 $sendTask->setTemplatePath(ROOT_PATH . './templates/sendTask.php');
+$sendTask->setRecaptchaKey((include(RECAPTCHA))["secretKey"]);
 $sendTask->setTask($task);
 $sendTask->core();
 

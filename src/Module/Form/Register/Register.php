@@ -1,6 +1,7 @@
 <?php
 namespace App\Module\Form\Register;
 
+use App\Connection\Connection;
 use App\Entity\User;
 use App\Logger\MessageSheme;
 use App\Manager\UserManager;
@@ -9,6 +10,11 @@ use App\Module\Form\PasswordForm;
 final class Register extends PasswordForm
 {
     protected const LOGIN_ERROR = "this login already exists";
+
+    public function __construct(array $formData, Connection $connection)
+    {
+        parent::__construct($formData, $connection);
+    }
 
     protected function doHandler()
     {

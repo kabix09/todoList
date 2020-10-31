@@ -10,6 +10,9 @@ use App\Token\Token;
 abstract class FormGeneric extends Observable implements FormInterface
 {
     static string $PATH_500;
+
+    private string $recaptcha_secret;
+
     const PROCESS_STATUS = ["errors", "correct" , "session"];
     protected ?string $processStatus = NULL;
 
@@ -37,6 +40,12 @@ abstract class FormGeneric extends Observable implements FormInterface
     public function handler(?string $serverToken = NULL, array $filter, array $assignments): bool{
         try{
             if($this->checkToken($serverToken)){
+
+                if(!$this->reCaptcha($this->data['recaptchaResponse']))
+                {
+                    throw new \RuntimeException("recaptcha error");
+                }
+
                 if (!$this->validData($filter, $assignments))
                 {
                     $this->processStatus = self::PROCESS_STATUS[0];
@@ -78,6 +87,37 @@ abstract class FormGeneric extends Observable implements FormInterface
         return TRUE;
     }
 
+    private function reCaptcha(string $recaptchaValue):bool
+    {
+        // Make and decode POST request:
+        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $recaptcha_response = $recaptchaValue;
+
+        $data = array('secret' => $this->recaptcha_secret, 'response' => $recaptcha_response);
+
+        $options = array(
+            'http' => array(
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($data)
+            )
+        );
+        $context  = stream_context_create($options);
+        $response = file_get_contents($recaptcha_url, false, $context);
+        $responseKeys = json_decode($response,true);
+
+
+        if ($responseKeys["success"]) {
+            return TRUE;
+        } else {
+
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $this->logger->error(implode("|",$responseKeys["error-codes"]), [$config]);
+            return FALSE;
+        }
+        // Take action based on the score returned: $responseKeys->score >= 0.5
+    }
+
     public function validData(array $filter, array $assignments): bool{
         $filter = new Filter($filter, $assignments);
         $filter->process($this->data);
@@ -93,6 +133,7 @@ abstract class FormGeneric extends Observable implements FormInterface
         return TRUE;
     }
 
+
     // hermetical methods
     public function getProcessStatus(): string{
         return $this->processStatus;
@@ -102,5 +143,11 @@ abstract class FormGeneric extends Observable implements FormInterface
     }
     public function getObject() {
         return $this->object;
+    }
+
+    // --------------------------------------
+    public function setRecaptchaKey(string $key)
+    {
+        $this->recaptcha_secret = $key;
     }
 }

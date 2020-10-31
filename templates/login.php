@@ -41,6 +41,8 @@ $formFactory->generate(include LOG_FORM,
         path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/src/JSON/variables.php?name=loginErrors";
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/js/formErrors.js></script>
+
+    <?php include_once ("recaptchaScript.php"); ?>
 </head>
 <body style="font-size: 18px;">
     <main style="background-color: ivory;

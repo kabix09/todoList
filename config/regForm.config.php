@@ -70,6 +70,17 @@ return $regForm = [
         ]
     ],
 
+    "recaptchaResponse" => [
+        "class" => 'App\Form\Generic',
+        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "label" => '',
+        "wrappers" => include "formWrapper.config.php",
+        "attributes" => [
+            "id" => 'recaptchaResponse',
+            "value" => ''
+        ]
+    ],
+
     "submit" => [
         "class" => 'App\Form\Generic',
         "type" => App\Form\FormConstants::TYPE_SUBMIT,

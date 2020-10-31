@@ -42,7 +42,7 @@ if(is_null($editedTask['target_end_date']))
 
 foreach ($taskConfig as $element => &$values)
 {
-    if($element !== 'hidden' && $element !== 'submit')
+    if($element !== 'hidden' && $element !== 'recaptchaResponse' && $element !== 'submit')
     {
         $values["attributes"]["value"] = $editedTask[$element];
     }
@@ -72,6 +72,8 @@ $formFactory->generate($taskConfig,
         path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/src/JSON/variables.php?name=editErrors";
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/js/formErrors.js></script>
+
+    <?php include_once ("recaptchaScript.php"); ?>
 </head>
 <body style="font-size: 18px;">
 <main style="background-color: ivory;

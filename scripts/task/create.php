@@ -17,4 +17,5 @@ $createAccess->core();
 $createTask = new CreateTask($session, $connection);
 $createTask->generateToken();
 $createTask->setTemplatePath(ROOT_PATH . './templates/createTask.php');
+$createTask->setRecaptchaKey((include(RECAPTCHA))["secretKey"]);
 $createTask->core();

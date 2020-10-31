@@ -2,6 +2,7 @@
 vendor/
 config/db.config.php
 config/smtp.config.php
+config/reCaptcha.config.php
 composer.lock
 git
 tests/
