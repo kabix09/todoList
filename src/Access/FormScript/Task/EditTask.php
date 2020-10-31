@@ -10,6 +10,8 @@ use App\Module\SessionObserver;
 
 final class EditTask extends BaseFormAccess
 {
+    private int $taskID;
+
     protected function clearErrors(): void
     {
         if (isset($this->session['editErrors']))
@@ -18,7 +20,7 @@ final class EditTask extends BaseFormAccess
 
     protected function setupObserverLogic(array $formData, Connection $connection): void
     {
-        $this->mainLogicObject = new Edit($formData, $connection);
+        $this->mainLogicObject = new Edit($formData, $connection, $this->taskID);
 
         // create usefully observers
         new ErrorObserver($this->mainLogicObject);
@@ -38,7 +40,15 @@ final class EditTask extends BaseFormAccess
             // index.php refresh automatically task list in purpose to always handle lasted version
 
             $this->redirectToHome();
-        }else
-            header("Location: ./editTask.php?id={$queryParams[QueryParameters::QUERY_PARAMETERS[QueryParameters::ID]]}&owner={$queryParams[QueryParameters::QUERY_PARAMETERS[QueryParameters::OWNER]]}");
+        }else {
+            header("Location: ./edit.php?id={$this->taskID}&owner={$queryParams[\App\Access\TaskScript\Edit::QUERY_PARAMETERS[\App\Access\TaskScript\Edit::OWNER]]}");
+            die();
+        }
+    }
+
+    // -------------------------------------------
+    public function setTaskID(int $id): void
+    {
+        $this->taskID = $id;
     }
 }

@@ -8,10 +8,8 @@ use App\Manager\TaskManager;
 
 final class ChangeStatus extends BaseTaskAccess
 {
-    protected const NEW_STATUS = "NEW_STATUS";
+    protected const NEW_STATUS = 3;
     public const QUERY_PARAMETERS = [self::ID => "id", self::OWNER => "owner", self::NEW_STATUS => "new"];
-
-    private TaskManager $taskManager;
 
     protected function main(array $queryParams): void
     {

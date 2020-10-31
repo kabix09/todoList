@@ -10,9 +10,13 @@ use App\Module\Form\TaskForm;
 
 final class Edit extends TaskForm
 {
-    public function __construct(array $formData, Connection $connection)
+    private int $taskID;
+
+    public function __construct(array $formData, Connection $connection, int $id)
     {
         parent::__construct($formData, $connection);
+
+        $this->taskID = $id;
     }
 
     protected function doHandler()
@@ -45,7 +49,7 @@ final class Edit extends TaskForm
         }else
         {
             $config = new MessageSheme($this->data['owner'], __CLASS__, __FUNCTION__, TRUE);
-            $this->logger->error("An attempt to edit task with id: {$this->data['id']} has failed", [$config]);
+            $this->logger->error("An attempt to edit task with id: {$this->taskID} has failed", [$config]);
         }
     }
 

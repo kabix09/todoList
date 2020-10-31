@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Module\Form;
 
 use App\Connection\Connection;
