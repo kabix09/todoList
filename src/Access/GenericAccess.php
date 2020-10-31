@@ -2,18 +2,15 @@
 namespace App\Access;
 
 use App\Connection\Connection;
-use App\Logger\Logger;
 use App\Repository\UserRepository;
 use App\Session\Session;
 
 abstract class GenericAccess extends BaseAccess implements QueryParameters
 {
-    protected Logger $logger;
     protected UserRepository $userRepository;
 
     public function __construct(Session $session, Connection $connection)
     {
-        $this->logger = new Logger();
         $this->userRepository = new UserRepository($connection);
 
         parent::__construct($session);

@@ -1,6 +1,7 @@
 <?php
 namespace App\Module;
 
+use App\Access\Access;
 use App\Logger\Logger;
 use App\Logger\MessageSheme;
 use App\Module\Form\Login\Login;
@@ -37,15 +38,10 @@ class SessionObserver extends GenericObserver
             {
                 $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
                 $this->logger->critical("The user requesting access to the session could not be verified", [$config]);
-                    // logout and redirect to login form -> toDo ???
-                header("Location: ./logout.php");
-                header("Location: ./login.php");
 
-                exit("user verify fail - The user requesting access to the session could not be verified");   // don't show message -> toDo
+                header("Location: " . Access::$PATH_401);
+                die();
             }
-
-            // but when, not all time
-            //$sessionManager->changeSessionUser();
         }
 
         if($observable->getProcessStatus() === "correct")

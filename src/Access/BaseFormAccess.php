@@ -7,7 +7,7 @@ use App\Token\Token;
 
 abstract class BaseFormAccess extends BaseAccess implements FormStatus
 {
-    static string $PATH_404;
+    static string $PATH_400;
 
     protected Session $session;
     private Connection $connection;
@@ -21,8 +21,8 @@ abstract class BaseFormAccess extends BaseAccess implements FormStatus
 
         $this->connection = $connection;
 
-        if (!isset(self::$PATH_404) || empty(self::$PATH_404))
-            self::$PATH_404 = $_SERVER['REQUEST_SCHEME']. "://" . $_SERVER['HTTP_HOST'] . "/templates/error/404.php";
+        if (!isset(self::$PATH_400) || empty(self::$PATH_400))
+            self::$PATH_400 = $_SERVER['REQUEST_SCHEME']. "://" . $_SERVER['HTTP_HOST'] . "/templates/error/400.php";
 
     }
 
@@ -83,7 +83,7 @@ abstract class BaseFormAccess extends BaseAccess implements FormStatus
 
             default:
             {
-                header("Location: " . self::$PATH_404);
+                header("Location: " . self::$PATH_400);
                 break;
             }
         }

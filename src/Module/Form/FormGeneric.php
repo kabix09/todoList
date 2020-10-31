@@ -9,6 +9,7 @@ use App\Token\Token;
 
 abstract class FormGeneric extends Observable implements FormInterface
 {
+    static string $PATH_500;
     const PROCESS_STATUS = ["errors", "correct" , "session"];
     protected ?string $processStatus = NULL;
 
@@ -26,6 +27,10 @@ abstract class FormGeneric extends Observable implements FormInterface
         $this->repository = $repository;
 
         $this->logger = new Logger();
+
+        if (!isset(self::$PATH_500) || empty(self::$PATH_500))
+            self::$PATH_500 = $_SERVER['REQUEST_SCHEME']. "://" . $_SERVER['HTTP_HOST'] . "/templates/error/500.php";
+
     }
 
         // main method
@@ -39,20 +44,16 @@ abstract class FormGeneric extends Observable implements FormInterface
 
                 $this->doHandler();
 
-
                 $this->notify();
 
                 if (empty($this->errors))
                     return TRUE;
             }
         }catch (\Exception $e){
-            echo '<pre>';
-            var_dump($e);
-            echo '</pre>';
-
             $config = new MessageSheme($_SERVER['REMOTE_ADDR'], static::class, __FUNCTION__);
             $this->logger->error($e->getMessage(), [$config]);
 
+            header("Location: " . self::$PATH_500);
             die();
         }
         return FALSE;

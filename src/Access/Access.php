@@ -2,16 +2,25 @@
 namespace App\Access;
 
 use App\Entity\User;
+use App\Logger\Logger;
+use App\Logger\MessageSheme;
 use App\Session\SessionManager;
 use App\Session\Session;
 
 class Access
 {
+    static string $PATH_401;
     protected Session $session;
+    protected Logger $logger;
 
     public function __construct(Session $session)
     {
         $this->session = $session;
+
+        $this->logger = new Logger();
+
+        if (!isset(self::$PATH_401) || empty(self::$PATH_401))
+            self::$PATH_401 = $_SERVER['REQUEST_SCHEME']. "://" . $_SERVER['HTTP_HOST'] . "/templates/error/401.php";
     }
 
     protected function isLogged() : bool
@@ -31,8 +40,11 @@ class Access
         $sessionManager = new SessionManager($this->session);
         if(!$sessionManager->manage())
         {
-            // logout and redirect to login page
-            die("session error - try to refresh page :/"); // TODO - fix error and behaviour
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
+            $this->logger->critical("The user requesting access to the session could not be verified", [$config]);
+
+            header("Location: " . self::$PATH_401);
+            die();
         }
     }
 }
