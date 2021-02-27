@@ -1,7 +1,7 @@
 <?php
 namespace App\Module\Form\Login\Observers;
 
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Manager\UserManager;
 use App\Module\Form\Login\Login;

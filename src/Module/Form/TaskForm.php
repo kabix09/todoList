@@ -1,7 +1,7 @@
 <?php
 namespace App\Module\Form;
 
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
 

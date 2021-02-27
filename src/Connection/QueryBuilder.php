@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace App\Connection;
 
-use App\Connection\Connection;
-
 class QueryBuilder
 {
     private static $classInstance = NULL;

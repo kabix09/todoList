@@ -1,6 +1,6 @@
 <?php
 namespace App\Session;
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Logger\Logger;
 use App\Repository\SessionRepository;
 use App\Manager\SessionManager;

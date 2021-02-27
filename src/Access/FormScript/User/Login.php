@@ -2,7 +2,7 @@
 namespace App\Access\FormScript\User;
 
 use App\Access\BaseFormAccess;
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Module\ErrorObserver;
 use App\Module\Form\Login\Observers\DateObserver;
 use App\Module\SessionObserver;

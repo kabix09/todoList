@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Session\Session;
 
 define('RECAPTCHA', ROOT_PATH . './config/reCaptcha.config.php');

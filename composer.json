@@ -1,4 +1,13 @@
 {
+  "name": "kabix09/todo-list",
+  "description": "Simple ToDo List",
+  "keywords": ["ToDo List", "ToDo", "list"],
+  "authors": [
+    {
+      "name": "kabix09",
+      "email": "kabix009@gmail.com"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "App\\" : "./src/"
@@ -6,6 +15,14 @@
   },
   "require": {
     "psr/log": "dev-master",
-    "phpmailer/phpmailer": "^6.1"
-  }
+    "phpmailer/phpmailer": "^6.1",
+    "kabix09/connection-factory": "dev-namespaceFix"
+  },
+  "repositories": [
+    {
+      "type": "github",
+      "url": "https://github.com/kabix09/connectionFactory",
+      "branches-path": "namespaceFix"
+    }
+  ]
 }

@@ -1,7 +1,7 @@
 <?php
 require_once  '../../init.php';
 
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Entity\Mapper\TaskMapper;
 use App\Manager\TaskManager;
 use App\Manager\UserManager;

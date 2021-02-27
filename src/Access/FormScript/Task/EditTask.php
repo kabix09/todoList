@@ -3,7 +3,7 @@ namespace App\Access\FormScript\Task;
 
 use App\Access\BaseFormAccess;
 use App\Access\QueryParameters;
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Module\ErrorObserver;
 use App\Module\Form\Task\Edit;
 use App\Module\SessionObserver;

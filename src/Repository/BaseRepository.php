@@ -1,10 +1,11 @@
 <?php
 namespace App\Repository;
 
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Connection\QueryBuilder;
 use App\Entity\Base;
 use App\Entity\Mapper\BaseMapper;
+use ConnectionFactory\Validator\ConnectionDriverValidator;
 
 abstract class BaseRepository implements Repository
 {
@@ -17,7 +18,7 @@ abstract class BaseRepository implements Repository
         $this->dbName = $dbName;
         $this->entityFactory = $baseFactory;
 
-        $this->connection->connect();
+        $this->connection->connect(new ConnectionDriverValidator());
     }
 
     /*

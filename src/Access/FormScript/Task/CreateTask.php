@@ -2,7 +2,7 @@
 namespace App\Access\FormScript\Task;
 
 use App\Access\BaseFormAccess;
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Module\ErrorObserver;
 use App\Module\Form\Task\Create;
 use App\Module\SessionObserver;

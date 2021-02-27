@@ -1,6 +1,6 @@
 <?php
 namespace App\Repository;
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Connection\QueryBuilder;
 use App\Entity\Mapper\TaskMapper;
 use App\Entity\Task;

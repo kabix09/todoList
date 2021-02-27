@@ -1,7 +1,7 @@
 <?php
 namespace App\Access;
 
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Session\Session;
 use App\Token\Token;
 

@@ -1,7 +1,7 @@
 <?php
 namespace App\Module\Form\Task;
 
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Entity\Task;
 use App\Logger\MessageSheme;

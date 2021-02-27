@@ -2,7 +2,7 @@
 namespace App\Access\UserScript;
 
 use App\Access\BaseUserAccess;
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Logger\MessageSheme;
 use App\Manager\UserManager;

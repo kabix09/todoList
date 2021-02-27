@@ -1,6 +1,6 @@
 <?php
 namespace App\Manager;
-use App\Connection\Connection;
+use ConnectionFactory\Connection;
 use App\Entity\Mapper\TaskMapper;
 use App\Entity\Mapper\UserMapper;
 use App\Entity\User;
