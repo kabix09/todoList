@@ -1,8 +1,11 @@
 <?php
+
+use App\Service\Form\Generic;
+
 return $taskForm = [
     "new_owner" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_TEXT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_TEXT,
         "label" => "Send To",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -13,8 +16,8 @@ return $taskForm = [
     ],
 
     "recaptchaResponse" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -24,8 +27,8 @@ return $taskForm = [
     ],
 
     "hidden" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -34,8 +37,8 @@ return $taskForm = [
     ],
 
     "submit" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_SUBMIT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_SUBMIT,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [

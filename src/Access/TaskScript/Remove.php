@@ -2,7 +2,7 @@
 namespace App\Access\TaskScript;
 
 use App\Access\BaseTaskAccess;
-use App\Logger\MessageSheme;
+use App\Service\Logger\MessageSheme;
 
 final class Remove extends BaseTaskAccess
 {

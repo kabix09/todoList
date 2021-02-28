@@ -7,7 +7,7 @@ use App\Entity\Task;
 use App\Module\ErrorObserver;
 use App\Module\Form\Task\Send;
 use App\Module\SessionObserver;
-use App\Session\Session;
+use App\Service\Session\Session;
 
 class SendTask extends BaseFormAccess
 {

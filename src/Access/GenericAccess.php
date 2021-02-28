@@ -3,7 +3,7 @@ namespace App\Access;
 
 use ConnectionFactory\Connection;
 use App\Repository\UserRepository;
-use App\Session\Session;
+use App\Service\Session\Session;
 
 abstract class GenericAccess extends BaseAccess implements QueryParameters
 {

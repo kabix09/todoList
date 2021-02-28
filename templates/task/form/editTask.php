@@ -3,9 +3,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 use App\Access\Access;
 use App\Entity\Mapper\TaskMapper;
-use App\Form\Factory\Factory;
-use App\Session\Session;
-use App\Token\Token;
+use App\Service\Form\Factory\Factory;
+use App\Service\Session\Session;
+use App\Service\Token\Token;
 
 define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
 define('TASK_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/editTaskForm.config.php");

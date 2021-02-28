@@ -2,8 +2,8 @@
 namespace App\Access;
 
 use ConnectionFactory\Connection;
-use App\Session\Session;
-use App\Token\Token;
+use App\Service\Session\Session;
+use App\Service\Token\Token;
 
 abstract class BaseFormAccess extends BaseAccess implements FormStatus
 {

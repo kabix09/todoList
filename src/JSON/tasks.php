@@ -3,11 +3,11 @@ require_once  '../../init.php';
 
 use ConnectionFactory\Connection;
 use App\Entity\Mapper\TaskMapper;
-use App\Manager\TaskManager;
-use App\Manager\UserManager;
+use App\Service\Manager\TaskManager;
+use App\Service\Manager\UserManager;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
-use App\Session\Session;
+use App\Service\Session\Session;
 
 $session = new Session();
 $tasksArray = [];

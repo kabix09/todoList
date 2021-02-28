@@ -2,7 +2,7 @@
 namespace App\Access;
 
 use App\Entity\User;
-use App\Logger\MessageSheme;
+use App\Service\Logger\MessageSheme;
 
 abstract class BaseUserAccess extends GenericAccess
 {

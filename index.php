@@ -1,7 +1,7 @@
 <?php
 require_once './init.php';
 
-use App\Session\Session;
+use App\Service\Session\Session;
 
 $session = new Session();
 /*

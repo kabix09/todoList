@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . './init.php';
 define("LINK", '%s://%s:%s/public/scripts/activateAccount.php?email=%s&nick=%s&key=%s');
 define("HREF", '<a href="%s">%s</a>');
 
-$session = new \App\Session\Session();
+$session = new \App\Service\Session\Session();
 $href = sprintf(LINK,
             $_SERVER['REQUEST_SCHEME'],
             $_SERVER['SERVER_NAME'],

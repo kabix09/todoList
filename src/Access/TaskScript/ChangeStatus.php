@@ -3,8 +3,8 @@ namespace App\Access\TaskScript;
 
 use App\Access\BaseTaskAccess;
 use App\Entity\Task;
-use App\Logger\MessageSheme;
-use App\Manager\TaskManager;
+use App\Service\Logger\MessageSheme;
+use App\Service\Manager\TaskManager;
 
 final class ChangeStatus extends BaseTaskAccess
 {

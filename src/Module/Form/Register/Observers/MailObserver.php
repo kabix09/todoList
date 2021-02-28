@@ -1,8 +1,8 @@
 <?php
 namespace App\Module\Form\Register\Observers;
 
-use App\Logger\Logger;
-use App\Logger\MessageSheme;
+use App\Service\Logger\Logger;
+use App\Service\Logger\MessageSheme;
 use App\Module\Observer\Observable;
 use App\Module\Form\Register\Register;
 use App\Entity\User;

@@ -3,7 +3,7 @@ namespace App\Module\Form\Login\Observers;
 
 use ConnectionFactory\Connection;
 use App\Entity\User;
-use App\Manager\UserManager;
+use App\Service\Manager\UserManager;
 use App\Module\Form\Login\Login;
 use App\Module\Observer\Observable;
 use App\Repository\UserRepository;

@@ -1,7 +1,7 @@
 <?php
 
-use App\Filter\CallbackAbstract;
-use App\Filter\Elements\ {Result, Messages};
+use App\Service\Filter\CallbackAbstract;
+use App\Service\Filter\Elements\ {Result, Messages};
 
 return $filterSanitize = [
     'htmlentities' => new class () extends CallbackAbstract {

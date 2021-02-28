@@ -1,5 +1,5 @@
 <?php
-use App\Filter\Elements\Messages;
+use App\Service\Filter\Elements\Messages;
 
 Messages::setMessages(
     [

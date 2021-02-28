@@ -2,10 +2,10 @@
 namespace App\Access;
 
 use App\Entity\User;
-use App\Logger\Logger;
-use App\Logger\MessageSheme;
-use App\Session\SessionManager;
-use App\Session\Session;
+use App\Service\Logger\Logger;
+use App\Service\Logger\MessageSheme;
+use App\Service\Session\SessionManager;
+use App\Service\Session\Session;
 
 class Access
 {

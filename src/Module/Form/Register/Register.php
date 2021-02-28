@@ -3,8 +3,8 @@ namespace App\Module\Form\Register;
 
 use ConnectionFactory\Connection;
 use App\Entity\User;
-use App\Logger\MessageSheme;
-use App\Manager\UserManager;
+use App\Service\Logger\MessageSheme;
+use App\Service\Manager\UserManager;
 use App\Module\Form\PasswordForm;
 
 final class Register extends PasswordForm

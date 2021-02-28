@@ -2,7 +2,7 @@
 namespace App\Module;
 
 use App\Module\Observer\Observable;
-use App\Session\Session;
+use App\Service\Session\Session;
 
 final class ErrorObserver extends GenericObserver
 {

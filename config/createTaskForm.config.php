@@ -1,8 +1,12 @@
 <?php
+
+use App\Service\Form\Elements\Textarea;
+use App\Service\Form\Generic;
+
 return $taskForm = [
     "title" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_TEXT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_TEXT,
         "label" => "Title",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -16,8 +20,8 @@ return $taskForm = [
     ],
 
     "content" => [
-        "class" => 'App\Form\Elements\Textarea',
-        "type" => App\Form\FormConstants::TYPE_TEXT,
+        "class" => Textarea::class,
+        "type" => App\Service\Form\FormConstants::TYPE_TEXT,
         "label" => "Description",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -31,8 +35,8 @@ return $taskForm = [
     ],
 
     "start_date" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_DATE,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_DATE,
         "label" => "Start date",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -45,8 +49,8 @@ return $taskForm = [
     ],
 
     "start_time" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_TIME,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_TIME,
         "label" => "Start time",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -58,8 +62,8 @@ return $taskForm = [
     ],
 
     "target_end_date" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_DATE,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_DATE,
         "label" => "End date",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -70,8 +74,8 @@ return $taskForm = [
     ],
 
     "end_time" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_TIME,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_TIME,
         "label" => "End time",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -83,8 +87,8 @@ return $taskForm = [
     ],
 
     "hidden" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -93,8 +97,8 @@ return $taskForm = [
     ],
 
     "recaptchaResponse" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -104,8 +108,8 @@ return $taskForm = [
     ],
 
     "submit" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_SUBMIT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_SUBMIT,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [

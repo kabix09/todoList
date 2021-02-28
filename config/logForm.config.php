@@ -1,8 +1,11 @@
 <?php
+
+use App\Service\Form\Generic;
+
 return $logForm = [
     "nick" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_TEXT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_TEXT,
         "label" => "Username",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -16,8 +19,8 @@ return $logForm = [
     ],
 
     "password" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_PASSWORD,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_PASSWORD,
         "label" => "Password",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -31,8 +34,8 @@ return $logForm = [
     ],
 
     "hidden" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -41,8 +44,8 @@ return $logForm = [
     ],
 
     "recaptchaResponse" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -52,8 +55,8 @@ return $logForm = [
     ],
 
     "submit" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_SUBMIT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_SUBMIT,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [

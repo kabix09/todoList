@@ -3,8 +3,8 @@ namespace App\Module\Form\Task;
 
 use ConnectionFactory\Connection;
 use App\Entity\Task;
-use App\Logger\MessageSheme;
-use App\Manager\TaskManager;
+use App\Service\Logger\MessageSheme;
+use App\Service\Manager\TaskManager;
 use App\Module\Form\TaskForm;
 use App\Repository\UserRepository;
 

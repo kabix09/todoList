@@ -1,7 +1,7 @@
 <?php
 namespace App\Module\Form\Login;
 
-use App\Logger\MessageSheme;
+use App\Service\Logger\MessageSheme;
 use App\Module\Form\UserForm;
 
 final class Login extends UserForm

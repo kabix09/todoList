@@ -2,7 +2,7 @@
 namespace App\Repository;
 
 use ConnectionFactory\Connection;
-use App\Connection\QueryBuilder;
+use App\Service\Connection\QueryBuilder;
 use App\Entity\Base;
 use App\Entity\Mapper\BaseMapper;
 use ConnectionFactory\Validator\ConnectionDriverValidator;

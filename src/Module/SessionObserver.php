@@ -2,13 +2,13 @@
 namespace App\Module;
 
 use App\Access\Access;
-use App\Logger\Logger;
-use App\Logger\MessageSheme;
+use App\Service\Logger\Logger;
+use App\Service\Logger\MessageSheme;
 use App\Module\Form\Login\Login;
 use App\Module\Form\Register\Register;
 use App\Module\Observer\Observable;
-use App\Session\Session;
-use App\Session\SessionManager;
+use App\Service\Session\Session;
+use App\Service\Session\SessionManager;
 
 class SessionObserver extends GenericObserver
 {

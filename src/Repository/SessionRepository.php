@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use ConnectionFactory\Connection;
-use App\Connection\QueryBuilder;
+use App\Service\Connection\QueryBuilder;
 use App\Entity\Mapper\SessionMapper;
 use App\Entity\Session;
 

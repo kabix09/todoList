@@ -2,12 +2,10 @@
 namespace App\Access;
 
 use ConnectionFactory\Connection;
-use App\Logger\Logger;
-use App\Logger\MessageSheme;
-use App\Manager\UserManager;
+use App\Service\Logger\MessageSheme;
+use App\Service\Manager\UserManager;
 use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
-use App\Session\Session;
+use App\Service\Session\Session;
 
 abstract class BaseTaskAccess extends GenericAccess
 {

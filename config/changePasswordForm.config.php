@@ -1,8 +1,11 @@
 <?php
+
+use App\Service\Form\Generic;
+
 return $logForm = [
     "password" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_PASSWORD,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_PASSWORD,
         "label" => "New Password",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -16,8 +19,8 @@ return $logForm = [
     ],
 
     "repeatPassword" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_PASSWORD,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_PASSWORD,
         "label" => "Repeat Password",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -32,7 +35,7 @@ return $logForm = [
 
     "hidden" => [
         "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -42,7 +45,7 @@ return $logForm = [
 
     "recaptchaResponse" => [
         "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -53,7 +56,7 @@ return $logForm = [
 
     "submit" => [
         "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_SUBMIT,
+        "type" => App\Service\Form\FormConstants::TYPE_SUBMIT,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [

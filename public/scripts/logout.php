@@ -1,8 +1,8 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . './init.php';
 
-use App\Logger\MessageSheme;
-use App\Session\Session;
+use App\Service\Logger\MessageSheme;
+use App\Service\Session\Session;
 
 $session = new Session();
 if(isset($session['user'])) {
@@ -11,7 +11,7 @@ if(isset($session['user'])) {
     $session->destroy();
 
     $config = new MessageSheme($user, __CLASS__, __FUNCTION__, TRUE);
-    $logger = new \App\Logger\Logger();
+    $logger = new \App\Service\Logger\Logger();
     $logger->info("Successfully logout user", [$config]);
 }
 

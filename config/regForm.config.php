@@ -1,8 +1,11 @@
 <?php
+
+use App\Service\Form\Generic;
+
 return $regForm = [
     "nick" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_TEXT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_TEXT,
         "label" => "Username",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -16,8 +19,8 @@ return $regForm = [
     ],
 
     "email" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_EMAIL,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_EMAIL,
         "label" => "Email",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -31,8 +34,8 @@ return $regForm = [
     ],
 
     "password" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_PASSWORD,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_PASSWORD,
         "label" => "Password",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -46,8 +49,8 @@ return $regForm = [
     ],
 
     "repeatPassword" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_PASSWORD,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_PASSWORD,
         "label" => "Repeat Password",
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -61,8 +64,8 @@ return $regForm = [
     ],
 
     "hidden" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -71,8 +74,8 @@ return $regForm = [
     ],
 
     "recaptchaResponse" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_HIDDEN,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [
@@ -82,8 +85,8 @@ return $regForm = [
     ],
 
     "submit" => [
-        "class" => 'App\Form\Generic',
-        "type" => App\Form\FormConstants::TYPE_SUBMIT,
+        "class" => Generic::class,
+        "type" => App\Service\Form\FormConstants::TYPE_SUBMIT,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
         "attributes" => [

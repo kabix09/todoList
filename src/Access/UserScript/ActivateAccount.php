@@ -4,9 +4,9 @@ namespace App\Access\UserScript;
 use App\Access\BaseUserAccess;
 use ConnectionFactory\Connection;
 use App\Entity\User;
-use App\Logger\MessageSheme;
-use App\Manager\UserManager;
-use App\Session\Session;
+use App\Service\Logger\MessageSheme;
+use App\Service\Manager\UserManager;
+use App\Service\Session\Session;
 
 final class ActivateAccount extends BaseUserAccess
 {

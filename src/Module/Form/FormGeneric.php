@@ -1,11 +1,11 @@
 <?php
 namespace App\Module\Form;
 
-use App\Filter\Filter;
-use App\Logger\Logger;
-use App\Logger\MessageSheme;
+use App\Service\Filter\Filter;
+use App\Service\Logger\MessageSheme;
 use App\Repository\BaseRepository;
-use App\Token\Token;
+use App\Service\Logger\Logger;
+use App\Service\Token\Token;
 
 abstract class FormGeneric extends Observable implements FormInterface
 {

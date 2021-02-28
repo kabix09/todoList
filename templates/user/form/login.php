@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "./vendor/autoload.php";
-use App\Form\Factory\Factory;
-use App\Token\Token;
+use App\Service\Form\Factory\Factory;
+use App\Service\Token\Token;
 
 define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
 define('LOG_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/logForm.config.php");
