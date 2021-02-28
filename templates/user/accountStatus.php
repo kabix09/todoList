@@ -29,7 +29,7 @@
         )
     )): ?>
     <?= (new \DateTime($session['user']->getEndBan()))->format(User::DATE_FORMAT); ?>
-    <a href="<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/scripts/activateAccount.php">Active Account</a>
+    <a href="<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/user/activateAccount.php">Active Account</a>
     <?php endif; ?>
 </body>
 </html>

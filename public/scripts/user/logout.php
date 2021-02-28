@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . './init.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../init.php';
 
 use App\Service\Logger\MessageSheme;
 use App\Service\Session\Session;
