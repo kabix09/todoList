@@ -9,6 +9,6 @@ use App\Access\FormScript\User\Register;
 
 $register = new Register($session, $connection);
 $register->generateToken();
-$register->setTemplatePath(ROOT_PATH . "./templates/register.php");
+$register->setTemplatePath(ROOT_PATH . "./templates/user/form/register.php");
 $register->setRecaptchaKey((include(RECAPTCHA))["secretKey"]);
 $register->core();

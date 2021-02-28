@@ -9,6 +9,6 @@ use App\Access\FormScript\User\Login;
 
 $login = new Login($session, $connection);
 $login->generateToken();
-$login->setTemplatePath(ROOT_PATH . "./templates/login.php");
+$login->setTemplatePath(ROOT_PATH . "./templates/user/form/login.php");
 $login->setRecaptchaKey((include(RECAPTCHA))["secretKey"]);
 $login->core();

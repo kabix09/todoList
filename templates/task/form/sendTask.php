@@ -1,23 +1,17 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "./vendor/autoload.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+use App\Access\Access;
+use App\Entity\Mapper\TaskMapper;
 use App\Form\Factory\Factory;
+use App\Session\Session;
 use App\Token\Token;
 
-define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
-define('LOG_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/logForm.config.php");
-
-
-/*
- * $errors = [
- *  "wrong Nickname",
- *  "wrong charset"
- * ];
- * $elementGenerator = new Generic("nick", FormConstants::TYPE_TEXT, "Nick", $wrappers, $attributes, $errors);
- * echo $elementGenerator->render(TRUE);
- */
+define('FORM_CONFIG', ROOT_PATH . "./config/form.config.php");
+define('TASK_FORM', ROOT_PATH . "./config/sendTaskForm.config.php");
 
 $formFactory = new Factory();
-$formFactory->generate(include LOG_FORM,
+$formFactory->generate(include TASK_FORM,
                         (new Token($this->session['token']))
                             ->hash()
                             ->binToHex()
@@ -27,7 +21,7 @@ $formFactory->generate(include LOG_FORM,
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login Form</title>
+    <title>Edit Task Form</title>
     <meta name="author" content="kabix09" />
     <meta http-equiv = "Content-Type" content = "text/html; charset = UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,32 +31,30 @@ $formFactory->generate(include LOG_FORM,
 
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/js-snackbar.js></script>
     <script>
-        path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/src/JSON/variables.php?name=loginErrors";
+        path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/src/JSON/variables.php?name=sendErrors";
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/formErrors.js></script>
 
-    <?php include_once ("recaptchaScript.php"); ?>
+    <?php include_once ($_SERVER['DOCUMENT_ROOT'] . "/templates/recaptchaScript.php"); ?>
 </head>
 <body style="font-size: 18px;">
-    <main style="background-color: ivory;
+<main style="background-color: ivory;
                 padding: 15px;
                 border-radius: 20px;
-                width: 24rem;
+                width: 26rem;
                 position: fixed; top: 40%; left: 50%;
-                transform: translate(-50%, -50%);
+                transform: translate(-50%, -40%);
                 box-sizing:border-box;
                 -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
                 -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
                 box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);">
-        <div style="text-align: center; margin: 10px 0 25px 0; font-size: 20px;">
+    <div style="text-align: center; margin: 10px 0 25px 0; font-size: 20px;">
             <span style="border-bottom:  2px solid #000000;">
-                Sing in with your<br>username & password
+                Edit Task
             </span>
-        </div>
+    </div>
 
-        <?= $formFactory->render(include FORM_CONFIG, FALSE, TRUE); ?>
-    </main>
+    <?= $formFactory->render(include FORM_CONFIG, FALSE, TRUE)?>
+</main>
 </body>
 </html>
-
-

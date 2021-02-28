@@ -32,7 +32,7 @@ $formFactory->generate(include TASK_FORM,
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/formErrors.js></script>
 
-    <?php include_once ("recaptchaScript.php"); ?>
+    <?php include_once ($_SERVER['DOCUMENT_ROOT'] . "/templates/recaptchaScript.php"); ?>
 </head>
 <body style="font-size: 18px;">
 <main style="background-color: ivory;

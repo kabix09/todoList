@@ -9,7 +9,7 @@ use App\Access\FormScript\User\ChangePassword;
 
 $changePassword = new ChangePassword($session, $connection);
 $changePassword->generateToken();
-$changePassword->setTemplatePath(ROOT_PATH . "./templates/changePassword.php");
+$changePassword->setTemplatePath(ROOT_PATH . "./templates/user/form/changePassword.php");
 $changePassword->setRecaptchaKey((include(RECAPTCHA))["secretKey"]);
 $changePassword->core();
 

@@ -15,7 +15,7 @@ var_dump($session['counter']);
 
     // chceck account status in purpose to redirect
 if(isset($session["user"]) && $session["user"]->getStatus() !== "active"){
-    header("Location: ./templates/accountStatus.php");
+    header("Location: ./templates/user/accountStatus.php");
     exit();
 }
 

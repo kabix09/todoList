@@ -39,7 +39,7 @@ class Login extends BaseFormAccess
             if($this->session['user']->getStatus() === 'active')
                 $this->redirectToHome();
             else
-                header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/templates/accountStatus.php");
+                header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/templates/user/accountStatus.php");
         }else
             header("Location: ./login.php");
     }
