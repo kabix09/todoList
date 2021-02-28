@@ -1,11 +1,11 @@
 <?php
-namespace App\Module\Form\User\Login\Observers;
+namespace App\Module\FormHandling\User\Login\Observers;
 
-use App\Module\Form\User\Login\Observers\LoginObserver;
+use App\Module\FormHandling\User\Login\Observers\LoginObserver;
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Service\Manager\UserManager;
-use App\Module\Form\User\Login\Login;
+use App\Module\FormHandling\User\Login\Login;
 use App\Module\Observer\Observable;
 use App\Repository\UserRepository;
 

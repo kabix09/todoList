@@ -4,7 +4,7 @@ namespace App\Module\FormActions\User;
 use App\Module\FormActions\BaseFormActions;
 use ConnectionFactory\Connection;
 use App\Module\Observer\Generic\ErrorObserver;
-use App\Module\Form\User\ChangePassword\ChangePass;
+use App\Module\FormHandling\User\ChangePassword\ChangePass;
 use App\Module\Observer\Generic\SessionObserver;
 
 class ChangePassword extends BaseFormActions

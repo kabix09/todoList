@@ -1,11 +1,11 @@
 <?php
-namespace App\Module\Form\User\ChangePassword;
+namespace App\Module\FormHandling\User\ChangePassword;
 
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Service\Logger\MessageSheme;
 use App\Service\Manager\UserManager;
-use App\Module\Form\User\PasswordForm;
+use App\Module\FormHandling\User\PasswordForm;
 
 final class ChangePass extends PasswordForm
 {

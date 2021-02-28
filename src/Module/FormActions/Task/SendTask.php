@@ -5,7 +5,7 @@ use App\Module\FormActions\BaseFormActions;
 use ConnectionFactory\Connection;
 use App\Entity\Task;
 use App\Module\Observer\Generic\ErrorObserver;
-use App\Module\Form\Task\Send;
+use App\Module\FormHandling\Task\Send;
 use App\Module\Observer\Generic\SessionObserver;
 use App\Service\Session\Session;
 

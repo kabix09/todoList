@@ -4,7 +4,7 @@ namespace App\Module\FormActions\User;
 use App\Module\FormActions\BaseFormActions;
 use ConnectionFactory\Connection;
 use App\Module\Observer\Generic\ErrorObserver;
-use App\Module\Form\User\Login\Observers\DateObserver;
+use App\Module\FormHandling\User\Login\Observers\DateObserver;
 use App\Module\Observer\Generic\SessionObserver;
 
 class Login extends BaseFormActions
@@ -17,7 +17,7 @@ class Login extends BaseFormActions
 
     protected function setupObserverLogic(array $formData, Connection $connection): void
     {
-        $this->mainLogicObject = new \App\Module\Form\User\Login\Login($formData, $connection);
+        $this->mainLogicObject = new \App\Module\FormHandling\User\Login\Login($formData, $connection);
 
         // create usefully observers
         new ErrorObserver($this->mainLogicObject);

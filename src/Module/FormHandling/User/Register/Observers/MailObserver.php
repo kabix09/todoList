@@ -1,11 +1,11 @@
 <?php
-namespace App\Module\Form\User\Register\Observers;
+namespace App\Module\FormHandling\User\Register\Observers;
 
-use App\Module\Form\User\Register\Observers\RegisterObserver;
+use App\Module\FormHandling\User\Register\Observers\RegisterObserver;
 use App\Service\Logger\Logger;
 use App\Service\Logger\MessageSheme;
 use App\Module\Observer\Observable;
-use App\Module\Form\User\Register\Register;
+use App\Module\FormHandling\User\Register\Register;
 use App\Entity\User;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

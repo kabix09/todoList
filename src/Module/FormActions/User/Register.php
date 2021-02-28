@@ -4,7 +4,7 @@ namespace App\Module\FormActions\User;
 use App\Module\FormActions\BaseFormActions;
 use ConnectionFactory\Connection;
 use App\Module\Observer\Generic\ErrorObserver;
-use App\Module\Form\User\Register\Observers\MailObserver;
+use App\Module\FormHandling\User\Register\Observers\MailObserver;
 use App\Module\Observer\Generic\SessionObserver;
 
 class Register extends BaseFormActions
@@ -17,7 +17,7 @@ class Register extends BaseFormActions
 
     protected function setupObserverLogic(array $formData, Connection $connection): void
     {
-        $this->mainLogicObject = new \App\Module\Form\User\Register\Register($formData, $connection);
+        $this->mainLogicObject = new \App\Module\FormHandling\User\Register\Register($formData, $connection);
 
         // create usefully observers
         new ErrorObserver($this->mainLogicObject);

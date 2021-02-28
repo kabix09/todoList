@@ -1,7 +1,7 @@
 <?php
-namespace App\Module\Form\Task;
+namespace App\Module\FormHandling\Task;
 
-use App\Module\Form\FormGeneric;
+use App\Module\FormHandling\FormGeneric;
 use ConnectionFactory\Connection;
 use App\Entity\Task;
 use App\Repository\TaskRepository;

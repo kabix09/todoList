@@ -1,8 +1,8 @@
 <?php
-namespace App\Module\Form\User;
+namespace App\Module\FormHandling\User;
 
 use App\Entity\User;
-use App\Module\Form\User\UserForm;
+use App\Module\FormHandling\User\UserForm;
 
 abstract class PasswordForm extends UserForm
 {

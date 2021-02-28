@@ -4,7 +4,7 @@ namespace App\Module\FormActions\Task;
 use App\Module\FormActions\BaseFormActions;
 use ConnectionFactory\Connection;
 use App\Module\Observer\Generic\ErrorObserver;
-use App\Module\Form\Task\Create;
+use App\Module\FormHandling\Task\Create;
 use App\Module\Observer\Generic\SessionObserver;
 
 final class CreateTask extends BaseFormActions

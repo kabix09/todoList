@@ -1,7 +1,7 @@
 <?php
-namespace App\Module\Form\User;
+namespace App\Module\FormHandling\User;
 
-use App\Module\Form\FormGeneric;
+use App\Module\FormHandling\FormGeneric;
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Repository\UserRepository;

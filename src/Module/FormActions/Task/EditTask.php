@@ -5,7 +5,7 @@ use App\Module\FormActions\BaseFormActions;
 use App\Module\Access\QueryParameters;
 use ConnectionFactory\Connection;
 use App\Module\Observer\Generic\ErrorObserver;
-use App\Module\Form\Task\Edit;
+use App\Module\FormHandling\Task\Edit;
 use App\Module\Observer\Generic\SessionObserver;
 
 final class EditTask extends BaseFormActions

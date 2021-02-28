@@ -1,5 +1,5 @@
 <?php
-namespace App\Module\Form;
+namespace App\Module\FormHandling;
 
 interface FormInterface
 {

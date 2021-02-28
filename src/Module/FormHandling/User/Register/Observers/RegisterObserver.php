@@ -1,8 +1,8 @@
 <?php
-namespace App\Module\Form\User\Register\Observers;
+namespace App\Module\FormHandling\User\Register\Observers;
 
 use App\Module\Observer\Observer;
-use App\Module\Form\User\Register\Register;
+use App\Module\FormHandling\User\Register\Register;
 
 abstract class RegisterObserver implements Observer
 {

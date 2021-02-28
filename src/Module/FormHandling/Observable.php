@@ -1,5 +1,5 @@
 <?php
-namespace App\Module\Form;
+namespace App\Module\FormHandling;
 
 use App\Module\Observer\Observer;
 use App\Module\Observer\Observable as ObservableInterface;

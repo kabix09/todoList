@@ -1,11 +1,11 @@
 <?php
-namespace App\Module\Form\User\Register;
+namespace App\Module\FormHandling\User\Register;
 
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Service\Logger\MessageSheme;
 use App\Service\Manager\UserManager;
-use App\Module\Form\User\PasswordForm;
+use App\Module\FormHandling\User\PasswordForm;
 
 final class Register extends PasswordForm
 {

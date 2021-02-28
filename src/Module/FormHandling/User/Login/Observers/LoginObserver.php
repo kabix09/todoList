@@ -1,8 +1,8 @@
 <?php
-namespace App\Module\Form\User\Login\Observers;
+namespace App\Module\FormHandling\User\Login\Observers;
 
 use App\Module\Observer\Observer;
-use App\Module\Form\User\Login\Login;
+use App\Module\FormHandling\User\Login\Login;
 
 abstract class LoginObserver implements Observer
 {

@@ -1,5 +1,5 @@
 <?php
-namespace App\Module\Form;
+namespace App\Module\FormHandling;
 
 use App\Service\Filter\Filter;
 use App\Service\Logger\MessageSheme;
