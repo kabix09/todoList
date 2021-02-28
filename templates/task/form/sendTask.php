@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-use App\Access\Access;
+use App\Module\Access;
 use App\Entity\Mapper\TaskMapper;
 use App\Service\Form\Factory\Factory;
 use App\Service\Session\Session;

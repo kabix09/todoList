@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../index.php';
 
-use App\Access\FormScript\Task\SendTask;
-use App\Access\TaskScript\Send;
+use App\Module\FormActions\Task\SendTask;
+use App\Module\Access\TaskActions\Send;
 use App\Repository\TaskRepository;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');

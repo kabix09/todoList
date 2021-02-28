@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../index.php';
 
-use App\Access\FormScript\Task\EditTask;
-use App\Access\TaskScript\Edit;
+use App\Module\FormActions\Task\EditTask;
+use App\Module\Access\TaskActions\Edit;
 
 define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
 define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');

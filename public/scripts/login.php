@@ -5,7 +5,7 @@ define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
 define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
 define("LOG_ASSIGNMENTS", ROOT_PATH . './config/logAssignments.config.php');
 
-use App\Access\FormScript\User\Login;
+use App\Module\FormActions\User\Login;
 
 $login = new Login($session, $connection);
 $login->generateToken();

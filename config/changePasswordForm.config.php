@@ -34,7 +34,7 @@ return $logForm = [
     ],
 
     "hidden" => [
-        "class" => 'App\Form\Generic',
+        "class" => Generic::class,
         "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
@@ -44,7 +44,7 @@ return $logForm = [
     ],
 
     "recaptchaResponse" => [
-        "class" => 'App\Form\Generic',
+        "class" => Generic::class,
         "type" => App\Service\Form\FormConstants::TYPE_HIDDEN,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",
@@ -55,7 +55,7 @@ return $logForm = [
     ],
 
     "submit" => [
-        "class" => 'App\Form\Generic',
+        "class" => Generic::class,
         "type" => App\Service\Form\FormConstants::TYPE_SUBMIT,
         "label" => '',
         "wrappers" => include "formWrapper.config.php",

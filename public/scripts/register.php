@@ -5,7 +5,7 @@ define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
 define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
 define("REG_ASSIGNMENTS", ROOT_PATH . './config/regAssignments.config.php');
 
-use App\Access\FormScript\User\Register;
+use App\Module\FormActions\User\Register;
 
 $register = new Register($session, $connection);
 $register->generateToken();

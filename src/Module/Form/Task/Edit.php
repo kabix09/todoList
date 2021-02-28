@@ -6,7 +6,7 @@ use ConnectionFactory\Connection;
 use App\Entity\Task;
 use App\Service\Logger\MessageSheme;
 use App\Service\Manager\TaskManager;
-use App\Module\Form\TaskForm;
+use App\Module\Form\Task\TaskForm;
 
 final class Edit extends TaskForm
 {

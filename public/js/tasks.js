@@ -19,7 +19,7 @@ const parseJSONtasks = async() => {
 
 const loadTasks = async() => {
     try{
-        const result = await fetch('http://todolist.localhost:8000/src/JSON/tasks.php')
+        const result = await fetch('http://todolist.localhost:8000/public/endpoints/tasks.php')
         tasks = await result.json();
 
         localStorage.setItem("userTasks", JSON.stringify(tasks));
