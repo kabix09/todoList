@@ -1,5 +1,5 @@
 <?php
-require_once '../init.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . './init.php';
 
 use App\Logger\MessageSheme;
 use App\Session\Session;
@@ -15,4 +15,4 @@ if(isset($session['user'])) {
     $logger->info("Successfully logout user", [$config]);
 }
 
-header("Location: ../index.php");
+header("Location: ../../index.php");

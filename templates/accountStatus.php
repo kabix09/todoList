@@ -1,5 +1,5 @@
 <?php
-    require_once '../vendor/autoload.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . './vendor/autoload.php';
     use App\Session\Session;
     define("DB_CONFIG", __DIR__ . '/../config/db.config.php');
     $session = new Session();
@@ -29,7 +29,7 @@
         )
     )): ?>
     <?= (new \DateTime($session['user']->getEndBan()))->format(User::DATE_FORMAT); ?>
-    <a href="<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/activateAccount.php">Active Account</a>
+    <a href="<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/scripts/activateAccount.php">Active Account</a>
     <?php endif; ?>
 </body>
 </html>

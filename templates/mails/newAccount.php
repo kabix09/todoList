@@ -1,7 +1,7 @@
 <?php
-require_once '../init.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . './init.php';
 
-define("LINK", '%s://%s:%s/scripts/activateAccount.php?email=%s&nick=%s&key=%s');
+define("LINK", '%s://%s:%s/public/scripts/activateAccount.php?email=%s&nick=%s&key=%s');
 define("HREF", '<a href="%s">%s</a>');
 
 $session = new \App\Session\Session();

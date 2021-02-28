@@ -7,8 +7,8 @@ use App\Form\Factory\Factory;
 use App\Session\Session;
 use App\Token\Token;
 
-define('FORM_CONFIG', ROOT_PATH . "./config/form.config.php");
-define('TASK_FORM', ROOT_PATH . "./config/editTaskForm.config.php");
+define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
+define('TASK_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/editTaskForm.config.php");
 
 $taskConfig = include TASK_FORM;
 $editedTask = NULL;

@@ -43,14 +43,14 @@ const displayTasks = (tasks) => {
                             '<div class="boxFlex">' +
 
                                 (task.status === "prepared" ?
-                                        '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=planned">plan</a>':
+                                        '<a href="/public/scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=planned">plan</a>':
                                     (task.status === "planned" || task.status === "paused" ?
-                                        '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=started">activate</a>':
+                                        '<a href="/public/scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=started">activate</a>':
                                         (task.status === 'started' ?
-                                            '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=finished">finish</a>' +
-                                            '<a href="./scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=paused">stop</a>':
+                                            '<a href="/public/scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=finished">finish</a>' +
+                                            '<a href="/public/scripts/task/changeStatus.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) +'&new=paused">stop</a>':
                                             '')))
-                                +'<a href="./scripts/task/remove.php?id=' + task.id +'&owner=' + encodeURIComponent(task.owner) + '">remove</a>' +
+                                +'<a href="/public/scripts/task/remove.php?id=' + task.id +'&owner=' + encodeURIComponent(task.owner) + '">remove</a>' +
                             '</div>' +
                             '<div class="boxFlex cardFooter">' +
                                 '<a href="#id=' + task.id + '" onclick="modalCard(' + task.id + ')">info</a>' +

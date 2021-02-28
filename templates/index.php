@@ -17,11 +17,11 @@
     <nav>
         <ul>
             <?php if(!isset($session['user'])):?>
-                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/login.php>Login</a></li>
-                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/register.php>Register</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/scripts/login.php>Login</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/scripts/register.php>Register</a></li>
             <?php else: ?>
-                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/logout.php>Logout</a></li>
-                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/changePassword.php>Change password</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/scripts/logout.php>Logout</a></li>
+                <li><a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/scripts/changePassword.php>Change password</a></li>
                 <input type="text" name="searchBar" id="searchBar" placeholder="search for task"/>
             <?php endif ?>
         </ul>
@@ -40,7 +40,7 @@
 
         </section>
         <div style="padding: 10px;">
-            <a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/scripts/task/create.php>Create Task</a>
+            <a href=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/scripts/task/create.php>Create Task</a>
         </div>
         <?php endif;?>
         <div id="modalContainer"></div>

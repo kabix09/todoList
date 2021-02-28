@@ -1,5 +1,5 @@
 <?php
-require_once '../index.php';
+require_once __DIR__ . '/../index.php';
 
 use App\Access\FormScript\Task\CreateTask;
 use App\Access\TaskScript\Create;

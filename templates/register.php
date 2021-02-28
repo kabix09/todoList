@@ -1,11 +1,11 @@
 <?php
-require_once "../vendor/autoload.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "./vendor/autoload.php";
 
 use App\Form\Factory\Factory;
 use App\Token\Token;
 
-define('FORM_CONFIG', "../config/form.config.php");
-define('REG_FORM', "../config/regForm.config.php");
+define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
+define('REG_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/regForm.config.php");
 
 /*
  * $errors = [

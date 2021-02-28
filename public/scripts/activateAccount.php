@@ -1,5 +1,5 @@
 <?php
-require_once './index.php';
+require_once __DIR__ . './index.php';
 
 use App\Access\UserScript\ActivateAccount;
 

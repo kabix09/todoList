@@ -55,11 +55,11 @@ function displayModal(task){
                 '<span><b>Author:</b> ' + task.author + '</span><br>' +
                 '<div class="content">' + task.content + '</div><br>' +
                 '<div class="boxFlex">' +
-                    '<a href="./scripts/task/send.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) + '">send</a>' +
-                    '<a href="./scripts/task/remove.php?id=' + task.id +'&owner=' + encodeURIComponent(task.owner) + '">remove</a>' +
+                    '<a href="/public/scripts/task/send.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) + '">send</a>' +
+                    '<a href="/public/scripts/task/remove.php?id=' + task.id +'&owner=' + encodeURIComponent(task.owner) + '">remove</a>' +
                 '</div>' +
                 '<div class="boxFlex cardFooter">' +
-                    '<a href="./scripts/task/edit.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) + '">edit</a>' + /* bug - after click window is refresh and input value is deleted */
+                    '<a href="/public/scripts/task/edit.php?id=' + task.id + '&owner=' + encodeURIComponent(task.owner) + '">edit</a>' + /* bug - after click window is refresh and input value is deleted */
                 '</div>' +
            '</div>';
 }
