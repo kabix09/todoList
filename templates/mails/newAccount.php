@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . './init.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'init.php';
 
 define("LINK", '%s://%s:%s/public/scripts/user/activateAccount.php?email=%s&nick=%s&key=%s');
 define("HREF", '<a href="%s">%s</a>');

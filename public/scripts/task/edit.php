@@ -13,7 +13,7 @@ $editAccess->core();
 // edit task form logic: valid & add
 $editTask = new EditTask($session, $connection);
 $editTask->generateToken();
-$editTask->setTemplatePath(ROOT_PATH . './templates/task/form/editTask.php');
+$editTask->setTemplatePath(SITE_ROOT . './templates/task/form/editTask.php');
 $editTask->setRecaptchaKey(Config::init()::module(Constants::RECAPTCHA)::get("secretKey")[0]);
 $editTask->setTaskID($_GET['id']);
 $editTask->core();

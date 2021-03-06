@@ -1,5 +1,5 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . './vendor/autoload.php';
+    require_once dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'init.php';
     use App\Service\Session\Session;
 
     $session = new Session();

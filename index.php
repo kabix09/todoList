@@ -1,5 +1,5 @@
 <?php
-require_once './init.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'init.php';
 
 use App\Service\Session\Session;
 
@@ -30,4 +30,4 @@ foreach ($sessionKeys as $key)
 }
 
     // main page
-include ROOT_PATH . './templates/index.php';
+include SITE_ROOT . './templates/index.php';

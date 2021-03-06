@@ -13,6 +13,6 @@ $createAccess->core();
 // create task form logic: valid & add
 $createTask = new CreateTask($session, $connection);
 $createTask->generateToken();
-$createTask->setTemplatePath(ROOT_PATH . './templates/task/form/createTask.php');
+$createTask->setTemplatePath(SITE_ROOT . './templates/task/form/createTask.php');
 $createTask->setRecaptchaKey(Config::init()::module(Constants::RECAPTCHA)::get("secretKey")[0]);
 $createTask->core();

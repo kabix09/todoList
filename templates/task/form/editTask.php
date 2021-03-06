@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+require_once dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'init.php';
 
 use App\Module\Access;
 use App\Entity\Mapper\TaskMapper;
@@ -71,7 +71,7 @@ $formFactory->generate($taskConfig,
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/formErrors.js></script>
 
-    <?php include_once ($_SERVER['DOCUMENT_ROOT'] . "/templates/recaptchaScript.php"); ?>
+    <?php include_once (SITE_ROOT . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "recaptchaScript.php"); ?>
 </head>
 <body style="font-size: 18px;">
 <main style="background-color: ivory;

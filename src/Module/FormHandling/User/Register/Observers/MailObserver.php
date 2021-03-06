@@ -30,8 +30,8 @@ class MailObserver extends RegisterObserver
             try{
                 $mail = $this->buildMail($user->getEmail(),
                                     "New Account verification",
-                                        include(ROOT_PATH . "./templates/Mails/newAccount.php"),
-                                        require_once ROOT_PATH . './config/smtp.config.php');
+                                        include(SITE_ROOT . "./templates/Mails/newAccount.php"),
+                                        require_once SITE_ROOT . './config/smtp.config.php');
 
                 if($mail->send())
                 {

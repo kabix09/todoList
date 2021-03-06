@@ -1,10 +1,9 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . './init.php';
+require_once __DIR__ . '/../index.php';
 
 use App\Service\Logger\MessageSheme;
 use App\Service\Session\Session;
 
-$session = new Session();
 if(isset($session['user'])) {
     $user = $session['user']->getNick();
 

@@ -44,7 +44,7 @@ final class ActivateAccount extends BaseUserAccess
             $this->session['user'] = $this->user;
 
             // redirect to confirm page
-            include_once ROOT_PATH . "./templates/mails/verificationSuccess.php";
+            include_once SITE_ROOT . "./templates/mails/verificationSuccess.php";
             die();
         }
         else

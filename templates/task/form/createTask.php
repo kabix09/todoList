@@ -1,12 +1,9 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] .'./vendor/autoload.php';
+require_once dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'init.php';
 
 use App\Service\Config\{Config, Constants};
 use App\Service\Form\Factory\Factory;
 use App\Service\Token\Token;
-
-define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
-define('TASK_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/createTaskForm.config.php");
 
 $formFactory = new Factory();
 $formFactory->generate(Config::init()::action(Constants::CREATE_TASK)::module(Constants::FORM)::get(),
@@ -33,7 +30,7 @@ $formFactory->generate(Config::init()::action(Constants::CREATE_TASK)::module(Co
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/formErrors.js></script>
 
-    <?php include_once ($_SERVER['DOCUMENT_ROOT'] . "/templates/recaptchaScript.php"); ?>
+    <?php include_once (SITE_ROOT . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "recaptchaScript.php"); ?>
 </head>
 <body style="font-size: 18px;">
 <main style="background-color: ivory;

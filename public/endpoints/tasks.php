@@ -1,22 +1,16 @@
 <?php
-require_once '../../vendor/autoload.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'index.php';
 
-use App\Service\Config\{Config, Constants};
-use ConnectionFactory\Connection;
 use App\Entity\Mapper\TaskMapper;
 use App\Service\Manager\TaskManager;
 use App\Service\Manager\UserManager;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
-use App\Service\Session\Session;
 
-$session = new Session();
 $tasksArray = [];
 if(isset($session['user']))
 {
     // download all tasks - v 2.0
-    $connection = new Connection(Config::init()::module(Constants::DATABASE)::get());
-
     // no matter if the list is empty, data must be fetched every time the script is called
     $userManager = new UserManager($session['user'],
                                     new UserRepository($connection));

@@ -15,7 +15,7 @@ ini_set('session.hash_bits_per_character', 5);
 
 //session_start();
 
-define("ROOT_PATH", str_replace("\\", "/", dirname(__FILE__)) . '/');
+define("SITE_ROOT", str_replace("\\", DIRECTORY_SEPARATOR, __DIR__) . DIRECTORY_SEPARATOR);
 
 // replace paths with $_SERVER['SERVER_NAME'];
-require_once ROOT_PATH . './config/messages.config.php';
+require_once SITE_ROOT . './config/messages.config.php';

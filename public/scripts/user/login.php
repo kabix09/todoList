@@ -6,6 +6,6 @@ use App\Service\Config\{Config, Constants};
 
 $login = new Login($session, $connection);
 $login->generateToken();
-$login->setTemplatePath(ROOT_PATH . "./templates/user/form/login.php");
+$login->setTemplatePath(SITE_ROOT . "./templates/user/form/login.php");
 $login->setRecaptchaKey(Config::init()::module(Constants::RECAPTCHA)::get("secretKey")[0]);
 $login->core();

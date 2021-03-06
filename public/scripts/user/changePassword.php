@@ -6,7 +6,7 @@ use App\Service\Config\{Config, Constants};
 
 $changePassword = new ChangePassword($session, $connection);
 $changePassword->generateToken();
-$changePassword->setTemplatePath(ROOT_PATH . "./templates/user/form/changePassword.php");
+$changePassword->setTemplatePath(SITE_ROOT . "./templates/user/form/changePassword.php");
 $changePassword->setRecaptchaKey(Config::init()::module(Constants::RECAPTCHA)::get("secretKey")[0]);
 $changePassword->core();
 

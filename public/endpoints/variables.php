@@ -1,12 +1,8 @@
 <?php
-require_once '../../vendor/autoload.php';
-
-use App\Service\Session\Session;
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'index.php';
 
 $name = $_GET['name'] ?? "";
-$session = new Session();
 
 header('Content-Type: application/json');
-
 echo json_encode($session[$name]??"");
 ?>
