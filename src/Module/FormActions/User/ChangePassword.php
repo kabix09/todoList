@@ -2,6 +2,7 @@
 namespace App\Module\FormActions\User;
 
 use App\Module\FormActions\BaseFormActions;
+use App\Service\Config\{Config, Constants};
 use ConnectionFactory\Connection;
 use App\Module\Observer\Generic\ErrorObserver;
 use App\Module\FormHandling\User\ChangePassword\ChangePass;
@@ -17,7 +18,7 @@ class ChangePassword extends BaseFormActions
 
     protected function setupObserverLogic(array $formData, Connection $connection): void
     {
-        $this->mainLogicObject = new ChangePass($formData, new Connection(include DB_CONFIG), $this->session['user']);
+        $this->mainLogicObject = new ChangePass($formData, $connection, $this->session['user']);
 
         // create usefully observers
         new ErrorObserver($this->mainLogicObject);
@@ -26,9 +27,14 @@ class ChangePassword extends BaseFormActions
 
     protected function main(array $queryParams): void
     {
-        if($this->mainLogicObject->handler($this->session['token'],
-            array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include CHANGE_PASSWORD_ASSIGNMENTS))
-        {
+        if($this->mainLogicObject->handler(
+            $this->session['token'],
+            array_merge(
+                Config::init()::module(Constants::FILTER_VALIDATE)::get(),
+                Config::init()::module(Constants::FILTER_SANITIZE)::get()
+            ),
+            Config::init()::action(Constants::CHANGE_PASSWORD)::module(Constants::ASSIGNMENTS)::get()
+        )) {
             unset($this->session['token']);
 
             $this->redirectToHome();   // TODO - go to info page "password changed successfull" ???

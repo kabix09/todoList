@@ -1,6 +1,7 @@
 <?php
 namespace App\Service\Session;
 
+use App\Service\Config\{Config, Constants};
 use App\Service\Logger\Logger;
 use ConnectionFactory\Connection;
 use App\Repository\SessionRepository;
@@ -22,7 +23,7 @@ class Session extends SessionArray
     {
         $this->logger = new Logger();
 
-        $this->repository = new SessionRepository(new Connection(include DB_CONFIG));
+        $this->repository = new SessionRepository(new Connection(Config::init()::module(Constants::DATABASE)::get()));
 
         $this->session = new \App\Entity\Session();
         $this->verify = new SessionVerify($this->session);

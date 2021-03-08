@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] .'./vendor/autoload.php';
 
+use App\Service\Config\{Config, Constants};
 use App\Service\Form\Factory\Factory;
 use App\Service\Token\Token;
 
@@ -8,7 +9,7 @@ define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
 define('TASK_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/createTaskForm.config.php");
 
 $formFactory = new Factory();
-$formFactory->generate(include TASK_FORM,
+$formFactory->generate(Config::init()::action(Constants::CREATE_TASK)::module(Constants::FORM)::get(),
                         (new Token($this->session['token']))
                             ->hash()
                             ->binToHex()
@@ -28,7 +29,7 @@ $formFactory->generate(include TASK_FORM,
 
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/js-snackbar.js></script>
     <script>
-        path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/src/JSON/variables.php?name=createErrors";
+        path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/public/endpoints/variables.php?name=createErrors";
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/formErrors.js></script>
 
@@ -51,7 +52,7 @@ $formFactory->generate(include TASK_FORM,
             </span>
     </div>
 
-    <?= $formFactory->render(include FORM_CONFIG, FALSE, TRUE)?>
+    <?= $formFactory->render(Config::init()::module(Constants::FORM_TEMPLATE)::get(), FALSE, TRUE)?>
 </main>
 </body>
 </html>

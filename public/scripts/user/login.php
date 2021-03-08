@@ -1,14 +1,11 @@
 <?php
 require_once __DIR__ . '/../index.php';
 
-define("FILTER_VALIDATE", ROOT_PATH . './config/filter_validate.config.php');
-define("FILTER_SANITIZE", ROOT_PATH . './config/filter_sanitize.config.php');
-define("LOG_ASSIGNMENTS", ROOT_PATH . './config/logAssignments.config.php');
-
 use App\Module\FormActions\User\Login;
+use App\Service\Config\{Config, Constants};
 
 $login = new Login($session, $connection);
 $login->generateToken();
 $login->setTemplatePath(ROOT_PATH . "./templates/user/form/login.php");
-$login->setRecaptchaKey((include(RECAPTCHA))["secretKey"]);
+$login->setRecaptchaKey(Config::init()::module(Constants::RECAPTCHA)::get("secretKey")[0]);
 $login->core();

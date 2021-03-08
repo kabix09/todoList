@@ -2,6 +2,7 @@
 namespace App\Module\FormActions\User;
 
 use App\Module\FormActions\BaseFormActions;
+use App\Service\Config\{Config, Constants};
 use ConnectionFactory\Connection;
 use App\Module\Observer\Generic\ErrorObserver;
 use App\Module\FormHandling\User\Register\Observers\MailObserver;
@@ -27,9 +28,14 @@ class Register extends BaseFormActions
 
     protected function main(array $queryParams): void
     {
-        if($this->mainLogicObject->handler($this->session['token'],
-            array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include REG_ASSIGNMENTS))
-        {
+        if($this->mainLogicObject->handler(
+            $this->session['token'],
+            array_merge(
+                Config::init()::module(Constants::FILTER_VALIDATE)::get(),
+                Config::init()::module(Constants::FILTER_SANITIZE)::get()
+            ),
+            Config::init()::action(Constants::REGISTER)::module(Constants::ASSIGNMENTS)::get()
+        )) {
             unset($this->session['token']);
 
             $this->session['login'] = TRUE;

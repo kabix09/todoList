@@ -1,6 +1,7 @@
 <?php
-require_once '../../init.php';
+require_once '../../vendor/autoload.php';
 
+use App\Service\Config\{Config, Constants};
 use ConnectionFactory\Connection;
 use App\Entity\Mapper\TaskMapper;
 use App\Service\Manager\TaskManager;
@@ -14,7 +15,7 @@ $tasksArray = [];
 if(isset($session['user']))
 {
     // download all tasks - v 2.0
-    $connection = new Connection(include DB_CONFIG);
+    $connection = new Connection(Config::init()::module(Constants::DATABASE)::get());
 
     // no matter if the list is empty, data must be fetched every time the script is called
     $userManager = new UserManager($session['user'],

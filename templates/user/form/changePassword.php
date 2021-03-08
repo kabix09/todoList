@@ -1,14 +1,12 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "./vendor/autoload.php";
 
+use App\Service\Config\{Config, Constants};
 use App\Service\Form\Factory\Factory;
 use App\Service\Token\Token;
 
-define('FORM_CONFIG', $_SERVER['DOCUMENT_ROOT'] . "./config/form.config.php");
-define('CHANGE_PASSWORD_FORM', $_SERVER['DOCUMENT_ROOT'] . "./config/changePasswordForm.config.php");
-
 $formfactory = new Factory();
-$formfactory->generate(include CHANGE_PASSWORD_FORM,
+$formfactory->generate(Config::init()::action(Constants::CHANGE_PASSWORD)::module(Constants::FORM)::get(),
                         (new Token($this->session['token']))
                             ->hash()
                             ->binToHex()
@@ -29,7 +27,7 @@ $formfactory->generate(include CHANGE_PASSWORD_FORM,
 
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/js-snackbar.js></script>
     <script>
-        path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/src/JSON/variables.php?name=changepwdErrors";
+        path = "<?=strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0])?>://<?=$_SERVER['SERVER_NAME']?>:<?=$_SERVER['SERVER_PORT']?>/public/endpoints/variables.php?name=changepwdErrors";
     </script>
     <script src=<?=$_SERVER['REQUEST_SCHEME'] . "://" .$_SERVER['HTTP_HOST']?>/public/js/formErrors.js></script>
 
@@ -52,7 +50,7 @@ $formfactory->generate(include CHANGE_PASSWORD_FORM,
                 </span>
     </div>
 
-    <?= $formfactory->render(include FORM_CONFIG, FALSE, TRUE); ?>
+    <?= $formfactory->render(Config::init()::module(Constants::FORM_TEMPLATE)::get(), FALSE, TRUE); ?>
 </main>
 </body>
 </html>

@@ -2,6 +2,7 @@
 namespace App\Module\FormActions\Task;
 
 use App\Module\FormActions\BaseFormActions;
+use App\Service\Config\{Config, Constants};
 use ConnectionFactory\Connection;
 use App\Entity\Task;
 use App\Module\Observer\Generic\ErrorObserver;
@@ -30,9 +31,14 @@ class SendTask extends BaseFormActions
 
     protected function main(array $queryParams): void
     {
-        if($this->mainLogicObject->handler($this->session['token'],
-            array_merge(include FILTER_VALIDATE, include FILTER_SANITIZE), include TASK_ASSIGNMENTS))
-        {
+        if($this->mainLogicObject->handler(
+            $this->session['token'],
+            array_merge(
+                Config::init()::module(Constants::FILTER_VALIDATE)::get(),
+                Config::init()::module(Constants::FILTER_SANITIZE)::get()
+            ),
+            Config::init()::action(Constants::TASK)::module(Constants::ASSIGNMENTS)::get()
+        )) {
             unset($this->session['token']);
 
             // 2 - don't touch task list, only index file manage to download and handle it

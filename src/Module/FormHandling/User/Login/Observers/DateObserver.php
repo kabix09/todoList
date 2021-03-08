@@ -2,6 +2,7 @@
 namespace App\Module\FormHandling\User\Login\Observers;
 
 use App\Module\FormHandling\User\Login\Observers\LoginObserver;
+use App\Service\Config\{Config, Constants};
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Service\Manager\UserManager;
@@ -20,7 +21,7 @@ final class DateObserver extends LoginObserver
                 $this->updateLastLoginDate(new UserManager(
                                                 $login->getObject(),
                                                 new UserRepository(
-                                                    new Connection(include DB_CONFIG))));
+                                                    new Connection(Config::init()::module(Constants::DATABASE)::get()))));
             } catch (\RuntimeException $e) {
                 var_dump($e->getMessage());
                 die();
