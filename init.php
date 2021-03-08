@@ -17,7 +17,5 @@ ini_set('session.hash_bits_per_character', 5);
 
 define("ROOT_PATH", str_replace("\\", "/", dirname(__FILE__)) . '/');
 
-// replace paths with 4_SERVER['SERVER_NAME'];
-define("DB_CONFIG", ROOT_PATH . './config/db.config.php');
-
+// replace paths with $_SERVER['SERVER_NAME'];
 require_once ROOT_PATH . './config/messages.config.php';

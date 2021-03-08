@@ -1,7 +1,7 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . './vendor/autoload.php';
     use App\Service\Session\Session;
-    define("DB_CONFIG", __DIR__ . '/../config/db.config.php');
+
     $session = new Session();
 
     if(!isset($session['user']))
