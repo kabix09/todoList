@@ -7,6 +7,8 @@ use App\Service\Logger\MessageSheme;
 use App\Module\Observer\Observable;
 use App\Module\FormHandling\User\Register\Register;
 use App\Entity\User;
+use App\Service\Mail\Decorators\NewAccount;
+use App\Service\Mail\MailFactory;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
@@ -21,63 +23,40 @@ class MailObserver extends RegisterObserver
         parent::__construct($register);
     }
 
-    public function update(Observable $observable)
+    public function update(Observable $observable): void
     {
-        if($observable->getProcessStatus() === "correct")
-        {
-            $user = $observable->getObject();
+        $userInstance = clone $observable->getObject();
 
-            try{
-                $mail = $this->buildMail($user->getEmail(),
-                                    "New Account verification",
-                                        include(SITE_ROOT . "./templates/Mails/newAccount.php"),
-                                        require_once SITE_ROOT . './config/smtp.config.php');
+        try{
+            $mailFactory = new NewAccount(new MailFactory());
 
-                if($mail->send())
-                {
-                    $config = new MessageSheme($observable->getObject()->getNick(), __CLASS__, __FUNCTION__, TRUE);
-                    $this->logger->error("activation email sended successfully", [$config]);
-                }else
-                {
-                    throw new \RuntimeException("system error - couldn't send activation mail");
-                }
-            }catch (\Exception $e)
+            $mail = $mailFactory->create(
+                        $userInstance,
+                        require(SITE_ROOT . './config/smtp.config.php')
+                    );
+
+            if($mail->send())
             {
-                $config = new MessageSheme($observable->getObject()->getNick(), __CLASS__, __FUNCTION__, TRUE);
-                $this->logger->info($e->getMessage(), [$config]);
-
-                die("mail system error - the email could not be sent :<");  // ToDo - redirect to error page
+                $config = new MessageSheme($userInstance->getNick(), __CLASS__, __FUNCTION__, TRUE);
+                $this->logger->error("Activation email sent successfully", [$config]);
+            }else
+            {
+                throw new \RuntimeException("System error - couldn't send activation mail");
             }
+        }catch (\Exception $e)
+        {
+            $config = new MessageSheme($userInstance->getNick(), __CLASS__, __FUNCTION__, TRUE);
+            $this->logger->info($e->getMessage(), [$config]);
+
+            header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/templates/mails/newAccountFailed.php");
         }
+
     }
 
-    public function doUpdate(Register $register)
+    public function doUpdate(Register $register): void
     {
-        if($register === $this->register)
+        if($register === $this->register & $register->getProcessStatus() === "correct") {
             $this->doUpdate($register);
-    }
-
-    private function buildMail(string $recipientEmail, string $title, string $content, array $config): PHPMailer {
-        $mail = new PHPMailer(true);
-
-        $mail->isSMTP();
-        $mail->SMTPDebug = SMTP::DEBUG_OFF;
-        $mail->Host = $config['smtp'];
-        $mail->Port = $config['port'];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->SMTPAuth = TRUE;
-
-        $mail->Username = $config['username'];
-        $mail->Password = $config['password'];
-
-        $mail->setFrom($config['from'][0], $config['from'][1]);    // eg company address
-        $mail->addAddress($recipientEmail);
-        $mail->addReplyTo($config['replyTo'][0], $config['replyTo'][1]);      // eg support address
-
-        $mail->isHTML(true);
-        $mail->Subject = $title;
-        $mail->Body = $content;
-
-        return $mail;
+        }
     }
 }
