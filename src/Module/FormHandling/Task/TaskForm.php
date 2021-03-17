@@ -12,6 +12,8 @@ abstract class TaskForm extends FormGeneric
     {
         parent::__construct($formData,
                             new TaskRepository($connection));
+
+        $this->object = new Task();
     }
 
     abstract protected function prepareTask(): Task;

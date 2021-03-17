@@ -1,10 +1,11 @@
 <?php
 namespace App\Module\FormHandling\User\Register;
 
+use App\Service\EntityManager\User\Builder\UserBuilder;
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Service\Logger\MessageSheme;
-use App\Service\Manager\UserManager;
+use App\Service\EntityManager\User\UserManager;
 use App\Module\FormHandling\User\PasswordForm;
 
 final class Register extends PasswordForm
@@ -57,7 +58,10 @@ final class Register extends PasswordForm
 
     private function prepareUserObject() : User
     {
-        $userManager = new UserManager($this->data, $this->repository);
+        $userManager = new UserManager(
+            new UserBuilder($this->data),
+            $this->repository
+        );
             // hash password
         $userManager->changePassword($this->data['password']);
         $userManager->generateKey();

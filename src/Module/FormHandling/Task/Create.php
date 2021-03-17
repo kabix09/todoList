@@ -1,11 +1,13 @@
 <?php
 namespace App\Module\FormHandling\Task;
 
+use App\Entity\Mapper\TaskMapper;
+use App\Service\EntityManager\Task\Builder\TaskBuilder;
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Entity\Task;
 use App\Service\Logger\MessageSheme;
-use App\Service\Manager\TaskManager;
+use App\Service\EntityManager\Task\TaskManager;
 use App\Module\FormHandling\Task\TaskForm;
 
 final class Create extends TaskForm
@@ -58,7 +60,7 @@ final class Create extends TaskForm
         }
     }
 
-    public function checkTitle(){
+    public function checkTitle(){       // TODO - the name of the function does not match its behavior
         $tasks = $this->repository->fetchByOwner($this->user->getNick());
 
         if(!is_null($tasks))
@@ -66,12 +68,13 @@ final class Create extends TaskForm
             foreach ($tasks as $task)
             {
                 if($task->getTitle() === $this->data['title'])
-                    $this->object = $task;
+                    return FALSE;
+                   // $this->object = $task;
             }
 
-            if($this->object){
-                return FALSE;
-            }
+            //if($this->object){
+            //    return FALSE;
+            //}
         }
         return TRUE;
     }
@@ -79,11 +82,15 @@ final class Create extends TaskForm
 
     protected function prepareTask(): Task
     {
-        // set other data
-        $taskManager = new TaskManager($this->data, $this->repository);
+        $taskManager = new TaskManager(new TaskBuilder(TaskMapper::arrayToEntity($this->data)), $this->repository);
 
-        $taskManager->setAuthor($this->user->getNick(), TRUE);
-        $taskManager->setStatus();
+        $taskManager->prepareInstance(
+            [
+                Task::MAPPING['author'] => $this->user->getNick(),
+                Task::MAPPING['owner'] => $this->user->getNick()
+            ]
+        );
+        $taskManager->manageStatus();
 
         return $taskManager->return();
     }

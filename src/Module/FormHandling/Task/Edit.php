@@ -2,10 +2,12 @@
 
 namespace App\Module\FormHandling\Task;
 
+use App\Entity\Mapper\TaskMapper;
+use App\Service\EntityManager\Task\Builder\TaskBuilder;
 use ConnectionFactory\Connection;
 use App\Entity\Task;
 use App\Service\Logger\MessageSheme;
-use App\Service\Manager\TaskManager;
+use App\Service\EntityManager\Task\TaskManager;
 use App\Module\FormHandling\Task\TaskForm;
 
 final class Edit extends TaskForm
@@ -56,8 +58,8 @@ final class Edit extends TaskForm
     protected function prepareTask(): Task
     {
         // set other data
-        $taskManager = new TaskManager($this->data, $this->repository);
-        $taskManager->setStatus();
+        $taskManager = new TaskManager(new TaskBuilder(TaskMapper::arrayToEntity($this->data)), $this->repository);
+        $taskManager->manageStatus();
 
         return $taskManager->return();
     }

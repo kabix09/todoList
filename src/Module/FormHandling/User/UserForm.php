@@ -15,12 +15,14 @@ abstract class UserForm extends FormGeneric
     {
         parent::__construct($formData,
                             new UserRepository($connection));
+
+        $this->object = new User();
     }
 
     // user form module methods
     protected function checkNick(): bool
     {
-        $this->object =  $this->repository->fetchByNick($this->data['nick']);
+        $this->object = $this->repository->fetchByNick($this->data['nick']);
 
         if(! $this->object )
         {

@@ -1,10 +1,11 @@
 <?php
 namespace App\Module\FormHandling\User\ChangePassword;
 
+use App\Service\EntityManager\User\Builder\UserBuilder;
 use ConnectionFactory\Connection;
 use App\Entity\User;
 use App\Service\Logger\MessageSheme;
-use App\Service\Manager\UserManager;
+use App\Service\EntityManager\User\UserManager;
 use App\Module\FormHandling\User\PasswordForm;
 
 final class ChangePass extends PasswordForm
@@ -29,20 +30,24 @@ final class ChangePass extends PasswordForm
 
             $this->notify();
 
-            if ($this->processStatus === self::PROCESS_STATUS[2])
-            {
-                $userManager = new UserManager($this->object, $this->repository);
+            if ($this->processStatus === self::PROCESS_STATUS[2]) {
+
+                $userManager = new UserManager(
+                    new UserBuilder($this->object),
+                    $this->repository
+                );
 
                 try{
-                    $userManager->changePassword($this->data['password']);
+                    if(!$userManager->changePassword($this->data['password'])) {
 
-                    if(!$userManager->update())
-                    {
                         throw new \RuntimeException("password couldn't be changed");
-                    }else{
-                        $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);
-                        $this->logger->info("Successfully changed password", [$config]);
                     }
+
+                    $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);
+                    $this->logger->info("Successfully changed password", [$config]);
+
+                    // update user handled in session
+                    $this->object = $userManager->return();
                 }catch (\Exception $e)
                 {
                     $config = new MessageSheme($this->object->getNick(), __CLASS__, __FUNCTION__, TRUE);

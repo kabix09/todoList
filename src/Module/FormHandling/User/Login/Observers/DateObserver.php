@@ -1,11 +1,13 @@
 <?php
 namespace App\Module\FormHandling\User\Login\Observers;
 
+use App\Entity\Mapper\UserMapper;
 use App\Module\FormHandling\User\Login\Observers\LoginObserver;
+use App\Service\EntityManager\User\Builder\UserBuilder;
 use App\Service\Config\{Config, Constants};
 use ConnectionFactory\Connection;
 use App\Entity\User;
-use App\Service\Manager\UserManager;
+use App\Service\EntityManager\User\UserManager;
 use App\Module\FormHandling\User\Login\Login;
 use App\Module\Observer\Observable;
 use App\Repository\UserRepository;
@@ -18,10 +20,14 @@ final class DateObserver extends LoginObserver
         if($login->getProcessStatus() === "correct")
         {
             try {
-                $this->updateLastLoginDate(new UserManager(
-                                                $login->getObject(),
-                                                new UserRepository(
-                                                    new Connection(Config::init()::module(Constants::DATABASE)::get()))));
+                $this->updateLastLoginDate(
+                    new UserManager(
+                        new UserBuilder($login->getObject()),
+                        new UserRepository(
+                            new Connection(Config::init()::module(Constants::DATABASE)::get())
+                        )
+                    )
+                );
             } catch (\RuntimeException $e) {
                 var_dump($e->getMessage());
                 die();
@@ -37,7 +43,7 @@ final class DateObserver extends LoginObserver
 
     private function updateLastLoginDate(UserManager $userManager){
 
-        if($userManager->upgradeLastLogin())
+        if($userManager->updateLastLogin())
             return TRUE;
         else
             throw new \RuntimeException("system error - couldn't update last login date");

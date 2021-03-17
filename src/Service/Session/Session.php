@@ -1,11 +1,12 @@
 <?php
 namespace App\Service\Session;
 
+use App\Service\EntityManager\Session\Builder\SessionBuilder;
 use App\Service\Config\{Config, Constants};
 use App\Service\Logger\Logger;
 use ConnectionFactory\Connection;
 use App\Repository\SessionRepository;
-use App\Service\Manager\SessionManager;
+use App\Service\EntityManager\Session\SessionManager;
 use App\Service\Session\Counter\Counter;
 
 class Session extends SessionArray
@@ -27,7 +28,7 @@ class Session extends SessionArray
 
         $this->session = new \App\Entity\Session();
         $this->verify = new SessionVerify($this->session);
-        $this->manager = new SessionManager($this->session);
+        $this->manager = new SessionManager(new SessionBuilder($this->session));
 
         try {
             $this->init();
@@ -52,10 +53,9 @@ class Session extends SessionArray
             // 1 download session object from database
         $tmp = $this->fetchSession();
 
-
         if($tmp instanceof \App\Entity\Session)
         {
-            $this->manager->set($tmp, \App\Entity\Session::class);
+            $this->manager->updateInstance($tmp, \App\Entity\Session::class);
 
         }elseif(is_null($tmp))      // 2 if not exist, create new session bd object
         {
@@ -69,6 +69,7 @@ class Session extends SessionArray
 
             // 3 start session, if exists in db then, with downloaded key
         $key = $this->session->getSessionKey();
+
         $this->create(
             empty($key) ? NULL : $key
         );
@@ -98,7 +99,7 @@ class Session extends SessionArray
         }
 
             // 5 download correct session instance from
-         $this->manager->set(
+         $this->manager->updateInstance(
              $this->repository->find(array(),
                  [
                      "WHERE" => NULL,
@@ -176,6 +177,6 @@ class Session extends SessionArray
             return $this->repository->find(array(),[
                 "WHERE" => NULL,
                 "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
-            ])->current();  // return first object from generator's array, tehnically there MUST be ONE object with this criteria in this case
+            ])->current();  // return first object from generator's array, technically there MUST be ONE object with this criteria in this case
     }
 }

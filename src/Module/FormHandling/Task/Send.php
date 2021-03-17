@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 namespace App\Module\FormHandling\Task;
 
+use App\Entity\Mapper\TaskMapper;
+use App\Service\EntityManager\Task\Builder\TaskBuilder;
 use ConnectionFactory\Connection;
 use App\Entity\Task;
 use App\Service\Logger\MessageSheme;
-use App\Service\Manager\TaskManager;
+use App\Service\EntityManager\Task\TaskManager;
 use App\Module\FormHandling\Task\TaskForm;
 use App\Repository\UserRepository;
 
@@ -68,9 +70,10 @@ class Send extends TaskForm
     protected function prepareTask(): Task
     {
         // set other data
-        $taskManager = new TaskManager($this->object, $this->repository);
-        $taskManager->changeOwner($this->data['new_owner']);
-        return $taskManager->return();
+        $taskFactory = new TaskBuilder(TaskMapper::arrayToEntity($this->data));
+        $taskFactory->setOwner($this->data['new_owner']);
+
+        return $taskFactory->getInstance();
     }
 
     private function checkNewNick(string $newNick): bool

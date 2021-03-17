@@ -2,9 +2,10 @@
 namespace App\Module\Access;
 
 use App\Module\Access\GenericAccess;
+use App\Service\EntityManager\User\Builder\UserBuilder;
 use ConnectionFactory\Connection;
 use App\Service\Logger\MessageSheme;
-use App\Service\Manager\UserManager;
+use App\Service\EntityManager\User\UserManager;
 use App\Repository\TaskRepository;
 use App\Service\Session\Session;
 
@@ -25,8 +26,10 @@ abstract class BaseTaskAccess extends GenericAccess
     }
 
     private function setUserTask(): void{
-        if(empty($this->session['user']->getTaskCollection()))
-            $this->userManager->getUserTasks($this->taskRepository);
+        if(empty($this->session['user']->getTaskCollection())) {
+            $this->userManager->loadUserTasks($this->session['user']->getNick());
+            $this->session['user'] = $this->userManager->return();
+        }
     }
 
     private function checkUserTask(string $owner) : bool
@@ -60,7 +63,13 @@ abstract class BaseTaskAccess extends GenericAccess
                 if(!$this->checkUserTask($queryParams[static::QUERY_PARAMETERS[static::OWNER]]))
                     throw new \RuntimeException("script error - incorrect user");
 
-                $this->userManager = new UserManager($this->session['user'], $this->userRepository);
+                $this->userManager = new UserManager(
+                    new UserBuilder(
+                        $this->session['user']
+                    ),
+                    $this->userRepository,
+                    $this->taskRepository
+                );
                 $this->setUserTask();
 
                 if(!$this->checkTaskID($queryParams[static::QUERY_PARAMETERS[static::ID]]))
