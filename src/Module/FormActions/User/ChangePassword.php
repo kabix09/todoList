@@ -12,8 +12,8 @@ class ChangePassword extends BaseFormActions
 {
     protected function clearErrors(): void
     {
-        if(isset($session['changepwdErrors']))
-            unset($session['changepwdErrors']);
+        if(isset($session['changepassErrors']))
+            unset($session['changepassErrors']);
     }
 
     protected function setupObserverLogic(array $formData, Connection $connection): void

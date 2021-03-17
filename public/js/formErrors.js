@@ -8,15 +8,17 @@ request.onreadystatechange = function() {
 
     if(this.readyState === 4 && this.status === 200)
     {
-        list = JSON.parse(this.responseText);
+        list = JSON.parse("[" + this.responseText + "]")[0];
 
         Array.from(Object.keys(list)).forEach(function(key) {
-            snackBarList.push(
-                new SnackBar({
-                    message: key + ": " + list[key][0],
-                    status: "error"
-                })
-            );
+            Array.from(Object.values(list[key])).forEach(function(value) {
+                snackBarList.push(
+                    new SnackBar({
+                        message: value,
+                        status: "error"
+                    })
+                );
+            });
         });
     }
 };
