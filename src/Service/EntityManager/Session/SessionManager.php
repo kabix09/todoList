@@ -58,7 +58,7 @@ class SessionManager extends BaseManager
     }
 
     // ---- function to clone object values                     TODO - is required????
-    public function updateInstance (Session $copiedObject, string $className){
-        $this->objectBuilder->setInstance( clone $copiedObject);
+    public function updateInstance (Session $copiedObject){
+        $this->objectBuilder->setInstance($copiedObject);
     }
 }

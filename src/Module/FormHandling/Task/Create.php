@@ -38,7 +38,7 @@ final class Create extends TaskForm
             $this->notify();
 
             // prepare task
-            $this->object = $this->prepareTask();
+            $this->prepareTask($this->object);
 
             // insert new task
             if(!$this->repository->insert($this->object))
@@ -80,9 +80,9 @@ final class Create extends TaskForm
     }
 
 
-    protected function prepareTask(): Task
+    protected function prepareTask(Task $overwrittenObject): bool
     {
-        $taskManager = new TaskManager(new TaskBuilder(TaskMapper::arrayToEntity($this->data)), $this->repository);
+        $taskManager = new TaskManager(new TaskBuilder(TaskMapper::convertArrayToEntity($this->data)), $this->repository);
 
         $taskManager->prepareInstance(
             [
@@ -92,6 +92,6 @@ final class Create extends TaskForm
         );
         $taskManager->manageStatus();
 
-        return $taskManager->return();
+        return TaskMapper::overwriteEntity($taskManager->return(), $overwrittenObject);
     }
 }

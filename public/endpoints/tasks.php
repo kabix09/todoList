@@ -1,14 +1,11 @@
 <?php
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'index.php';
 
-use App\Entity\Mapper\TaskMapper;
 use App\Entity\Task;
-use App\Service\EntityManager\Task\Builder\TaskBuilder;
-use App\Service\EntityManager\User\Builder\UserBuilder;
-use App\Service\EntityManager\Task\TaskManager;
-use App\Service\EntityManager\User\UserManager;
-use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
+use App\Entity\Mapper\TaskMapper;
+use App\Service\EntityManager\ { Task\TaskManager, Task\Builder\TaskBuilder};
+use App\Service\EntityManager\ { User\UserManager, User\Builder\UserBuilder};
+use App\Repository\{TaskRepository, UserRepository};
 
 $tasksArray = [];
 
@@ -69,7 +66,7 @@ if(isset($session['user']))
         }
 
         // map object
-        $tasksArray[$key] = TaskMapper::entityToArray($task);
+        $tasksArray[$key] = TaskMapper::convertEntityToArray($task);
     }
 }
 

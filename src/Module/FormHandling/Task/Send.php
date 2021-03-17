@@ -40,7 +40,7 @@ class Send extends TaskForm
 
 
             // update owner in task
-            $this->object = $this->prepareTask();
+            $this->prepareTask($this->object);
 
             // update existing task
             if(!$this->repository->update($this->object, [
@@ -67,13 +67,12 @@ class Send extends TaskForm
         }
     }
 
-    protected function prepareTask(): Task
+    protected function prepareTask(Task $overwrittenObject): bool
     {
-        // set other data
-        $taskFactory = new TaskBuilder(TaskMapper::arrayToEntity($this->data));
-        $taskFactory->setOwner($this->data['new_owner']);
+        $taskBuilder = new TaskBuilder(TaskMapper::convertArrayToEntity($this->data));
+        $taskBuilder->setOwner($this->data['new_owner']);
 
-        return $taskFactory->getInstance();
+        return TaskMapper::overwriteEntity($taskBuilder->getInstance(), $overwrittenObject);
     }
 
     private function checkNewNick(string $newNick): bool

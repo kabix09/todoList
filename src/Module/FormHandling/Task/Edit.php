@@ -31,7 +31,7 @@ final class Edit extends TaskForm
 
             $this->notify();
 
-            $this->object = $this->prepareTask();
+            $this->prepareTask($this->object);
 
             // update existing task
             if(!$this->repository->update($this->object, [
@@ -55,12 +55,11 @@ final class Edit extends TaskForm
         }
     }
 
-    protected function prepareTask(): Task
+    protected function prepareTask(Task $overwrittenObject): bool
     {
-        // set other data
-        $taskManager = new TaskManager(new TaskBuilder(TaskMapper::arrayToEntity($this->data)), $this->repository);
+        $taskManager = new TaskManager(new TaskBuilder(TaskMapper::convertArrayToEntity($this->data)), $this->repository);
         $taskManager->manageStatus();
 
-        return $taskManager->return();
+        return TaskMapper::overwriteEntity($taskManager->return(), $overwrittenObject);
     }
 }

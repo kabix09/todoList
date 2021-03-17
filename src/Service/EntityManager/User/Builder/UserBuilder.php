@@ -18,7 +18,7 @@ final class UserBuilder implements \App\Service\EntityManager\IEntityBuilder
         return clone $this->userInstance;
     }
 
-    public function changePassword(string $newPassword): bool
+    public function changePassword(string $newPassword): void
     {
         $this->userInstance->setPassword($newPassword);
     }

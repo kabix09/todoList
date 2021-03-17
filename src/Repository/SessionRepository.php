@@ -24,14 +24,14 @@ class SessionRepository extends BaseRepository
     public function insert($base): bool
     {
         return parent::insert(
-            $this->entityFactory::entityToArray($base)
+            $this->entityFactory::convertEntityToArray($base)
         );
     }
 
     public function update($base, array $criteria = array()): bool
     {
         return parent::update(
-            $this->entityFactory::entityToArray($base),
+            $this->entityFactory::convertEntityToArray($base),
             $criteria
         );
     }

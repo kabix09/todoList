@@ -19,7 +19,7 @@ foreach ($this->session['user']->getTaskCollection() as $task)
     }
 }
 
-$editedTask = TaskMapper::entityToArray($editedTask);
+$editedTask = TaskMapper::convertEntityToArray($editedTask);
 
 // split time fields
 $ex1 = explode(" ", $editedTask['start_date']);

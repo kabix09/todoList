@@ -16,7 +16,7 @@ abstract class TaskForm extends FormGeneric
         $this->object = new Task();
     }
 
-    abstract protected function prepareTask(): Task;
+    abstract protected function prepareTask(Task $overwrittenObject): bool;
 
     protected function fixDate()
     {
