@@ -4,7 +4,7 @@ namespace App\Module;
 use App\Entity\User;
 use App\Service\Logger\Logger;
 use App\Service\Logger\MessageSheme;
-use App\Service\Session\SessionManager;
+use App\Service\Session\SessionSecurity;
 use App\Service\Session\Session;
 
 class Access
@@ -37,8 +37,8 @@ class Access
 
     protected function sessionManage(): void
     {
-        $sessionManager = new SessionManager($this->session);
-        if(!$sessionManager->manage())
+        $sessionSecurity = new SessionSecurity($this->session);
+        if(!$sessionSecurity->manageSessionSecurity())
         {
             $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
             $this->logger->critical("The user requesting access to the session could not be verified", [$config]);

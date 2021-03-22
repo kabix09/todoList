@@ -5,7 +5,7 @@ use App\Service\Session\Session;
 
 $session = new Session();
 /*
-$sesManager = new SessionManager($session);
+$sesManager = new SessionSecurity($session);
 if(!$sesManager->manage())
 {
     throw new \ErrorException("incompatible browser data");

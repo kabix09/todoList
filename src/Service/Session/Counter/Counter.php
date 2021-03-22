@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
+
 namespace App\Service\Session\Counter;
 
 final class Counter
 {
-    const DEFAULT_MAX_VALUE = 10;
+    private const DEFAULT_MAX_VALUE = 10;
 
-    static Counter $instance;
+    public static Counter $instance;
     private static int $item;
     private static int $maxValue;
 
@@ -17,25 +18,32 @@ final class Counter
 
     static function init(?int $maxValue = NULL, ?int $startValue = NULL) : Counter
     {
-        self::$instance = new Counter($maxValue, $startValue);
+        if(empty(self::$instance)) {
+            self::$instance = new self($maxValue, $startValue);
+        }
         return self::$instance;
     }
 
-    public static function resetItem(): void{
+    public static function resetItem(): void
+    {
         self::$item = 0;
     }
 
-    public static function increaseItem(): void{
+    public static function increaseItem(): void
+    {
         self::$item++;
     }
 
-    public static function getItem(): int{
+    public static function getItem(): int
+    {
         return self::$item;
     }
 
-    function checkCounter(): bool{
-        if(self::$item < self::$maxValue)
+    public static function checkCounter(): bool
+    {
+        if(self::$item < self::$maxValue) {
             return TRUE;
+        }
 
         return FALSE;
     }

@@ -9,18 +9,18 @@ use App\Module\FormHandling\User\Login\Login;
 use App\Module\FormHandling\User\Register\Register;
 use App\Module\Observer\Observable;
 use App\Service\Session\Session;
-use App\Service\Session\SessionManager;
+use App\Service\Session\SessionSecurity;
 
 class SessionObserver extends GenericObserver
 {
-    private $sessionManager;
+    private $sessionSecurity;
     private $logger;
 
     public function __construct(Observable $observable)
     {
         $this->logger = new Logger();
 
-        $this->sessionManager = new SessionManager(new Session());
+        $this->sessionSecurity = new SessionSecurity(new Session());
 
         parent::__construct($observable);
     }
@@ -35,7 +35,7 @@ class SessionObserver extends GenericObserver
     {
         if($observable->getProcessStatus() === "session")
         {
-            if(!$this->sessionManager->manage())
+            if(!$this->sessionSecurity->manageSessionSecurity())
             {
                 $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__);
                 $this->logger->critical("The user requesting access to the session could not be verified", [$config]);
@@ -49,7 +49,7 @@ class SessionObserver extends GenericObserver
         {
             // change session user
             if($observable instanceof Login || $observable instanceof Register)
-                $this->sessionManager->changeSessionUser($observable->getObject()->getNick());
+                $this->sessionSecurity->changeSessionUser($observable->getObject()->getNick());
         }
     }
 }

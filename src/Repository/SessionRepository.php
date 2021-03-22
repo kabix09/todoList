@@ -110,4 +110,10 @@ class SessionRepository extends BaseRepository
             return NULL;
     }
 
+    //--------------------------------------------------------------
+    public function fetchCurrentSession(): ?Session
+    {
+
+    }
+
 }

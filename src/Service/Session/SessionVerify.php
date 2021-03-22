@@ -10,10 +10,10 @@ class SessionVerify
     private Session $session;
     private int $sessionDurationTime;
 
-    public function __construct(Session $session, ?int $sessionDurationTime = NULL)
+    public function __construct(Session $session, int $sessionDurationTime = 0)
     {
         $this->session = $session;
-        $this->sessionDurationTime = $sessionDurationTime ?? self::DEFAULT_SESSION_DURATION_TIME;
+        $this->sessionDurationTime = ($sessionDurationTime > 0) ? $sessionDurationTime : self::DEFAULT_SESSION_DURATION_TIME;
     }
 
     public function checkUserAgent(): bool{
@@ -27,11 +27,7 @@ class SessionVerify
     }
 
     public function isLoginSessionExpired(): bool{
-        if(isset($_SESSION['user']) &&
-            (time() - \DateTime::createFromFormat(Session::DATE_FORMAT, $this->session->getCreateTime())->getTimestamp()) > $this->sessionDurationTime) {
-            return TRUE;
-        }
-
-        return FALSE;
+        return
+            isset($_SESSION['user']) && (time() - \DateTime::createFromFormat(Session::DATE_FORMAT, $this->session->getCreateTime())->getTimestamp()) > $this->sessionDurationTime;
     }
 }

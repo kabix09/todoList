@@ -1,182 +1,216 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace App\Service\Session;
 
 use App\Service\EntityManager\Session\Builder\SessionBuilder;
+use App\Service\Logger\MessageSheme;
 use App\Service\Config\{Config, Constants};
 use App\Service\Logger\Logger;
 use ConnectionFactory\Connection;
 use App\Repository\SessionRepository;
 use App\Service\EntityManager\Session\SessionManager;
 use App\Service\Session\Counter\Counter;
+use App\Entity\Session as SessionEntity;
 
 class Session extends SessionArray
 {
-    const DEFAULT_REQUESTS_COUNT = 5;
+    private const  PATH_PATTERN = "%s" . DIRECTORY_SEPARATOR . "sess_%s";
+    private const DEFAULT_REQUESTS_COUNT = 5;
 
-    public SessionVerify $verify;
     private SessionRepository $repository;
     private SessionManager $manager;
-    protected \App\Entity\Session $session;
+    protected SessionEntity $sessionEntity;
 
-    public Counter $counter;
+    private Logger $logger;
 
-    public function __construct(?int $sessionRequestsAmount = NULL)
+    public function __construct(int $sessionRequestsAmount = 0)
     {
         $this->logger = new Logger();
 
+        $this->sessionEntity = new SessionEntity();
         $this->repository = new SessionRepository(new Connection(Config::init()::module(Constants::DATABASE)::get()));
-
-        $this->session = new \App\Entity\Session();
-        $this->verify = new SessionVerify($this->session);
-        $this->manager = new SessionManager(new SessionBuilder($this->session));
+        $this->manager = new SessionModuleManager(new SessionBuilder($this->sessionEntity), $this->repository);
 
         try {
             $this->init();
-        }catch (\Exception $e)
-        {
-            $this->logger->error($e->getMessage(), [
-                "userFingerprint" => $_SERVER['REMOTE_ADDR'],
-                "fileName" => $e->getFile(),
-                "line" => $e->getLine()
-            ]);
+        }
+        catch (\Exception $e) {
+            $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__, FALSE);
+            $this->logger->error($e->getMessage(), [$config]);
         }
 
-        $this->counter = Counter::init(
-                            $sessionRequestsAmount ?? self::DEFAULT_REQUESTS_COUNT,
-                            $_SESSION['counter'] ?? NULL
-                                );
-    }
-
-    private function init(): void{
-        $this->garbageCollection();     // TODO - add 0 garbage cllection -> remove old sessions in db ???
-
-            // 1 download session object from database
-        $tmp = $this->fetchSession();
-
-        if($tmp instanceof \App\Entity\Session)
-        {
-            $this->manager->updateInstance($tmp, \App\Entity\Session::class);
-
-        }elseif(is_null($tmp))      // 2 if not exist, create new session bd object
-        {
-                // create new session object
-            $this->manager->init();
-
-
-                // insert new session object
-            $this->repository->insert($this->session);
-        }
-
-            // 3 start session, if exists in db then, with downloaded key
-        $key = $this->session->getSessionKey();
-
-        $this->create(
-            empty($key) ? NULL : $key
+        Counter::init(
+    $sessionRequestsAmount ?: self::DEFAULT_REQUESTS_COUNT,
+    $_SESSION['counter'] ?? NULL
         );
     }
 
-    private function create(?string $sessionKey = NULL): void
+    public function getSessionVerify(SessionSecurity $sessionSecurity): void
     {
-        if(session_id() === '') {
-            if(!is_null($sessionKey))
-                session_id($sessionKey);
+        $sessionSecurity->setSessionVerify(new SessionVerify($this->sessionEntity));
+    }
+    public function getSessionManager(SessionSecurity $sessionSecurity): void
+    {
+        $sessionSecurity->setSessionManager($this->manager);
+    }
 
-            session_start();
-                    // session_start automatically generate ID and save this in cookie PHPSESSID, but
-                    // in purpose to overwrite time in cookie PHPSESSID with time() - gc.maxlifetime in destroy() func
-            setcookie('PHPSESSID', session_id(), time() + ini_get('session.gc_maxlifetime'), "/");   // delegate create cookie task to other class?
+    private function init(): void
+    {
+            // 1 clear db from old sessions
+        if(!$this->garbageCollection()) {
+            throw new \RuntimeException("Old sessions could not be deleted from the database");
+        }
 
-                // 4 update session instance in database (key & session time) if that is a new session
-                //   a session which weren't initialize in database because its new client
-            if(session_id() !== $this->session->getSessionKey())
+            // 2 if exists fetch session object from database
+        $capturedSessionInstance = $this->manager->fetchSession();
+
+        if(is_null($capturedSessionInstance))                           // 3 if not exist, push new session object into db
+        {
+            $this->manager->prepareInstance();
+
+            $this->repository->insert($this->manager->return());
+        }else {
+            $this->manager->updateInstance($capturedSessionInstance);   // 3 if exist, update local object representative
+        }
+
+            // 4 start session, if exists in db then, with downloaded key else with new generated key
+        if($this->create($this->sessionEntity->getSessionKey()))
+        {
+            /*
+             * 5
+             * if it is a new session (e.g. session which weren't initialize in database because its new client)
+             * update session instance in database (key & session time)
+             */
+            if(session_id() !== $this->sessionEntity->getSessionKey())
             {
                 $this->manager->updateSessionKey(session_id());
                 $this->manager->updateCreateTime();
 
-                if(! $this->refreshSessionEntity())
-                    throw new \Exception("couldn't update session instance in database");
+                if(! $this->manager->refreshSessionEntity()) {
+                    throw new \RuntimeException("Couldn't update session instance in database");
+                }
+
+                // 6 catch correct session instance from db
+                $this->manager->updateInstance(
+                    $this->repository->find(array(),
+                        [
+                            "WHERE" => NULL,
+                            "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
+                        ])->current()
+                );
             }
         }
-
-            // 5 download correct session instance from
-         $this->manager->updateInstance(
-             $this->repository->find(array(),
-                 [
-                     "WHERE" => NULL,
-                     "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
-                 ])->current(),
-             \App\Entity\Session::class);
     }
 
-    // remove old sessions
-    public function garbageCollection(){
-        return
-            $this->repository->remove([
-                "WHERE" => "session_create_time < '" . date(\App\Entity\Session::DATE_FORMAT, time() - ini_get("session.gc_maxlifetime")) . "'"
-            ]);
+    private function create(string $sessionKey): bool
+    {
+        if(session_id() === '') {
+            if(!empty($sessionKey)) {
+                session_id($sessionKey);    // must be set before the function will be called
+            }
 
-        // ToDO - function also should remove file from tmp/ sess_[key]
+            session_start();
+
+            /*
+             * session_start automatically generate ID and save this in cookie PHPSESSID, but
+             * in purpose to overwrite time in cookie PHPSESSID with time() - gc.maxlifetime in destroy() func
+             */
+            setcookie('PHPSESSID', session_id(), time() + ini_get('session.gc_maxlifetime'), "/");   // TODO - delegate create cookie task to other class?
+
+        }else {
+            throw new \RuntimeException("Session already exists - current session id: " . session_id());
+        }
+
+        return true;
     }
 
-    // remove current session
-    public function destroy(){
-            // 1 remove session fingerprint in database
-        if(isset($_SESSION['user']))
-            $this->repository->remove([
-                "WHERE" => "user_nick = '{$_SESSION['user']->getNick()}'"
-            ]);
-        unset($this->session);
+    public function destroy()
+    {
+        // check is session exists / was started
+        if(!isset($_COOKIE['PHPSESSID'])) {
+            throw new \RuntimeException("Session couldn't be removed because wasn't started before");
+        }
 
-            // 2 destroy data in server's file
-        session_unset();
-        session_destroy();
+        // remove session fingerprint in database
+        $this->repository->remove(
+            [
+                "WHERE" => NULL,
+                "AND" => ["user_nick = '{$_SESSION['user']->getNick()}'", "session_key = '{$_COOKIE['PHPSESSID']}'"]
+            ]
+        );
 
-            // 3 destroy browser data
-            //   in session_start(), function don't read ID from cookie and successfully generate new token value
+        // remove local handled session object
+        unset($this->sessionEntity);
+
+
+        session_unset();    // destroys data stored in $_SESSION super global array
+        session_destroy();  // destroys the session data stored in the session storage
+
+        /*
+         * destroy browser data
+         * in session_start(), function don't read ID from cookie and successfully generate new token value
+         */
         setcookie('PHPSESSID', "", time() - ini_get('session.gc_maxlifetime'), "/");
     }
 
-    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     public function regenerateID(bool $removeOldSession = true)
     {
         session_regenerate_id($removeOldSession);
-            // need to manually update cookie sess id value
+        // need to manually update cookies sess id value
         setcookie('PHPSESSID', session_id(), time() + ini_get('session.gc_maxlifetime'), "/");
 
-            // fetch new key
+        // fetch new key
         $this->manager->updateSessionKey(session_id());
     }
 
-    public function refreshSessionTime(): void{
-        $this->manager->updateCreateTime();
+    private function garbageCollection(): bool
+    {
+        /*
+         * 1 - fetch old sessions key
+         * 2 - clear db with old sessions records
+         * 3 - remove old session filed from server tmp folder
+         * ToDO - delegate remove task to other class and outside que eg. RabbitMQ
+         */
+        $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__, FALSE);
+
+        $oldDate = date(SessionEntity::DATE_FORMAT, time() - ini_get("session.gc_maxlifetime"));
+
+        $oldSessionsCollection = $this->repository->find(array(),
+            [
+                "WHERE" => "session_create_time < '{$oldDate}}'"
+            ]
+        );
+
+        foreach ($oldSessionsCollection as $oldObject)
+        {
+            $realSessionPath = $this->generatePathToSessionFile($oldObject->getSessionKey());
+
+            if(unlink($realSessionPath)) {
+
+                $this->logger->info("Successfully deleted file with location: {$realSessionPath}", [$config]);
+            } else {
+
+                throw new \RuntimeException("Couldn't remove session file: " . $realSessionPath);
+            }
+
+            if($this->repository->remove(
+                [
+                    "WHERE" => "session_key = '{$oldObject->getSessionKey()}'"
+                ]
+            )) {
+
+                $this->logger->info("Successfully removed session instance by id: {$oldObject->getSessionKey()}", [$config]);
+            } else {
+
+                throw new \RuntimeException("Couldn't remove session object by id: " . $oldObject->getSessionKey());
+            }
+        }
+
+        return true;
     }
 
-    //#####################################################
-    public function updateSessionUser(string $nick): bool{
-        if($this->session->getUserNick() !== NULL)
-            return TRUE;
-
-        $this->manager->updateUserNick($nick);
-        $this->manager->updateCreateTime(NULL);
-
-        return $this->refreshSessionEntity();
-    }
-
-    public function refreshSessionEntity(): bool{
-        return $this->repository->update($this->session, [
-            "WHERE" => NULL,
-            "AND" => ["user_ip = '{$this->session->getUserIP()}'", "browser_data = '{$this->session->getBrowserData()}'"]
-        ]);
-    }
-
-    //-----------------------------------------------------
-    private function fetchSession(){
-        if(isset($_COOKIE['PHPSESSID']))
-            return $this->repository->fetchBySessionKey($_COOKIE['PHPSESSID']);
-        else
-            return $this->repository->find(array(),[
-                "WHERE" => NULL,
-                "AND" => ["user_ip = '{$_SERVER["REMOTE_ADDR"]}'", "browser_data = '{$_SERVER["HTTP_USER_AGENT"]}'"]
-            ])->current();  // return first object from generator's array, technically there MUST be ONE object with this criteria in this case
+    private function generatePathToSessionFile(string $key) : string
+    {
+        return sprintf(self::PATH_PATTERN, session_save_path(), $key);
     }
 }

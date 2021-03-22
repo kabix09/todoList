@@ -75,7 +75,7 @@ final class UserManager extends BaseManager
 
         if($newHashedPassword !== FALSE && !is_null($newHashedPassword)) {
 
-            $this->objectBuilder->setPassword($newHashedPassword);
+            $this->objectBuilder->changePassword($newHashedPassword);
         }else {
             throw new \Exception("Password hash attempt failed :/");
         }

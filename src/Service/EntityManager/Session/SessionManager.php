@@ -17,20 +17,20 @@ class SessionManager extends BaseManager
         return $this->objectBuilder->getInstance();
     }
 
-    public function update(array $criteria=[]): bool
+    public function prepareInstance(array $config = []): void
     {
-        // TODO: Implement update() method.
+        parent::prepareInstance(
+            [
+                Session::MAPPING['user_ip'] => $_SERVER['REMOTE_ADDR'],
+                Session::MAPPING['browser_data'] => $_SERVER['HTTP_USER_AGENT']
+            ]
+        );
     }
 
-    // ---- base entity setting functions ----
-    private function setUserIP(): void
-    {
-        $this->objectBuilder->setUserIP($_SERVER['REMOTE_ADDR']);
+    public function updateInstance (Session $copiedObject){
+        $this->objectBuilder->setInstance($copiedObject);
     }
-    private function setBrowserData(): void
-    {
-        $this->objectBuilder->setBrowserData($_SERVER['HTTP_USER_AGENT']);
-    }
+
 
     // ---- base entity config functions ----
     public function updateSessionKey(string $sessionKey): void
@@ -41,24 +41,11 @@ class SessionManager extends BaseManager
     {
         $this->objectBuilder->setUserNick($userNick);
     }
-    public function updateCreateTime(?string $newTime = NULL): void
+    public function updateCreateTime(string $newTime = ""): void
     {
-        if(is_null($newTime))
+        if(empty($newTime))
             $newTime = $this->getDate();
 
         $this->objectBuilder->setCreateTime($newTime);
-    }
-
-    // ---- ---- support functions
-    public function init(){
-        $this->setUserIP();
-        $this->setBrowserData();
-
-        //$this->updateCreateTime();
-    }
-
-    // ---- function to clone object values                     TODO - is required????
-    public function updateInstance (Session $copiedObject){
-        $this->objectBuilder->setInstance($copiedObject);
     }
 }
