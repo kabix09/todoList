@@ -14,7 +14,7 @@ use App\Entity\Session as SessionEntity;
 
 class Session extends SessionArray
 {
-    private const  PATH_PATTERN = "%s" . DIRECTORY_SEPARATOR . "sess_%s";
+    private const PATH_PATTERN = "%s" . DIRECTORY_SEPARATOR . "sess_%s";
     private const DEFAULT_REQUESTS_COUNT = 5;
 
     private SessionRepository $repository;
@@ -41,7 +41,7 @@ class Session extends SessionArray
 
         Counter::init(
     $sessionRequestsAmount ?: self::DEFAULT_REQUESTS_COUNT,
-    $_SESSION['counter'] ?? NULL
+    isset($_SESSION['counter']) ?: 0
         );
     }
 
@@ -124,7 +124,7 @@ class Session extends SessionArray
         return true;
     }
 
-    public function destroy()
+    public function destroy(): void
     {
         // check is session exists / was started
         if(!isset($_COOKIE['PHPSESSID'])) {
@@ -139,12 +139,11 @@ class Session extends SessionArray
             ]
         );
 
-        // remove local handled session object
-        unset($this->sessionEntity);
+        unset($this->sessionEntity);    // remove local handled session object
 
 
-        session_unset();    // destroys data stored in $_SESSION super global array
-        session_destroy();  // destroys the session data stored in the session storage
+        session_unset();        // destroys data stored in $_SESSION super global array
+        session_destroy();      // destroys the session data stored in the session storage
 
         /*
          * destroy browser data
@@ -153,7 +152,7 @@ class Session extends SessionArray
         setcookie('PHPSESSID', "", time() - ini_get('session.gc_maxlifetime'), "/");
     }
 
-    public function regenerateID(bool $removeOldSession = true)
+    public function regenerateID(bool $removeOldSession = true): void
     {
         session_regenerate_id($removeOldSession);
         // need to manually update cookies sess id value
@@ -171,8 +170,6 @@ class Session extends SessionArray
          * 3 - remove old session filed from server tmp folder
          * ToDO - delegate remove task to other class and outside que eg. RabbitMQ
          */
-        $config = new MessageSheme($_SERVER['REMOTE_ADDR'], __CLASS__, __FUNCTION__, FALSE);
-
         $oldDate = date(SessionEntity::DATE_FORMAT, time() - ini_get("session.gc_maxlifetime"));
 
         $oldSessionsCollection = $this->repository->find(array(),
@@ -193,11 +190,9 @@ class Session extends SessionArray
                 throw new \RuntimeException("Couldn't remove session file: " . $realSessionPath);
             }
 
-            if($this->repository->remove(
-                [
+            if($this->repository->remove([
                     "WHERE" => "session_key = '{$oldObject->getSessionKey()}'"
-                ]
-            )) {
+            ])) {
 
                 $this->logger->info("Successfully removed session instance by id: {$oldObject->getSessionKey()}", [$config]);
             } else {

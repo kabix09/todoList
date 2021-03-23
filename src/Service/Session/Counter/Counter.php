@@ -2,6 +2,9 @@
 
 namespace App\Service\Session\Counter;
 
+use App\Service\Logger\Logger;
+use App\Service\Logger\MessageSheme;
+
 final class Counter
 {
     private const DEFAULT_MAX_VALUE = 10;
@@ -10,13 +13,13 @@ final class Counter
     private static int $item;
     private static int $maxValue;
 
-    private function __construct(?int $maxValue = NULL, ?int $startValue = NULL)
+    private function __construct(int $maxValue, int $startValue)
     {
-        self::$maxValue = $maxValue ?? self::DEFAULT_MAX_VALUE;
-        $startValue ? self::$item = $startValue : self::resetItem();
+        self::$maxValue = $maxValue ?: self::DEFAULT_MAX_VALUE;
+        self::$item = $startValue;
     }
 
-    static function init(?int $maxValue = NULL, ?int $startValue = NULL) : Counter
+    public static function init(int $maxValue = 0, int $startValue = 0) : Counter
     {
         if(empty(self::$instance)) {
             self::$instance = new self($maxValue, $startValue);
@@ -41,6 +44,8 @@ final class Counter
 
     public static function checkCounter(): bool
     {
+        var_dump("cur: " . self::$item);
+        var_dump("max: " . self::$maxValue);
         if(self::$item < self::$maxValue) {
             return TRUE;
         }
